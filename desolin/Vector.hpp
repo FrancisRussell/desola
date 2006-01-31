@@ -13,10 +13,9 @@ public:
   {
   }
   
-  Vector(int rows)
+  Vector(const int rows, const T_element initialValue)
   {
-    InternalVector<T_element>* internal = new ConventionalVector<T_element>(rows);
-    internal->allocate();
+    InternalVector<T_element>* internal = new ConventionalVector<T_element>(rows, initialValue);
     setExpr(*new Literal<vector, T_element>(internal));
   }
 

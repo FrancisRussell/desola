@@ -96,7 +96,7 @@ protected:
 
   virtual ExprNode<scalar, T_element>& createDefault() const
   {
-    InternalScalar<T_element>* internal = new ConventionalScalar<T_element>();
+    InternalScalar<T_element>* internal = new ConventionalScalar<T_element>(0);
     internal->allocate();
     return *new Literal<scalar, T_element>(internal);
   }

@@ -13,10 +13,9 @@ public:
   {
   }
   
-  Matrix(int rows, int cols)
+  Matrix(const int rows, const int cols, const T_element initialValue)
   {
-    InternalMatrix<T_element>* internal = new ConventionalMatrix<T_element>(rows, cols);
-    internal->allocate();
+    InternalMatrix<T_element>* internal = new ConventionalMatrix<T_element>(rows, cols, initialValue);
     setExpr(*new Literal<matrix, T_element>(internal));
   }
 

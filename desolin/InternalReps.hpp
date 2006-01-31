@@ -4,13 +4,13 @@
 #include <cassert>
 #include <desolin/Desolin_fwd.hpp>
 
-template<typename T_elementType>
+template<typename T_element>
 class InternalValue
 {
 protected:
   bool allocated;
 public:
-  InternalValue() : allocated(false)
+  InternalValue(const bool isAllocated) : allocated(isAllocated) 
   {
   }
   
@@ -23,23 +23,27 @@ public:
   virtual ~InternalValue() {}
 };
 
-template<typename T_elementType>
-class InternalScalar : public InternalValue<T_elementType>
+template<typename T_element>
+class InternalScalar : public InternalValue<T_element>
 {
 public:
-  virtual void accept(InternalScalarVisitor<T_elementType>& visitor) = 0;
+  InternalScalar(const bool allocated) : InternalValue<T_element>(allocated)
+  {
+  }
+  
+  virtual void accept(InternalScalarVisitor<T_element>& visitor) = 0;
 
-  virtual T_elementType getElementValue() = 0;
+  virtual T_element getElementValue() = 0;
 };
 
-template<typename T_elementType>
-class InternalVector : public InternalValue<T_elementType>
+template<typename T_element>
+class InternalVector : public InternalValue<T_element>
 {
 protected:
   const int rows;
 
 public:
-  InternalVector(const int rowCount) : rows(rowCount)
+  InternalVector(const bool allocated, const int rowCount) : InternalValue<T_element>(allocated), rows(rowCount)
   {
   }
   
@@ -48,20 +52,20 @@ public:
     return rows;
   }
 
-  virtual void accept(InternalVectorVisitor<T_elementType>& visitor) = 0;
+  virtual void accept(InternalVectorVisitor<T_element>& visitor) = 0;
 
-  virtual T_elementType getElementValue(const ElementIndex<vector>& index) = 0;
+  virtual T_element getElementValue(const ElementIndex<vector>& index) = 0;
 };
 
-template<typename T_elementType>
-class InternalMatrix : public InternalValue<T_elementType>
+template<typename T_element>
+class InternalMatrix : public InternalValue<T_element>
 {
 protected:
   const int rows;
   const int cols;
   
 public:
-  InternalMatrix(const int rowCount, const int colCount) : rows(rowCount), cols(colCount)
+  InternalMatrix(const bool allocated, const int rowCount, const int colCount) : InternalValue<T_element>(allocated), rows(rowCount), cols(colCount)
   {
   }
   
@@ -75,25 +79,24 @@ public:
     return cols;
   }
 
-  virtual void accept(InternalMatrixVisitor<T_elementType>& visitor) = 0;
+  virtual void accept(InternalMatrixVisitor<T_element>& visitor) = 0;
 
-  virtual T_elementType getElementValue(const ElementIndex<matrix>& index) = 0;
+  virtual T_element getElementValue(const ElementIndex<matrix>& index) = 0;
 };
 
-template<typename T_elementType>
-class ConventionalScalar : public InternalScalar<T_elementType>
+template<typename T_element>
+class ConventionalScalar : public InternalScalar<T_element>
 {
 private:
-  T_elementType value;
+  T_element value;
   
 public:
-  ConventionalScalar()
+  ConventionalScalar() : InternalScalar<T_element>(true)
   {
   }
 
-  ConventionalScalar(const T_elementType initialValue)
+  ConventionalScalar(const T_element initialValue) : InternalScalar<T_element>(true), value(initialValue)
   {
-    value = initialValue;
   }  
 
   virtual void allocate()
@@ -101,32 +104,36 @@ public:
     this->allocated=true;
   }
 
-  virtual void accept(InternalScalarVisitor<T_elementType>& visitor)
+  virtual void accept(InternalScalarVisitor<T_element>& visitor)
   {
     visitor.visit(*this);
   }
 
-  virtual T_elementType getElementValue()
+  virtual T_element getElementValue()
   {
     assert(this->allocated);
     return value;
   } 
 
-  T_elementType* getValue()
+  T_element* getValue()
   {
     assert(this->allocated);
     return &value;
   }
 };
 
-template<typename T_elementType>
-class ConventionalVector : public InternalVector<T_elementType>
+template<typename T_element>
+class ConventionalVector : public InternalVector<T_element>
 {
 private:
-  std::vector<T_elementType> value;
+  std::vector<T_element> value;
   
 public:
-  ConventionalVector(const int rowCount) : InternalVector<T_elementType>(rowCount)
+  ConventionalVector(const int rowCount) : InternalVector<T_element>(false, rowCount)
+  {
+  }
+
+  ConventionalVector(const int rowCount, const T_element initialValue) : InternalVector<T_element>(true, rowCount), value(rowCount, initialValue)
   {
   }
 
@@ -139,32 +146,36 @@ public:
     }
   }
 
-  virtual void accept(InternalVectorVisitor<T_elementType>& visitor)
+  virtual void accept(InternalVectorVisitor<T_element>& visitor)
   {
     visitor.visit(*this);
   }
 
-  T_elementType* getValue()
+  T_element* getValue()
   {
     assert(this->allocated);
     return &value[0];
   }
 
-  virtual T_elementType getElementValue(const ElementIndex<vector>& index)
+  virtual T_element getElementValue(const ElementIndex<vector>& index)
   {
     assert(this->allocated);
     return value[index.getRow()];
   }
 };
 
-template<typename T_elementType>
-class ConventionalMatrix : public InternalMatrix<T_elementType>
+template<typename T_element>
+class ConventionalMatrix : public InternalMatrix<T_element>
 {
 private:
-  std::vector<T_elementType> value;
+  std::vector<T_element> value;
   
 public:
-  ConventionalMatrix(const int rowCount, const int colCount) : InternalMatrix<T_elementType>(rowCount, colCount)
+  ConventionalMatrix(const int rowCount, const int colCount) : InternalMatrix<T_element>(false, rowCount, colCount)
+  {
+  }
+
+  ConventionalMatrix(const int rowCount, const int colCount, const T_element initialValue) : InternalMatrix<T_element>(true, rowCount, colCount), value(rowCount*colCount, initialValue)
   {
   }
 
@@ -177,18 +188,18 @@ public:
     }
   }
 
-  virtual void accept(InternalMatrixVisitor<T_elementType>& visitor)
+  virtual void accept(InternalMatrixVisitor<T_element>& visitor)
   {
     visitor.visit(*this);
   }
 
-  T_elementType* getValue()
+  T_element* getValue()
   {
     assert(this->allocated);
     return &value[0];
   }
 
-  virtual T_elementType getElementValue(const ElementIndex<matrix>& index) 
+  virtual T_element getElementValue(const ElementIndex<matrix>& index) 
   {
     assert(this->allocated);
     return value[(this->cols*index.getRow())+index.getCol()];
