@@ -14,6 +14,7 @@ std::ostream& operator<< (std::ostream& o, const Vector<T_element>& v)
   o << "Vector: " << rows << std:: endl << "[";
   for(int row=0; row<rows; ++row)
   {
+    o.width(10);
     o << v(row).value();
     if (row!=rows-1)
       o <<", ";
@@ -34,6 +35,7 @@ std::ostream& operator<< (std::ostream& o, const Matrix<T_element>& m)
     o << "[";
     for(int col=0; col<cols; ++col)
     {
+      o.width(10);
       o << m(row,col).value();
       if (col!=cols-1)
         o <<", ";
