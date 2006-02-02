@@ -4,6 +4,10 @@
 // Uncomment next line to disable asserts
 // #define NDEBUG
 
+// Boost STL compliant array with partial specialisation for size 0
+// See http://www.josuttis.com/cppcode
+#include <desolin/boost_array.hpp>
+
 #include <desolin/Exceptions.hpp>
 #include <desolin/Traits.hpp>
 #include <desolin/ExpressionNode.hpp>
