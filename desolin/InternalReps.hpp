@@ -4,6 +4,9 @@
 #include <cassert>
 #include <desolin/Desolin_fwd.hpp>
 
+namespace desolin_internal
+{
+
 template<typename T_element>
 class InternalValue
 {
@@ -227,4 +230,5 @@ public:
   virtual void visit(ConventionalMatrix<T_elementType>& value) = 0;
 };
 
+}
 #endif

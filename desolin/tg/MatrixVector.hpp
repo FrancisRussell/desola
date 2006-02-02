@@ -3,6 +3,9 @@
 
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 
+namespace desolin_internal
+{
+
 template<typename T_element>
 class TGMatrixMult : public TGBinOp<tg_matrix, tg_matrix, tg_matrix, T_element>
 {
@@ -97,4 +100,5 @@ public:
   }
 };
 
+}
 #endif

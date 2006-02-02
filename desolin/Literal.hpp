@@ -6,7 +6,8 @@
 #include <boost/static_assert.hpp>
 #include <desolin/Desolin_fwd.hpp>
 
-template<typename T_element> class ExpressionVisitor;
+namespace desolin_internal
+{
 
 template<ExprType exprType, typename T_element>
 class Literal : public ExprNode<exprType, T_element>
@@ -153,4 +154,5 @@ public:
   }
 };
 
+}
 #endif

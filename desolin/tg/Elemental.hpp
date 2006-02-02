@@ -3,6 +3,9 @@
 
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 
+namespace desolin_internal
+{
+
 template<TGExprType exprType, typename T_element>
 class TGElementGet : public TGUnOp<tg_scalar, exprType, T_element>
 {
@@ -53,4 +56,5 @@ public:
   }
 };
 
+}
 #endif

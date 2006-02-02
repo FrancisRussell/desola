@@ -9,6 +9,9 @@
 #include <boost/ref.hpp>
 #include <TaskGraph>
 
+namespace desolin_internal
+{
+
 class ParameterHolder
 {
 private:
@@ -40,4 +43,5 @@ public:
   }
 };
 
+}
 #endif

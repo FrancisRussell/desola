@@ -5,6 +5,9 @@
 #include <boost/cast.hpp>
 #include <desolin/Desolin_fwd.hpp>
 
+namespace desolin_internal
+{
+
 template<ExprType resultType, ExprType exprType, typename T_element>
 class UnOp : public ExprNode<resultType, T_element>
 {
@@ -48,4 +51,5 @@ public:
   }       
 };
 
+}
 #endif

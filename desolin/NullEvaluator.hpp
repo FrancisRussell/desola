@@ -6,6 +6,9 @@
 #include <boost/shared_ptr.hpp>
 #include <desolin/Desolin_fwd.hpp>
 
+namespace desolin_internal
+{
+
 template<typename T_element>
 class NullEvaluator : private LiteralVisitor<T_element>, public Evaluator<T_element>
 {
@@ -82,4 +85,5 @@ class NullEvaluatorFactory : public EvaluatorFactory<T_element>
   }
 };
 
+}
 #endif

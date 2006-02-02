@@ -3,6 +3,8 @@
 
 #include <desolin/Desolin_fwd.hpp>
 
+namespace desolin_internal
+{
 // Enums used for template parameters
 enum TGExprType
 {
@@ -65,6 +67,7 @@ template<typename T_elementType> class TGConventionalMatrix;
 template<typename T_elementType> class TGScalarGen;
 template<typename T_elementType> class TGVectorGen;
 template<typename T_elementType> class TGMatrixGen;
+}
 
 // These should be moved into a source directory and headers added if this
 // library stops being header only.

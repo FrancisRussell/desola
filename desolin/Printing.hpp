@@ -2,13 +2,13 @@
 #include <desolin/Desolin_fwd.hpp>
 
 template<typename T_element>
-std::ostream& operator<< (std::ostream& o, const Scalar<T_element>& s)
+std::ostream& operator<< (std::ostream& o, const desolin::Scalar<T_element>& s)
 {
   return o << s.value();
 }
 
 template<typename T_element>
-std::ostream& operator<< (std::ostream& o, const Vector<T_element>& v)
+std::ostream& operator<< (std::ostream& o, const desolin::Vector<T_element>& v)
 {
   const int rows = v.numRows();
   o << "Vector: " << rows << std:: endl << "[";
@@ -24,7 +24,7 @@ std::ostream& operator<< (std::ostream& o, const Vector<T_element>& v)
 }
 
 template<typename T_element>
-std::ostream& operator<< (std::ostream& o, const Matrix<T_element>& m)
+std::ostream& operator<< (std::ostream& o, const desolin::Matrix<T_element>& m)
 {
   const int rows = m.numRows();
   const int cols = m.numCols();

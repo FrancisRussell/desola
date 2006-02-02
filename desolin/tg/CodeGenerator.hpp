@@ -10,6 +10,9 @@
 //      setExpression is used before calling addExpression on any result
 //      element.
 
+namespace desolin_internal
+{
+
 template<typename T_element>
 class TGCodeGenerator : public TGExpressionNodeVisitor<T_element>
 {
@@ -337,4 +340,5 @@ private:
   }
 };
 
+}
 #endif

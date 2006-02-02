@@ -4,7 +4,8 @@
 #include <boost/shared_ptr.hpp>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 
-template<typename T_element> class TGExpressionNodeVisitor;
+namespace desolin_internal
+{
 
 template<TGExprType exprType, typename T_element>
 class TGLiteral : public TGExprNode<exprType, T_element>
@@ -26,4 +27,5 @@ public:
   }
 };
 
+}
 #endif

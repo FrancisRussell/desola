@@ -5,6 +5,9 @@
 #include <boost/shared_ptr.hpp>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 
+namespace desolin_internal
+{
+
 template<TGExprType exprType>
 class TGElementIndex
 {
@@ -155,4 +158,5 @@ public:
   }
 };
 
+}
 #endif

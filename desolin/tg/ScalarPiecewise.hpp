@@ -3,6 +3,9 @@
 
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 
+namespace desolin_internal
+{
+
 template<TGExprType exprType, typename T_element>
 class TGScalarPiecewise : public TGBinOp<exprType, exprType, tg_scalar, T_element>
 {
@@ -28,4 +31,5 @@ public:
   }
 };
 
+}
 #endif

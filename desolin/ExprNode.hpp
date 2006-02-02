@@ -10,7 +10,8 @@
 #include <boost/cast.hpp>
 #include <desolin/Desolin_fwd.hpp>
 
-template<ExprType exprType> class ElementIndex;
+namespace desolin_internal
+{
 
 template<ExprType exprType, typename T_elementType>
 class ExprNode : public ExpressionNode<T_elementType>
@@ -207,4 +208,5 @@ struct ExprDimensions<matrix>
   static const int dims = 2;
 };
 
+}
 #endif

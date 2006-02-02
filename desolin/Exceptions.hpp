@@ -4,6 +4,9 @@
 #include <stdexcept>
 #include <string>
 
+namespace desolin
+{
+
 class DesoLinLogicError : public std::logic_error
 {
 public:
@@ -28,4 +31,5 @@ public:
   }
 };
 
+}
 #endif

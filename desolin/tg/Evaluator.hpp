@@ -12,6 +12,9 @@
 #include <TaskGraph>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 
+namespace desolin_internal
+{
+
 template<typename T_element>
 class TGEvaluator : public Evaluator<T_element>
 {
@@ -84,4 +87,5 @@ public:
   }
 };
 
+}
 #endif

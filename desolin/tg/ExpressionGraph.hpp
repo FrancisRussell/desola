@@ -12,6 +12,9 @@
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 #include <iostream>
 
+namespace desolin_internal
+{
+
 template<typename T_element>
 class TGExpressionGraph
 {
@@ -109,4 +112,5 @@ public:
   }
 };
 
+}
 #endif

@@ -3,6 +3,9 @@
 
 #include <desolin/Desolin_fwd.hpp>
 
+namespace desolin_internal
+{
+
 template<ExprType exprType, typename T_element>
 class ElementGet : public UnOp<scalar, exprType, T_element>
 {
@@ -57,4 +60,5 @@ public:
   }
 };
 
+}
 #endif

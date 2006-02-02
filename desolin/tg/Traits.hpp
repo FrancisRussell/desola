@@ -3,6 +3,9 @@
 
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 
+namespace desolin_internal
+{
+
 template<ExprType exprType, typename T_element>
 struct ExprTGTraits
 {
@@ -62,4 +65,5 @@ public:
   typedef TGMatrix<T_elementType> type;
 };
 
+}
 #endif

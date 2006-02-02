@@ -5,6 +5,9 @@
 #include <map>
 #include <boost/format.hpp>
 
+namespace desolin_internal
+{
+
 class NameGenerator
 {
 private:
@@ -22,4 +25,5 @@ public:
   }
 };
 
+}
 #endif

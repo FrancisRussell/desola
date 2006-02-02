@@ -6,6 +6,9 @@
 #include <boost/shared_ptr.hpp>
 #include <desolin/Desolin_fwd.hpp>
 
+namespace desolin_internal
+{
+
 template <typename T_element>
 class Evaluator
 {
@@ -23,4 +26,5 @@ public:
   virtual boost::shared_ptr< Evaluator<T_element> > createEvaluator(EvaluationStrategy<T_element>& strategy) = 0;
 };
 
+}
 #endif

@@ -3,6 +3,9 @@
 
 #include <desolin/Desolin_fwd.hpp>
 
+namespace desolin_internal
+{
+
 template<typename T_element>
 class Variable
 {
@@ -94,4 +97,5 @@ protected:
   virtual  ExprNode<expressionType, T_element>& createDefault() const = 0;
 };
 
+}
 #endif

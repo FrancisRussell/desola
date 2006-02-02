@@ -4,6 +4,9 @@
 #include <boost/array.hpp>
 #include <desolin/Desolin_fwd.hpp>
 
+namespace desolin_internal
+{
+
 template<typename T_element>
 class MatrixMult : public BinOp<matrix, matrix, matrix, T_element>
 {
@@ -120,4 +123,5 @@ public:
   }
 };
 
+}
 #endif

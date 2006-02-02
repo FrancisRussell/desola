@@ -3,6 +3,9 @@
 
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 
+namespace desolin_internal
+{
+
 template<typename T_element>
 class TGExpressionNodeVisitor
 {
@@ -35,4 +38,5 @@ public:
  virtual ~TGExpressionNodeVisitor() {}
 };
 
+}
 #endif

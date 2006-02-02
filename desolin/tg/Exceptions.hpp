@@ -1,6 +1,9 @@
 #ifndef DESOLIN_TG_EXCEPTIONS_HPP
 #define DESOLIN_TG_EXCEPTIONS_HPP
 
+namespace desolin_internal
+{
+
 class TGInvalidOperationError : public DesoLinRuntimeError
 {
 public:
@@ -9,4 +12,5 @@ public:
   }
 };
 
+}
 #endif

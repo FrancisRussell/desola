@@ -2,6 +2,11 @@
 #define DESOLIN_FWD_HPP
 
 // Enums used for template parameters
+
+namespace desolin_internal
+{
+using namespace desolin;
+	
 enum ExprType
 {
   scalar,
@@ -74,10 +79,16 @@ template<typename T_element> class NullEvaluatorFactory;
 // External Interface
 template<typename T_element> class Variable;
 template<ExprType expressionType, typename T_element> class Var;
+}
+
+namespace desolin
+{	
+// External Interface
 template<typename T_element> class Vector;
 template<typename T_element> class Matrix;
 template<typename T_element> class Scalar;
-template<ExprType exprType, typename T_element> class ScalarElement;
+template<desolin_internal::ExprType exprType, typename T_element> class ScalarElement;
+}
 
 // These should be moved into a source directory and headers added if this
 // library stops being header only.

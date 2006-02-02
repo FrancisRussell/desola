@@ -5,6 +5,9 @@
 #include <boost/array.hpp>
 #include <boost/cast.hpp>
 
+namespace desolin_internal
+{
+
 template<ExprType resultType, ExprType leftType, ExprType rightType, typename T_element>
 class BinOp : public ExprNode<resultType, T_element>
 {
@@ -61,4 +64,5 @@ public:
   }
 };
 
+}
 #endif

@@ -14,6 +14,9 @@
 #include <desolin/Desolin_fwd.hpp>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 
+namespace desolin_internal
+{
+
 template<typename T_element>
 class ExpressionNode
 {
@@ -196,4 +199,5 @@ protected:
   }
 };
 
+}
 #endif

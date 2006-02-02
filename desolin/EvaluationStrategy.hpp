@@ -10,6 +10,9 @@
 #include <boost/shared_ptr.hpp>
 #include <desolin/Desolin_fwd.hpp>
 
+namespace desolin_internal
+{
+
 template<typename T_element>
 class LiteralReplacer : public ExpressionNodeTypeVisitor<T_element>
 {
@@ -234,4 +237,5 @@ public:
   }
 };
 
+}
 #endif

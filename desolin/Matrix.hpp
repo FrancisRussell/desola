@@ -3,11 +3,14 @@
 
 #include <desolin/Desolin_fwd.hpp>
 
+namespace desolin
+{
+
 template<typename T_element>
-class Matrix : public Var<matrix, T_element>
+class Matrix : public desolin_internal::Var<desolin_internal::matrix, T_element>
 {
 public:
-  static const ExprType expressionType = matrix;
+  static const desolin_internal::ExprType expressionType = desolin_internal::matrix;
     
   Matrix()
   {
@@ -15,11 +18,12 @@ public:
   
   Matrix(const int rows, const int cols, const T_element initialValue)
   {
+    using namespace desolin_internal;
     InternalMatrix<T_element>* internal = new ConventionalMatrix<T_element>(rows, cols, initialValue);
     setExpr(*new Literal<matrix, T_element>(internal));
   }
 
-  Matrix(const Matrix& m) : Var<matrix, T_element>(m.getExpr())
+  Matrix(const Matrix& m) : desolin_internal::Var<desolin_internal::matrix, T_element>(m.getExpr())
   {
   }
 
@@ -44,69 +48,79 @@ public:
 
   const Matrix& operator=(const Scalar<T_element>& right)
   {
+    using namespace desolin_internal;
     setExpr(*new ScalarPiecewise<matrix, T_element>(assign, this->getExpr(), right.getExpr()));
     return *this;
   }
 
   const Matrix operator+(const Matrix& right) const
   {
+    using namespace desolin_internal;
     return Matrix(*new Pairwise<matrix, T_element>(add, this->getExpr(), right.getExpr()));
   }
 
   const Matrix operator-(const Matrix& right) const
   {
+    using namespace desolin_internal;
     return Matrix(*new Pairwise<matrix, T_element>(sub, this->getExpr(), right.getExpr()));
   }
     
   const Matrix operator*(const Scalar<T_element>& right) const
   {
+    using namespace desolin_internal;
     return Matrix(*new ScalarPiecewise<matrix, T_element>(multiply, this->getExpr(), right.getExpr()));
   }
 
   const Matrix operator/(const Scalar<T_element>& right) const
   {
+    using namespace desolin_internal;
     return Matrix(*new ScalarPiecewise<matrix, T_element>(divide, this->getExpr(), right.getExpr()));
   }      
 
   const Matrix operator*(const Matrix& right) const
   {
+    using namespace desolin_internal;
     return Matrix(*new MatrixMult<T_element>(this->getExpr(), right.getExpr()));
   }
 
   const Vector<T_element> operator*(const Vector<T_element>& right) const
   {
+    using namespace desolin_internal;
     return Vector<T_element>(*new MatrixVectorMult<T_element>(this->getExpr(), right.getExpr()));
   }
 
   const Matrix transpose() const
   {
+    using namespace desolin_internal;
     return Matrix(*new MatrixTranspose<T_element>(this->getExpr()));
   }
 
   const Vector<T_element> trans_mult(const Vector<T_element>& right) const
   {
+    using namespace desolin_internal;
     return transpose()*right;
   }
 
-  ScalarElement<matrix, T_element> operator()(const int row, const int col) const
+  ScalarElement<desolin_internal::matrix, T_element> operator()(const int row, const int col) const
   {
+    using namespace desolin_internal;
     const ElementIndex<matrix> index(row, col);
     return ScalarElement<matrix, T_element>(*this, index);
   }
 
 protected:
-  Matrix(ExprNode<matrix, T_element>& expr) : Var<matrix, T_element>(expr)
+  Matrix(desolin_internal::ExprNode<desolin_internal::matrix, T_element>& expr) : desolin_internal::Var<desolin_internal::matrix, T_element>(expr)
   {
   }
 
-  virtual ExprNode<matrix, T_element>& createDefault() const
+  virtual desolin_internal::ExprNode<desolin_internal::matrix, T_element>& createDefault() const
   { 
     throw NullSizeError("Invalid null size matrix usage");
   }
   
-  virtual void internal_update(ExprNode<scalar, T_element>& previous, ExprNode<scalar, T_element>& next) const {}
-  virtual void internal_update(ExprNode<vector, T_element>& previous, ExprNode<vector, T_element>& next) const {}
-  virtual void internal_update(ExprNode<matrix, T_element>& previous, ExprNode<matrix, T_element>& next) const
+  virtual void internal_update(desolin_internal::ExprNode<desolin_internal::scalar, T_element>& previous, desolin_internal::ExprNode<desolin_internal::scalar, T_element>& next) const {}
+  virtual void internal_update(desolin_internal::ExprNode<desolin_internal::vector, T_element>& previous, desolin_internal::ExprNode<desolin_internal::vector, T_element>& next) const {}
+  virtual void internal_update(desolin_internal::ExprNode<desolin_internal::matrix, T_element>& previous, desolin_internal::ExprNode<desolin_internal::matrix, T_element>& next) const
   {
     if (&this->getExpr() == &previous)
     {
@@ -115,4 +129,5 @@ protected:
   }   
 };
 
+}
 #endif

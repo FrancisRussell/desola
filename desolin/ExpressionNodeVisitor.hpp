@@ -3,6 +3,9 @@
 
 #include <desolin/Desolin_fwd.hpp>
 
+namespace desolin_internal
+{
+
 template<typename T_element>
 class ExpressionNodeVisitor
 {
@@ -57,4 +60,5 @@ public:
   virtual ~ExpressionNodeTypeVisitor() {}
 };
 
+}
 #endif
