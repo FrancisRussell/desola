@@ -51,7 +51,7 @@ protected:
   {
   }
 
-  Var(ExprNode<expressionType, T_element>& e) : expr(&e)
+  Var(ExprNode<expressionType, T_element>* e) : expr(e)
   {
     if (expr != NULL)
       expr->registerRequiredBy(*this);
@@ -87,14 +87,14 @@ protected:
   {
     if (expr == NULL)
     {
-      ExprNode<expressionType, T_element>& e = createDefault();
-      expr = &e;
-      registerWith(e);
+      ExprNode<expressionType, T_element>* e = createDefault();
+      expr = e;
+      registerWith(*e);
     }
     return *expr;
   }
   
-  virtual  ExprNode<expressionType, T_element>& createDefault() const = 0;
+  virtual  ExprNode<expressionType, T_element>* createDefault() const = 0;
 };
 
 }
