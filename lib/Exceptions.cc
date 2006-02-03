@@ -2,7 +2,7 @@
 #include <stdexcept>
 #include <string>
 
-namespace desolin_internal
+namespace desolin
 {
 
 DesoLinLogicError::DesoLinLogicError(const std::string& message) : std::logic_error(message)
