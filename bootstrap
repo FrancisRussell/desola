@@ -1,5 +1,5 @@
 #! /bin/sh
 
-aclocal -I ./m4\
+aclocal \
 && automake-1.9 --gnu --add-missing --copy \
 && autoconf
