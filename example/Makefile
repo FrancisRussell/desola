@@ -7,7 +7,7 @@ test: test.o
 	$(CC) $^ $(LDFLAGS)  -o $@
 
 test.o:
-	$(CC) $(CCFLAGS) -c test.cc -o test.o
+	$(CC) $(CCFLAGS) -I../include -c test.cc -o test.o
 
 clean:
 	rm -f test.o test

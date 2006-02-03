@@ -3,8 +3,6 @@
 
 #include <string>
 #include <map>
-#include <cassert>
-#include <algorithm>
 #include <TaskGraph>
 
 namespace desolin_internal
@@ -16,11 +14,12 @@ private:
   ParameterHolder(const ParameterHolder&);
   ParameterHolder& operator=(const ParameterHolder&);
   std::map<std::string, void*> parameters;
-  
+ 
+  static void setParameter(tg::tuTaskGraph& taskGraphObject, const std::pair<std::string, void*>& parameterMapping);
+
 public:
   ParameterHolder();
   void addParameter(const std::string& name, void* value);
-  static void setParameter(tg::tuTaskGraph& taskGraphObject, const std::pair<std::string, void*>& parameterMapping);
   void setParameters(tg::tuTaskGraph& taskGraphObject) const;
 };
 

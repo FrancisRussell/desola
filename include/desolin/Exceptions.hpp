@@ -14,13 +14,14 @@ public:
 };
 
 
-class DesoLinRuntimeError
+class DesoLinRuntimeError : public std::runtime_error
 {
 public:
   DesoLinRuntimeError(const std::string& message); 
 };
 
 class NullSizeError : public DesoLinLogicError
+{
 public:
   NullSizeError(const std::string& message); 
 };
