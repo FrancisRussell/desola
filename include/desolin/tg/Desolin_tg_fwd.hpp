@@ -69,8 +69,6 @@ template<typename T_elementType> class TGVectorGen;
 template<typename T_elementType> class TGMatrixGen;
 }
 
-// These should be moved into a source directory and headers added if this
-// library stops being header only.
 #include <desolin/tg/NameGenerator.hpp>
 #include <desolin/tg/ParameterHolder.hpp>
 #include <desolin/tg/Exceptions.hpp>

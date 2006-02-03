@@ -3,7 +3,6 @@
 
 #include <string>
 #include <map>
-#include <boost/format.hpp>
 
 namespace desolin_internal
 {
@@ -15,14 +14,8 @@ private:
   std::map<const std::string, int> nameCount;
   
 public:
-  NameGenerator() : formatter("%s_%i")
-  {
-  }
-  
-  std::string getName(const std::string& prefix)
-  {
-    return (formatter % prefix % nameCount[prefix]++).str();
-  }
+  NameGenerator(); 
+  std::string getName(const std::string& prefix);
 };
 
 }

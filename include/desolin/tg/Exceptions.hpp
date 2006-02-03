@@ -4,12 +4,10 @@
 namespace desolin_internal
 {
 
-class TGInvalidOperationError : public DesoLinRuntimeError
+class TGInvalidOperationError
 {
 public:
-  TGInvalidOperationError(const std::string& error) : DesoLinRuntimeError(error) 
-  {
-  }
+  TGInvalidOperationError(const std::string& error); 
 };
 
 }

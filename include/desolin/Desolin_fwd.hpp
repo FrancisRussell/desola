@@ -90,8 +90,6 @@ template<typename T_element> class Scalar;
 template<desolin_internal::ExprType exprType, typename T_element> class ScalarElement;
 }
 
-// These should be moved into a source directory and headers added if this
-// library stops being header only.
 #include <desolin/Exceptions.hpp>
 
 #endif
