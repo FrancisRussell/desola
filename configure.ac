@@ -55,19 +55,5 @@ AC_CHECK_TYPES([ptrdiff_t])
 
 # Checks for library functions.
 AC_HEADER_STDC
-
-# Add Taskgraph
-AC_ARG_WITH([taskgraph-prefix],
-  AS_HELP_STRING([--with-taskgraph-prefix=PFX], [Prefix where TaskGraph is installed]),
-  [
-  if test -f "$withval/include/TaskGraph"; then
-    AC_SUBST(taskgraph_dir, "$withval")
-    CPPFLAGS="$CPPFLAGS -I$withval/include"
-  else  
-    AC_MSG_ERROR("$withval does not appear to be a TaskGraph source directory.")
-  fi
-  ],
-  AC_MSG_ERROR([Must specify TaskGraph directory with --with-taskgraph-prefix=PFX]))
-
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
