@@ -44,7 +44,7 @@ available_tags=" CXX F77"
 
 # ### BEGIN LIBTOOL CONFIG
 
-# Libtool was configured on host ray07:
+# Libtool was configured on host ray08:
 
 # Shell to use when invoking shell scripts.
 SHELL="/bin/sh"
@@ -6828,7 +6828,7 @@ build_old_libs=`case $build_libtool_libs in yes) $echo no;; *) $echo yes;; esac`
 # End:
 # ### BEGIN LIBTOOL TAG CONFIG: CXX
 
-# Libtool was configured on host ray07:
+# Libtool was configured on host ray08:
 
 # Shell to use when invoking shell scripts.
 SHELL="/bin/sh"
@@ -6869,7 +6869,7 @@ AR_FLAGS="cru"
 LTCC="gcc"
 
 # A language-specific compiler.
-CC="g++"
+CC="g++-3.4.3"
 
 # Is the compiler the GNU C compiler?
 with_gcc=yes
@@ -7130,7 +7130,7 @@ include_expsyms=""
 
 # ### BEGIN LIBTOOL TAG CONFIG: F77
 
-# Libtool was configured on host ray07:
+# Libtool was configured on host ray08:
 
 # Shell to use when invoking shell scripts.
 SHELL="/bin/sh"

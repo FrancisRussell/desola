@@ -4,14 +4,44 @@
 AC_PREREQ(2.59)
 AC_INIT([Desolin], [0.1], [fpr02@doc.ic.ac.uk])
 AC_CONFIG_SRCDIR([lib/Exceptions.cc])
-#AC_CONFIG_HEADER([config.h])
+AC_LANG_CPLUSPLUS
 AM_INIT_AUTOMAKE([subdir-objects])
 
 # Checks for programs.
 AC_PROG_CXX
 AC_PROG_LIBTOOL
 
+desolin_headers=$($srcdir/findheaders)
+AC_SUBST(DESOLIN_HEADERS, desolin_headers)
+
 # Checks for libraries.
+
+AC_ARG_WITH([taskgraph-prefix],
+            AC_HELP_STRING([--with-taskgraph-prefix=DIR], [Use the TaskGraph installation in dir]),
+            [
+              if test -f "$withval/include/TaskGraph"; then
+                CPPFLAGS="$CPPFLAGS -I$withval/include"
+                LDFLAGS="$LDFLAGS -R$withval/lib -L$withval/lib"
+              else
+                AC_MSG_ERROR("$withval does not appear to be a prefix for a TaskGraph installation")
+              fi
+            ]
+            )
+
+AC_ARG_WITH([boost-prefix],
+           AC_HELP_STRING([--with-boost-prefix=DIR], [Use the Boost installation in dir]),
+           [
+             if test -f "$withval/include/boost/version.hpp"; then
+               CPPFLAGS="$CPPFLAGS -I$withval/include"
+               LDFLAGS="$LDFLAGS -R$withval/lib -L$withval/lib"
+             else
+               AC_MSG_ERROR("$withval does not appear to be a prefix for a TaskGraph installation")
+             fi
+           ]
+           )
+
+AC_TRY_COMPILE([@%:@include <TaskGraph>], [], AC_MSG_NOTICE([Found TaskGraph]), AC_MSG_FAILURE([Failed to find TaskGraph]))
+AC_TRY_COMPILE([@%:@include <boost/version.hpp>], [], AC_MSG_NOTICE([Found Boost]), AC_MSG_FAILURE([Failed to find Boost]))
 
 # Checks for header files.
 
