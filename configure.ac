@@ -17,7 +17,7 @@ AC_SUBST(DESOLIN_HEADERS, desolin_headers)
 # Checks for libraries.
 
 AC_ARG_WITH([taskgraph-prefix],
-            AC_HELP_STRING([--with-taskgraph-prefix=DIR], [Use the TaskGraph installation in dir]),
+            AC_HELP_STRING([--with-taskgraph-prefix=PFX], [Use the TaskGraph installation in PFX]),
             [
               if test -f "$withval/include/TaskGraph"; then
                 CPPFLAGS="$CPPFLAGS -I$withval/include"
@@ -29,13 +29,13 @@ AC_ARG_WITH([taskgraph-prefix],
             )
 
 AC_ARG_WITH([boost-prefix],
-           AC_HELP_STRING([--with-boost-prefix=DIR], [Use the Boost installation in dir]),
+           AC_HELP_STRING([--with-boost-prefix=PFX], [Use the Boost installation in PFX]),
            [
              if test -f "$withval/include/boost/version.hpp"; then
                CPPFLAGS="$CPPFLAGS -I$withval/include"
                LDFLAGS="$LDFLAGS -R$withval/lib -L$withval/lib"
              else
-               AC_MSG_ERROR("$withval does not appear to be a prefix for a TaskGraph installation")
+               AC_MSG_ERROR("$withval does not appear to be a prefix for a Boost installation")
              fi
            ]
            )
@@ -44,7 +44,6 @@ AC_TRY_COMPILE([@%:@include <TaskGraph>], [], AC_MSG_NOTICE([Found TaskGraph]), 
 AC_TRY_COMPILE([@%:@include <boost/version.hpp>], [], AC_MSG_NOTICE([Found Boost]), AC_MSG_FAILURE([Failed to find Boost]))
 
 # Checks for header files.
-AC_CHECK_HEADER([boost/version.hpp], AC_MSG_NOTICE([Boost detected.]), AC_MSG_ERROR([Unable to locate Boost libraries. These are required in order to compile.]))
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
