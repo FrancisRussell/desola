@@ -24,7 +24,7 @@ public:
   {
   }
 
-  Matrix(harwell_boeing_stream<T_element>& stream)
+  Matrix(harwell_boeing_stream<T_element>& stream) :  desolin_internal::Var<desolin_internal::matrix, T_element>(new desolin_internal::Literal<desolin_internal::matrix, T_element>(new desolin_internal::ConventionalMatrix<T_element>(stream)))
   {
   }
 
