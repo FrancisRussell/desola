@@ -33,6 +33,7 @@
 
 #include <desolin/tg/Desolin_tg.hpp>
 
-#include <desolin/harwell-boeing/mtl_harwell_boeing_stream.hpp>
+#include <desolin/file-access/mtl_harwell_boeing_stream.hpp>
+#include <desolin/file-access/mtl_matrix_market_stream.hpp>
 
 #endif

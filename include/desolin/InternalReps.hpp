@@ -182,7 +182,8 @@ public:
   {
   }
 
-  ConventionalMatrix(harwell_boeing_stream<T_element>& stream) : InternalMatrix<T_element>(true, stream.nrows(), stream.ncols()), value(stream.nrows()*stream.ncols())
+  template<typename StreamType>
+  ConventionalMatrix(StreamType& stream) : InternalMatrix<T_element>(true, stream.nrows(), stream.ncols()), value(stream.nrows()*stream.ncols())
   {
     while(!stream.eof())
     {
