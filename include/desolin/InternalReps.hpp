@@ -184,12 +184,11 @@ public:
 
   ConventionalMatrix(harwell_boeing_stream<T_element>& stream) : InternalMatrix<T_element>(true, stream.nrows(), stream.ncols()), value(stream.nrows()*stream.ncols())
   {
-    for(int row=0; row<this->getRowCount(); ++row)
+    while(!stream.eof())
     {
-      for(int col=0; col<this->getColCount(); ++col)
-      {
-        stream >> value[this->getRowCount()*col + row];
-      }
+        entry2<double> entry;
+        stream >> entry;
+	value[this->getRowCount()*entry.row + entry.col] = entry.value;
     }
   }
   

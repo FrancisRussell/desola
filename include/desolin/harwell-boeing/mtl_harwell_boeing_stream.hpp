@@ -15,6 +15,7 @@
 
 #include <stdlib.h>
 #include <cassert>
+#include <iostream>
 #include <desolin/harwell-boeing/mtl_complex.hpp>
 #include <desolin/harwell-boeing/iohb.h>
 #include <desolin/harwell-boeing/mtl_entry.hpp>

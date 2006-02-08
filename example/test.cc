@@ -21,4 +21,7 @@ int main()
   std::cout << "m3(1,1) = " << m3 << q << std::endl;
   std::vector< Scalar<double> > hello;
   hello.push_back(m3(1,1) = c);
+
+  harwell_boeing_stream<double> stream("./bcsstk14.rsa");
+  Matrix<double> hb(stream);
 }
