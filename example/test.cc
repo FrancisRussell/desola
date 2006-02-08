@@ -22,6 +22,8 @@ int main()
   std::vector< Scalar<double> > hello;
   hello.push_back(m3(1,1) = c);
 
-  harwell_boeing_stream<double> stream("./bcsstk14.rsa");
-  Matrix<double> hb(stream);
+  harwell_boeing_stream<double> hbstream("./bcsstk14.rsa");
+  Matrix<double> hb(hbstream);
+
+  matrix_market_stream<double> mmstream("./qc324.mtx");
 }
