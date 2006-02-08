@@ -10,9 +10,17 @@ template<typename T_element>
 class Vector : public desolin_internal::Var<desolin_internal::vector, T_element>
 {
 public:
+  // Typedefs for ITL
+  typedef Scalar<T_element> value_type;
+  typedef int size_type;
+
   static const desolin_internal::ExprType expressionType = desolin_internal::vector;
     
   Vector()
+  {
+  }
+ 
+  Vector(const int rows) : desolin_internal::Var<desolin_internal::vector, T_element>(new desolin_internal::Literal<desolin_internal::vector, T_element>(new desolin_internal::ConventionalVector<T_element>(rows, 0)))
   {
   }
   
@@ -33,7 +41,12 @@ public:
     return *this;
   }
 
-  const int numRows() const
+  void resize(const int rows)
+  {
+    setExpr(new desolin_internal::ConventionalVector<T_element>(rows, 0));
+  }
+
+  const inline int numRows() const
   {
     return this->getExpr().getRowCount();
   }
@@ -69,7 +82,7 @@ public:
     return Vector(new ScalarPiecewise<vector, T_element>(divide, this->getExpr(), right.getExpr()));
   }
 	 
-  const Vector dot(const Vector& right) const
+  const Scalar<T_element> dot(const Vector& right) const
   {
     using namespace desolin_internal;
     return Scalar<T_element>(new VectorDot<T_element>(this->getExpr(), right.getExpr()));

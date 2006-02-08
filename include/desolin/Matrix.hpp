@@ -10,6 +10,10 @@ template<typename T_element>
 class Matrix : public desolin_internal::Var<desolin_internal::matrix, T_element>
 {
 public:
+  // Typedefs for ITL
+  typedef Scalar<T_element> value_type;
+  typedef int size_type;
+	
   static const desolin_internal::ExprType expressionType = desolin_internal::matrix;
     
   Matrix()

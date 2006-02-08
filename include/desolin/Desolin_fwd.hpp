@@ -27,6 +27,12 @@ enum ScalarPiecewiseOp
   assign
 };
 
+enum PiecewiseOp
+{
+  negate,
+  abs
+};
+
 // Common
 template<ExprType exprType> class ElementIndex;
 template<ExprType exprType, typename T_element> struct ExprTraits;

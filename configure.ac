@@ -55,5 +55,6 @@ AC_HEADER_STDC
 AC_CONFIG_FILES([Makefile
                  include/Makefile
 		 lib/Makefile
-		 example/Makefile])
+		 example/Makefile
+		 itl-tests/Makefile])
 AC_OUTPUT
