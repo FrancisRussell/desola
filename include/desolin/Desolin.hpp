@@ -32,4 +32,7 @@
 #include <desolin/Printing.hpp>
 
 #include <desolin/tg/Desolin_tg.hpp>
+
+#include <desolin/harwell-boeing/mtl_harwell_boeing_stream.hpp>
+
 #endif

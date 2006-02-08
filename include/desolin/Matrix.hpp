@@ -24,6 +24,10 @@ public:
   {
   }
 
+  Matrix(harwell_boeing_stream<T_element>& stream)
+  {
+  }
+
   const int numRows() const
   {
     return this->getExpr().getRowCount();

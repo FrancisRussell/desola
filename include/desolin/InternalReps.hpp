@@ -182,6 +182,17 @@ public:
   {
   }
 
+  ConventionalMatrix(harwell_boeing_stream<T_element>& stream) : InternalMatrix<T_element>(true, stream.nrows(), stream.ncols()), value(stream.nrows()*stream.ncols())
+  {
+    for(int row=0; row<this->getRowCount(); ++row)
+    {
+      for(int col=0; col<this->getColCount(); ++col)
+      {
+        stream >> value[this->getRowCount()*col + row];
+      }
+    }
+  }
+  
   virtual void allocate()
   {
     if(!this->allocated)

@@ -88,8 +88,7 @@ template<typename T_element> class Vector;
 template<typename T_element> class Matrix;
 template<typename T_element> class Scalar;
 template<desolin_internal::ExprType exprType, typename T_element> class ScalarElement;
+template<typename T> class harwell_boeing_stream;
 }
-
-#include <desolin/Exceptions.hpp>
 
 #endif

@@ -6,13 +6,11 @@ AC_INIT([Desolin], [0.1], [fpr02@doc.ic.ac.uk])
 AC_CONFIG_SRCDIR([lib/Exceptions.cc])
 AC_LANG_CPLUSPLUS
 AM_INIT_AUTOMAKE([subdir-objects])
+AM_PROG_CC_C_O
 
 # Checks for programs.
 AC_PROG_CXX
 AC_PROG_LIBTOOL
-
-desolin_headers=$($srcdir/findheaders)
-AC_SUBST(DESOLIN_HEADERS, desolin_headers)
 
 # Checks for libraries.
 
@@ -54,5 +52,8 @@ AC_CHECK_TYPES([ptrdiff_t])
 
 # Checks for library functions.
 AC_HEADER_STDC
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile
+                 include/Makefile
+		 lib/Makefile
+		 example/Makefile])
 AC_OUTPUT
