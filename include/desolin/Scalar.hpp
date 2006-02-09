@@ -11,6 +11,9 @@ template<typename T_element>
 class Scalar : public desolin_internal::Var<desolin_internal::scalar, T_element>
 {
 public:
+  friend class Matrix<T_element>;
+  friend class Vector<T_element>;
+
   static const desolin_internal::ExprType expressionType = desolin_internal::scalar;
   
   Scalar()
@@ -98,7 +101,7 @@ public:
   }
     
 protected:
-  Scalar(desolin_internal::ExprNode<desolin_internal::scalar, T_element>* expr) : desolin_internal::Var<desolin_internal::scalar, T_element>(expr)
+  explicit Scalar(desolin_internal::ExprNode<desolin_internal::scalar, T_element>* expr) : desolin_internal::Var<desolin_internal::scalar, T_element>(expr)
   {
   }
 

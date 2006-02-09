@@ -12,6 +12,7 @@ int main()
   c = c+c;
   Vector<double> q(5, 4);
   Vector<double> r = q*c;
+  std::cout << r.norm() << std::endl;
 
   Matrix<double> m1(5,4, 0);
   Matrix<double> m2(4,7, 0);

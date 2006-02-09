@@ -10,6 +10,9 @@ template<typename T_element>
 class Vector : public desolin_internal::Var<desolin_internal::vector, T_element>
 {
 public:
+  friend class Scalar<T_element>;
+  friend class Matrix<T_element>;
+	  
   // Typedefs for ITL
   typedef Scalar<T_element> value_type;
   typedef int size_type;
@@ -20,7 +23,7 @@ public:
   {
   }
  
-  Vector(const int rows) : desolin_internal::Var<desolin_internal::vector, T_element>(new desolin_internal::Literal<desolin_internal::vector, T_element>(new desolin_internal::ConventionalVector<T_element>(rows, 0)))
+  explicit Vector(const int rows) : desolin_internal::Var<desolin_internal::vector, T_element>(new desolin_internal::Literal<desolin_internal::vector, T_element>(new desolin_internal::ConventionalVector<T_element>(rows, 0)))
   {
   }
   
@@ -108,7 +111,7 @@ public:
   }
    
 protected:
-  Vector(desolin_internal::ExprNode<desolin_internal::vector, T_element>* expr) : desolin_internal::Var<desolin_internal::vector, T_element>(expr)
+  explicit Vector(desolin_internal::ExprNode<desolin_internal::vector, T_element>* expr) : desolin_internal::Var<desolin_internal::vector, T_element>(expr)
   {
   }
   

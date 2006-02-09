@@ -35,15 +35,9 @@ protected:
 template<ExprType expressionType, typename T_element>
 class Var : public Variable<T_element>
 {
-protected:
-  friend class Scalar<T_element>;
-  friend class Matrix<T_element>;
-  friend class Vector<T_element>;
-
-  friend class ScalarElement<vector, T_element>;
-  friend class ScalarElement<matrix, T_element>;
-
 private:
+  friend class ScalarElement<vector, T_element>;
+  friend class ScalarElement<matrix, T_element>;	  
   mutable ExprNode<expressionType, T_element>* expr;
     
 protected:

@@ -10,6 +10,9 @@ template<typename T_element>
 class Matrix : public desolin_internal::Var<desolin_internal::matrix, T_element>
 {
 public:
+  friend class Scalar<T_element>;
+  friend class Vector<T_element>;
+	  
   // Typedefs for ITL
   typedef Scalar<T_element> value_type;
   typedef int size_type;
@@ -28,11 +31,11 @@ public:
   {
   }
 
-  Matrix(harwell_boeing_stream<T_element>& stream) : desolin_internal::Var<desolin_internal::matrix, T_element>(new desolin_internal::Literal<desolin_internal::matrix, T_element>(new desolin_internal::ConventionalMatrix<T_element>(stream)))
+  explicit Matrix(harwell_boeing_stream<T_element>& stream) : desolin_internal::Var<desolin_internal::matrix, T_element>(new desolin_internal::Literal<desolin_internal::matrix, T_element>(new desolin_internal::ConventionalMatrix<T_element>(stream)))
   {
   }
 
-  Matrix(matrix_market_stream<T_element>& stream) : desolin_internal::Var<desolin_internal::matrix, T_element>(new desolin_internal::Literal<desolin_internal::matrix, T_element>(new desolin_internal::ConventionalMatrix<T_element>(stream)))
+  explicit Matrix(matrix_market_stream<T_element>& stream) : desolin_internal::Var<desolin_internal::matrix, T_element>(new desolin_internal::Literal<desolin_internal::matrix, T_element>(new desolin_internal::ConventionalMatrix<T_element>(stream)))
   {
   }
 
@@ -118,7 +121,7 @@ public:
   }
 
 protected:
-  Matrix(desolin_internal::ExprNode<desolin_internal::matrix, T_element>* expr) : desolin_internal::Var<desolin_internal::matrix, T_element>(expr)
+  explicit Matrix(desolin_internal::ExprNode<desolin_internal::matrix, T_element>* expr) : desolin_internal::Var<desolin_internal::matrix, T_element>(expr)
   {
   }
 
