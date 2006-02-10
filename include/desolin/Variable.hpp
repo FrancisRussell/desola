@@ -45,7 +45,7 @@ protected:
   {
   }
 
-  Var(ExprNode<expressionType, T_element>* e) : expr(e)
+  Var(ExprNode<expressionType, T_element>& e) : expr(&e)
   {
     if (expr != NULL)
       expr->registerRequiredBy(*this);
