@@ -50,6 +50,12 @@ public:
     return Scalar(*new Pairwise<scalar, T_element>(sub, this->getExpr(), right.getExpr()));
   }
 
+  const Scalar operator-() const
+  {
+    using namespace desolin_internal;
+    return Scalar(*new Negate<scalar, T_element>(this->getExpr()));
+  }
+
   template<typename T_rightType>
   const T_rightType operator*(const T_rightType& right) const
   {
@@ -62,6 +68,12 @@ public:
   {
     using namespace desolin_internal;
     return T_rightType(*new ScalarPiecewise<T_rightType::expressionType, T_element>(divide, this->getExpr(), right.getExpr()));
+  }
+
+  const Scalar abs() const
+  {
+    using namespace desolin_internal;
+    return Scalar(*new Absolute<T_element>(this->getExpr()));
   }
 
   bool operator==(const Scalar& right) const
@@ -153,5 +165,14 @@ public:
   }
 };
 
+}
+
+namespace std
+{
+  template<typename T_element>
+  const desolin::Scalar<T_element> abs(const desolin::Scalar<T_element>& s)
+  {
+    return s.abs();
+  }
 }
 #endif

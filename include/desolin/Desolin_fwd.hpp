@@ -27,12 +27,6 @@ enum ScalarPiecewiseOp
   assign
 };
 
-enum PiecewiseOp
-{
-  negate,
-  abs
-};
-
 // Common
 template<ExprType exprType> class ElementIndex;
 template<ExprType exprType, typename T_element> struct ExprTraits;
@@ -54,6 +48,8 @@ template<typename T_element> class VectorDot;
 template<typename T_element> class VectorCross;
 template<typename T_element> class VectorNorm;
 template<typename T_element> class MatrixTranspose;
+template<ExprType exprType, typename T_element> class Negate;
+template<typename T_element> class Absolute;
 
 // Expression Tree Visitors
 template<typename T_element> class ExpressionNodeVisitor;

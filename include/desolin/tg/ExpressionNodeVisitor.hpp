@@ -34,7 +34,13 @@ public:
  virtual void visit(TGScalarPiecewise<tg_scalar, T_element>& e)=0;
  virtual void visit(TGScalarPiecewise<tg_vector, T_element>& e)=0;
  virtual void visit(TGScalarPiecewise<tg_matrix, T_element>& e)=0;
- 
+
+ virtual void visit(TGNegate<tg_scalar, T_element>& e)=0;
+ virtual void visit(TGNegate<tg_vector, T_element>& e)=0;
+ virtual void visit(TGNegate<tg_matrix, T_element>& e)=0;
+
+ virtual void visit(TGAbsolute<T_element>& e)=0;
+  
  virtual ~TGExpressionNodeVisitor() {}
 };
 

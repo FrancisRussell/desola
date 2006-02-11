@@ -4,6 +4,8 @@
 #include <desolin/tg/Exceptions.hpp>
 #include <desolin/tg/Traits.hpp>
 #include <desolin/tg/ExpressionNode.hpp>
+#include <desolin/tg/BinOp.hpp>
+#include <desolin/tg/UnOp.hpp>
 #include <desolin/tg/Elemental.hpp>
 #include <desolin/tg/Literal.hpp>
 #include <desolin/tg/MatrixVector.hpp>

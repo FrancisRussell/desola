@@ -33,6 +33,8 @@ template<TGExprType exprType> class TGElementIndex;
 
 // TaskGraph Evaluator Expression Tree
 template<typename T_element> class TGExpressionNode;
+template<TGExprType resultType, TGExprType leftType, TGExprType rightType, typename T_element> class TGBinOp;
+template<TGExprType resultType, TGExprType exprType, typename T_element> class TGUnOp;
 template<typename T_element> class TGExpressionNodeVisitor;
 template<TGExprType exprType, typename T_element> class TGElementGet;
 template<TGExprType exprType, typename T_element> class TGElementSet;
@@ -45,6 +47,8 @@ template<typename T_element> class TGVectorNorm;
 template<typename T_element> class TGMatrixTranspose;
 template<TGExprType exprType, typename T_element> class TGPairwise;
 template<TGExprType exprType, typename T_element> class TGScalarPiecewise;
+template<TGExprType exprType, typename T_element> class TGNegate;
+template<typename T_element> class TGAbsolute;
 
 // TaskGraph Evaluator Expression Tree Evaluation
 template<typename T_element> class TGCodeGenerator;

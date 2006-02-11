@@ -25,7 +25,7 @@ public:
     return index;
   }
 
-  void accept(TGExpressionNodeVisitor<T_element>& v)
+  virtual void accept(TGExpressionNodeVisitor<T_element>& v)
   {
     v.visit(*this);
   }
@@ -50,7 +50,7 @@ public:
     return index;
   }
 
-  void accept(TGExpressionNodeVisitor<T_element>& v)
+  virtual void accept(TGExpressionNodeVisitor<T_element>& v)
   {
     v.visit(*this);
   }

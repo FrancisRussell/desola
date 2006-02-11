@@ -317,6 +317,58 @@ public:
     }		    
   }
 
+  virtual void visit(TGNegate<tg_scalar, T_element>& e)
+  {
+    using namespace tg;
+
+    boost::shared_ptr< TGScalar<T_element> > result(e.getInternal());
+    boost::shared_ptr< TGScalar<T_element> > operand(e.getOperand().getInternal());
+
+    result->setExpression(operand->getExpression().negate()); 
+  }
+  
+  virtual void visit(TGNegate<tg_vector, T_element>& e)
+  {
+    using namespace tg;
+
+    boost::shared_ptr< TGVector<T_element> > result(e.getInternal());
+    boost::shared_ptr< TGVector<T_element> > operand(e.getOperand().getInternal());
+
+    tVarNamed(int, i, getIndexName());
+    tFor(i, 0, result->getRows()-1)
+    {
+      result->setExpression(i, operand->getExpression(i).negate());
+    }
+  }
+  
+  virtual void visit(TGNegate<tg_matrix, T_element>& e)
+  {
+    using namespace tg;
+
+    boost::shared_ptr< TGMatrix<T_element> > result(e.getInternal());
+    boost::shared_ptr< TGMatrix<T_element> > operand(e.getOperand().getInternal());
+
+    tVarNamed(int, i, getIndexName());
+    tVarNamed(int, j, getIndexName());
+    tFor(i, 0, result->getRows()-1)
+    {
+      tFor(j, 0, result->getCols()-1)
+      {
+        result->setExpression(i, j, operand->getExpression(i, j).negate());
+      }
+    }
+  }
+
+  virtual void visit(TGAbsolute<T_element>& e)
+  {
+    using namespace tg;
+
+    boost::shared_ptr< TGScalar<T_element> > result(e.getInternal());
+    boost::shared_ptr< TGScalar<T_element> > operand(e.getOperand().getInternal());
+
+    result->setExpression(operand->getExpression().abs());
+  }
+
 private:
   static inline TGScalarExpr<T_element> performOp(TGPairwiseOp op, const TGScalarExpr<T_element>& left, const TGScalarExpr<T_element>& right)
   {

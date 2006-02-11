@@ -17,7 +17,7 @@ private:
     return l.getDims();
   }
 public:  
-  Pairwise(PairwiseOp op, ExprNode<exprType, T_element>& l, ExprNode<exprType, T_element>& r) : BinOp<exprType, exprType, exprType, T_element>(getDims(l, r), l, r), operation(op)
+  Pairwise(const PairwiseOp op, ExprNode<exprType, T_element>& l, ExprNode<exprType, T_element>& r) : BinOp<exprType, exprType, exprType, T_element>(getDims(l, r), l, r), operation(op)
   {
   }
 

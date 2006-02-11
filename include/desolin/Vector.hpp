@@ -73,6 +73,12 @@ public:
     return Vector(*new Pairwise<vector, T_element>(sub, this->getExpr(), right.getExpr()));
   }
 
+  const Vector operator-() const
+  {
+    using namespace desolin_internal;
+    return Vector(*new Negate<vector, T_element>(this->getExpr()));
+  }  
+
   const Vector operator*(const Scalar<T_element>& right) const
   {
     using namespace desolin_internal;

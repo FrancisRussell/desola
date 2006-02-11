@@ -62,6 +62,7 @@
 using namespace itl;
 
 typedef  double Type;
+typedef desolin::Scalar<Type> Scalar;
 typedef desolin::Matrix<Type> Matrix;
 typedef desolin::Vector<Type> Vector;
 
@@ -89,7 +90,7 @@ int main (int argc, char* argv[])
   
   //inomplete cholesky preconditioner
   identity_preconditioner precond;
-  noisy_iteration<double> iter(b, max_iter, 1e-6);
+  noisy_iteration<Scalar> iter(b, max_iter, 1e-6);
   cg(A, x, b, precond(), iter);
   //end
 

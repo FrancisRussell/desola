@@ -34,7 +34,13 @@ public:
   virtual void visit(Literal<scalar, T_element>& e)= 0;
   virtual void visit(Literal<vector, T_element>& e)= 0;
   virtual void visit(Literal<matrix, T_element>& e)= 0;
-  
+
+  virtual void visit(Negate<scalar, T_element>& e)= 0;
+  virtual void visit(Negate<vector, T_element>& e)= 0;
+  virtual void visit(Negate<matrix, T_element>& e)= 0;
+
+  virtual void visit(Absolute<T_element>& e)= 0;
+      
   virtual ~ExpressionNodeVisitor() {}
 };
 

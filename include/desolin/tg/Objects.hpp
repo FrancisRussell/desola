@@ -97,6 +97,16 @@ public:
   {
     return TGScalarExpr(tSqrt(expr));
   }
+
+  inline const TGScalarExpr abs() const
+  {
+    return TGScalarExpr(tAbs(expr));
+  }
+
+  inline const TGScalarExpr negate() const
+  {
+    return TGScalarExpr(-expr);
+  }
 };
 
 template<typename T_elementType>

@@ -76,6 +76,13 @@ public:
     using namespace desolin_internal;
     return Matrix(*new Pairwise<matrix, T_element>(sub, this->getExpr(), right.getExpr()));
   }
+
+  const Matrix operator-() const
+  {
+    using namespace desolin_internal;
+    return Matrix(*new Negate<matrix, T_element>(this->getExpr()));
+  }
+  
     
   const Matrix operator*(const Scalar<T_element>& right) const
   {

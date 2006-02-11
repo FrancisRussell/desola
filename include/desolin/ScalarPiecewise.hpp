@@ -13,7 +13,7 @@ private:
   const ScalarPiecewiseOp operation;
 
 public:  
-  ScalarPiecewise(ScalarPiecewiseOp op, ExprNode<exprType, T_element>& o, ExprNode<scalar, T_element>& s) : BinOp<exprType, exprType, scalar, T_element>(o.getDims(), o, s), operation(op)
+  ScalarPiecewise(const ScalarPiecewiseOp op, ExprNode<exprType, T_element>& o, ExprNode<scalar, T_element>& s) : BinOp<exprType, exprType, scalar, T_element>(o.getDims(), o, s), operation(op)
   {
   }
 

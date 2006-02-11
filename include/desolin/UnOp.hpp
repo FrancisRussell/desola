@@ -1,6 +1,7 @@
 #ifndef DESOLIN_UNOP_HPP
 #define DESOLIN_UNOP_HPP
 
+#include <cmath>
 #include <boost/array.hpp>
 #include <boost/cast.hpp>
 #include <desolin/Desolin_fwd.hpp>
@@ -49,6 +50,44 @@ public:
   {
     updateImpl(previous, next);
   }       
+};
+
+template<ExprType exprType, typename T_element>
+class Negate : public UnOp<exprType, exprType, T_element>
+{
+public:
+  Negate(ExprNode<exprType, T_element>& e) : UnOp<exprType, exprType, T_element>(e.getDims(), e)
+  {
+  }
+
+  virtual void accept(ExpressionNodeVisitor<T_element>& visitor)
+  {
+    visitor.visit(*this);
+  }
+};
+
+template<typename T_element>
+class Absolute : public UnOp<scalar, scalar, T_element>
+{
+public:
+  Absolute(ExprNode<scalar, T_element>& e) : UnOp<scalar, scalar, T_element>(e.getDims(), e)
+  {
+  }
+
+  virtual void accept(ExpressionNodeVisitor<T_element>& visitor)
+  {
+    visitor.visit(*this);
+  }
+
+  virtual void internal_evaluate()
+  {
+    this->getOperand().evaluate();
+  }
+
+  virtual T_element getElementValue()
+  {
+    return std::abs(this->getOperand().getElementValue());
+  }
 };
 
 }

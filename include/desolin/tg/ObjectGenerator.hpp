@@ -201,6 +201,34 @@ public:
     TGExprNode<tg_scalar, T_element>& right = scalarHandler.getTGExprNode(e.getRight());
     matrixHandler.handleNode(e, new TGScalarPiecewise<tg_matrix, T_element>(internal, op, left, right));
   }
+
+  void visit(Negate<scalar, T_element>& e)
+  {
+    TGScalar<T_element>* internal = scalarHandler.createTGRep(e); 
+    TGExprNode<tg_scalar, T_element>& operand = scalarHandler.getTGExprNode(e.getOperand());
+    scalarHandler.handleNode(e, new TGNegate<tg_scalar, T_element>(internal, operand));
+  }
+
+  void visit(Negate<vector, T_element>& e)
+  {
+    TGVector<T_element>* internal = vectorHandler.createTGRep(e);
+    TGExprNode<tg_vector, T_element>& operand = vectorHandler.getTGExprNode(e.getOperand());
+    vectorHandler.handleNode(e, new TGNegate<tg_vector, T_element>(internal, operand));
+  }
+
+  void visit(Negate<matrix, T_element>& e)
+  {
+    TGMatrix<T_element>* internal = matrixHandler.createTGRep(e);
+    TGExprNode<tg_matrix, T_element>& operand = matrixHandler.getTGExprNode(e.getOperand());
+    matrixHandler.handleNode(e, new TGNegate<tg_matrix, T_element>(internal, operand));
+  }
+
+  void visit(Absolute<T_element>& e)
+  {
+    TGScalar<T_element>* internal = scalarHandler.createTGRep(e);
+    TGExprNode<tg_scalar, T_element>& operand = scalarHandler.getTGExprNode(e.getOperand());
+    scalarHandler.handleNode(e, new TGAbsolute<T_element>(internal, operand));
+  }
 };
 
 }

@@ -105,58 +105,5 @@ public:
   }
 };
 
-template<TGExprType resultType, TGExprType leftType, TGExprType rightType, typename T_element>
-class TGBinOp : public TGExprNode<resultType, T_element>
-{
-private:
-  TGExprNode<leftType, T_element>* left;
-  TGExprNode<rightType, T_element>* right;
-public:
-  TGBinOp(typename TGInternalType<resultType, T_element>::type* internal, TGExprNode<leftType, T_element>& l, TGExprNode<rightType, T_element>& r) : TGExprNode<resultType, T_element>(internal), left(&l), right(&r)
-  {
-  }
-
-  inline TGExprNode<leftType, T_element>& getLeft()
-  {
-    return *left;
-  }
-
-  inline TGExprNode<rightType, T_element>& getRight()
-  {
-    return *right;
-  }
-
-  virtual std::set<TGExpressionNode<T_element>*> getDependencies() const
-  {
-    std::set<TGExpressionNode<T_element>*> dependencies;
-    dependencies.insert(left);
-    dependencies.insert(right);
-    return dependencies;
-  }
-};
-
-template<TGExprType resultType, TGExprType exprType, typename T_element>
-class TGUnOp : public TGExprNode<resultType, T_element>
-{
-private:
-  TGExprNode<exprType, T_element>* expr;
-public:
-  TGUnOp(typename TGInternalType<resultType, T_element>::type* internal, TGExprNode<exprType, T_element>& e) : TGExprNode<resultType, T_element>(internal), expr(&e)
-  {
-  }
-
-  inline TGExprNode<exprType, T_element>& getOperand()
-  {
-    return *expr;
-  }
-
-  virtual std::set<TGExpressionNode<T_element>*> getDependencies() const
-  {
-    std::set<TGExpressionNode<T_element>*> dependencies;
-    dependencies.insert(expr);
-    return dependencies;
-  }
-};
-
 }
 #endif
