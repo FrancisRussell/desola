@@ -1,6 +1,7 @@
 #ifndef DESOLIN_EVALUATION_STRATEGY_HPP
 #define DESOLIN_EVALUATION_STRATEGY_HPP
 
+#include <iostream>
 #include <map>
 #include <set>
 #include <vector>
@@ -155,12 +156,8 @@ public:
       for(typename std::vector< boost::shared_ptr< Evaluator<T_element> > >::iterator evaluatorIterator = evaluators.begin(); evaluatorIterator != evaluators.end(); ++evaluatorIterator)
       {
         (*evaluatorIterator)->evaluate();
-	const std::set< ExpressionNode<T_element>* > evaluatedNodes(claimedMap[evaluatorIterator->get()]);
-	for(typename std::set<ExpressionNode<T_element>*>::iterator evaluatedIterator = evaluatedNodes.begin(); evaluatedIterator != evaluatedNodes.end(); ++evaluatedIterator)
-	{
-          (*evaluatedIterator)->accept(replacer);
-        }
       }
+      expressionGraph.accept(replacer);
     }
   }
 

@@ -17,6 +17,18 @@ class ExpressionGraph
 private:
   std::vector< ExpressionNode<T_elementType>* >  exprVector;
 
+  template<typename VisitorType>
+  static void applyVisitor(ExpressionNode<T_elementType>* node, VisitorType& visitor)
+  {
+    node->accept(visitor);
+  }
+
+  template<typename VisitorType>
+  inline void internalAccept(VisitorType& visitor)
+  {
+    std::for_each(exprVector.begin(), exprVector.end(), boost::bind(applyVisitor<VisitorType>, _1, boost::ref(visitor)));
+  }
+  
 public:
   template<typename InputIterator>
   ExpressionGraph(const InputIterator& start, const InputIterator& end)
@@ -35,18 +47,6 @@ public:
     return exprVector.size();
   }
 
-  template<typename VisitorType>
-  static void applyVisitor(ExpressionNode<T_elementType>* node, VisitorType& visitor)
-  {
-    node->accept(visitor);
-  }
-  
-  template<typename VisitorType>
-  inline void internalAccept(VisitorType& visitor)
-  {
-    std::for_each(exprVector.begin(), exprVector.end(), boost::bind(applyVisitor<VisitorType>, _1, boost::ref(visitor)));
-  }
-  
   void accept(ExpressionNodeVisitor<T_elementType>& visitor)
   {
     internalAccept(visitor);
