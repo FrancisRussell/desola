@@ -58,27 +58,19 @@
 //
 //===========================================================================
 
-#include "mtl/matrix.h"
-#include "mtl/mtl.h"
-#include "mtl/utils.h"
-#include "mtl/harwell_boeing_stream.h"
-
-#include <itl/interface/mtl.h>
-
-#include "itl/preconditioner/ilu.h"
+#include <desolin/Desolin.hpp>
+#include <desolin/itl_interface.hpp>
 #include "itl/krylov/tfqmr.h"
 
 /*
-  In thsi example, we show how to use QMR algorithm
+  In this example, we show how to use QMR algorithm
 */
-using namespace mtl;
 using namespace itl;
 
-typedef  double Type;
-
-typedef matrix< Type, rectangle<>, 
-	        array< compressed<> >, 
-                row_major >::type Matrix;
+typedef double Type;
+typedef desolin::Matrix<Type> Matrix;
+typedef desolin::Vector<Type> Vector;
+typedef desolin::Scalar<Type> Scalar;
 
 int main(int argc, char* argv[])
 {
@@ -92,29 +84,24 @@ int main(int argc, char* argv[])
     return 0;
   }
 
-  harwell_boeing_stream<Type> hbs(argv[1]);
+  desolin::harwell_boeing_stream<Type> hbs(argv[1]);
 
   int max_iter = 50;
-  //begin
   Matrix A(hbs);
-  //end
 
-  //begin
-  dense1D<Type> x(A.nrows(), Type(0));
-  dense1D<Type> b(A.ncols());
-  for (dense1D<Type>::iterator i=b.begin(); i!=b.end(); i++)
-    *i = 1.;
+  Vector x(A.numRows(), Type(0));
+  Vector b(A.numCols(), Type(1.));
 
-  //ILU preconditioner
-  ILU<Matrix> precond(A);
+  identity_preconditioner precond;
+  
   //iteration
-  noisy_iteration<double> iter(b, max_iter, 1e-6);
+  noisy_iteration<Scalar> iter(b, max_iter, 1e-6);
   //qmr algorithm
   tfqmr(A, x, b, precond.left(), precond.right(), iter);
   //end
 
   //verify the result
-  dense1D<Type> b1(A.ncols());
+  Vector b1(A.numCols());
   itl::mult(A, x, b1);
   itl::add(b1, itl::scaled(b, -1.), b1);
 
