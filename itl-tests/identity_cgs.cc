@@ -1,7 +1,7 @@
 //===========================================================================
 //  CVS Information:                                                         
 //                                                                           
-//     $RCSfile: ilu_qmr.cpp,v $  $Revision: 1.3 $  $State: Exp $ 
+//     $RCSfile: ilut_cgs.cpp,v $  $Revision: 1.4 $  $State: Exp $ 
 //     $Author: llee $  $Date: 2001/10/18 14:08:33 $ 
 //     $Locker:  $ 
 //---------------------------------------------------------------------------
@@ -37,49 +37,46 @@
 //                                                                           
 // REVISION HISTORY:                                                         
 //                                                                           
-// $Log: ilu_qmr.cpp,v $
-// Revision 1.3  2001/10/18 14:08:33  llee
+// $Log: ilut_cgs.cpp,v $
+// Revision 1.4  2001/10/18 14:08:33  llee
 // re-organize the directory structures
+//
+// Revision 1.3  2001/07/05 22:28:58  llee1
+// gcc 3.0 fix
 //
 // Revision 1.2  2000/07/27 04:39:21  llee1
 // *** empty log message ***
 //
-// Revision 1.1  2000/07/26 21:50:09  llee1
+// Revision 1.1  2000/07/26 21:50:12  llee1
 // change file extension from .cc to .cpp
 //
 // Revision 1.1  2000/07/18 16:41:01  llee1
 // add Harwell-Boeing matrix test
 //
-// Revision 1.2  2000/07/17 15:44:04  llee1
+// Revision 1.3  2000/07/18 14:30:44  llee1
 // *** empty log message ***
 //
-// Revision 1.1  1999/11/21 20:47:07  lums
+// Revision 1.2  2000/07/17 15:44:04  llee1
 // *** empty log message ***
 //
 //===========================================================================
 
-#include "mtl/matrix.h"
-#include "mtl/mtl.h"
-#include "mtl/utils.h"
-#include "mtl/harwell_boeing_stream.h"
-
-#include <itl/interface/mtl.h>
-#include "itl/preconditioner/ilu.h"
-#include "itl/krylov/qmr.h"
+#include <desolin/Desolin.hpp>
+#include <desolin/itl_interface.hpp>
+#include <itl/krylov/cgs.h>
 
 /*
-  In thsi example, we show how to use QMR algorithm
+  In thsi example, we show how to use bicgstab algorithm.
 */
-using namespace mtl;
 using namespace itl;
 
 typedef  double Type;
 
-typedef matrix< Type, rectangle<>, 
-	        array< compressed<> >, 
-                row_major >::type Matrix;
+typedef desolin::Scalar<double> Scalar;
+typedef desolin::Vector<double> Vector;
+typedef desolin::Matrix<double> Matrix;
 
-int main(int argc, char* argv[])
+int main (int argc, char* argv[]) 
 {
   using std::cout;
   using std::endl;
@@ -91,34 +88,29 @@ int main(int argc, char* argv[])
     return 0;
   }
 
-  harwell_boeing_stream<Type> hbs(argv[1]);
+  desolin::harwell_boeing_stream<Type> hbs(argv[1]);
 
-  int max_iter = 50;
+  int max_iter = 256;
   //begin
   Matrix A(hbs);
-  //end
 
-  //begin
-  dense1D<Type> x(A.nrows(), Type(0));
-  dense1D<Type> b(A.ncols());
-  for (dense1D<Type>::iterator i=b.begin(); i!=b.end(); i++)
-    *i = 1.;
+  Vector x(A.numRows(), Type(0));
+  Vector b(A.numCols(), Type(1.));
 
-  //ILU preconditioner
-  ILU<Matrix> precond(A);
+  identity_preconditioner precond;
   //iteration
-  noisy_iteration<double> iter(b, max_iter, 1e-6);
-  //qmr algorithm
-  qmr(A, x, b, precond.left(), precond.right(), iter);
+  noisy_iteration<Scalar> iter(b, max_iter, 1e-6);
+  //bicgstab algorithm
+  cgs(A, x, b, precond(), iter);
   //end
 
   //verify the result
-  dense1D<Type> b1(A.ncols());
+  Vector b1(A.numCols());
   itl::mult(A, x, b1);
   itl::add(b1, itl::scaled(b, -1.), b1);
-  
-  cout << "Residual " << itl::two_norm(b1) << endl;
 
+
+  std::cout << "Residual " << itl::two_norm(b1) << std::endl;
   return 0;
 }
 
