@@ -90,5 +90,30 @@ public:
   }
 };
 
+template<typename T_element>
+class SquareRoot : public UnOp<scalar, scalar, T_element>
+{
+public:
+  SquareRoot(ExprNode<scalar, T_element>& e) : UnOp<scalar, scalar, T_element>(e.getDims(), e)
+  {
+  }
+
+  virtual void accept(ExpressionNodeVisitor<T_element>& visitor)
+  { 
+    visitor.visit(*this);
+  }
+		      
+  virtual void internal_evaluate()
+  { 
+    this->getOperand().evaluate();
+  }
+		        
+  virtual T_element getElementValue()
+  { 
+    return std::sqrt(this->getOperand().getElementValue());
+  }
+};
+
+
 }
 #endif

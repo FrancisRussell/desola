@@ -107,13 +107,13 @@ template<typename T_element>
 class MatrixTranspose : public UnOp<matrix, matrix, T_element>
 {
 private:
-  inline static const boost::array<int, 2> getDims(const ExprNode<matrix, T_element>& matrix)
+  inline static const boost::array<int, 2> getDims(const ExprNode<matrix, T_element>& m)
   {
-    boost::array<int, 2> dimensions = {matrix.getColCount(), matrix.getRowCount()};
+    boost::array<int, 2> dimensions = {m.getColCount(), m.getRowCount()};
     return dimensions;
   }
 public:
-  MatrixTranspose(ExprNode<matrix, T_element>& matrix) : UnOp<matrix, matrix, T_element>(getDims(matrix), matrix)
+  MatrixTranspose(ExprNode<matrix, T_element>& m) : UnOp<matrix, matrix, T_element>(getDims(m), m)
   {
   }
 

@@ -40,7 +40,8 @@ public:
  virtual void visit(TGNegate<tg_matrix, T_element>& e)=0;
 
  virtual void visit(TGAbsolute<T_element>& e)=0;
-  
+ virtual void visit(TGSquareRoot<T_element>& e)=0;
+ 
  virtual ~TGExpressionNodeVisitor() {}
 };
 

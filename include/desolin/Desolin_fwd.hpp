@@ -50,6 +50,7 @@ template<typename T_element> class VectorNorm;
 template<typename T_element> class MatrixTranspose;
 template<ExprType exprType, typename T_element> class Negate;
 template<typename T_element> class Absolute;
+template<typename T_element> class SquareRoot;
 
 // Expression Tree Visitors
 template<typename T_element> class ExpressionNodeVisitor;

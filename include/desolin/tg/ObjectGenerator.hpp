@@ -229,6 +229,13 @@ public:
     TGExprNode<tg_scalar, T_element>& operand = scalarHandler.getTGExprNode(e.getOperand());
     scalarHandler.handleNode(e, new TGAbsolute<T_element>(internal, operand));
   }
+
+  void visit(SquareRoot<T_element>& e)
+  {
+    TGScalar<T_element>* internal = scalarHandler.createTGRep(e);
+    TGExprNode<tg_scalar, T_element>& operand = scalarHandler.getTGExprNode(e.getOperand());
+    scalarHandler.handleNode(e, new TGSquareRoot<T_element>(internal, operand));
+  }
 };
 
 }

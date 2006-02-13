@@ -49,6 +49,7 @@ template<TGExprType exprType, typename T_element> class TGPairwise;
 template<TGExprType exprType, typename T_element> class TGScalarPiecewise;
 template<TGExprType exprType, typename T_element> class TGNegate;
 template<typename T_element> class TGAbsolute;
+template<typename T_element> class TGSquareRoot;
 
 // TaskGraph Evaluator Expression Tree Evaluation
 template<typename T_element> class TGCodeGenerator;

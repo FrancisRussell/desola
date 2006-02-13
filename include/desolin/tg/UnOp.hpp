@@ -58,5 +58,19 @@ public:
   }
 };
 
+template<typename T_element>
+class TGSquareRoot : public TGUnOp<tg_scalar, tg_scalar, T_element>
+{
+public:
+  TGSquareRoot(typename TGInternalType<tg_scalar, T_element>::type* internal, TGExprNode<tg_scalar, T_element>& e) : TGUnOp<tg_scalar, tg_scalar, T_element>(internal, e)
+  {
+  }
+
+  virtual void accept(TGExpressionNodeVisitor<T_element>& v)
+  {
+    v.visit(*this);
+  }
+};
+
 }
 #endif

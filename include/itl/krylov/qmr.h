@@ -100,11 +100,11 @@ namespace itl {
 	break;
       }
 
-      itl::copy(itl::scaled(v_tld, 1./rho), v);
-      itl::scale(y, 1./rho);
+      itl::copy(itl::scaled(v_tld, value_type(1.)/rho), v);
+      itl::scale(y, value_type(1.)/rho);
 
-      itl::copy(itl::scaled(w_tld, 1./xi), w);
-      itl::scale(z, 1./xi);
+      itl::copy(itl::scaled(w_tld, value_type(1.)/xi), w);
+      itl::scale(z, value_type(1.)/xi);
 
       delta = itl::dot(z, y);
       if (delta == 0.0) {
@@ -153,7 +153,7 @@ namespace itl {
       theta_1 = theta;
 
       theta = rho / (gamma_1 * beta);
-      gamma = 1.0 / sqrt(1.0 + theta * theta);
+      gamma = value_type(1.0) / std::sqrt(value_type(1.0) + theta * theta);
 
       if (gamma == 0.0){
 	iter.fail(4, "qmr breakdown");

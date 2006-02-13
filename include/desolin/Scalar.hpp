@@ -76,6 +76,12 @@ public:
     return Scalar(*new Absolute<T_element>(this->getExpr()));
   }
 
+  const Scalar sqrt() const
+  {
+    using namespace desolin_internal;
+    return Scalar(*new SquareRoot<T_element>(this->getExpr()));
+  }
+
   bool operator==(const Scalar& right) const
   {
     return value() == right.value();
@@ -173,6 +179,12 @@ namespace std
   const desolin::Scalar<T_element> abs(const desolin::Scalar<T_element>& s)
   {
     return s.abs();
+  }
+
+  template<typename T_element>
+  const desolin::Scalar<T_element> sqrt(const desolin::Scalar<T_element>& s)
+  {
+    return s.sqrt();
   }
 }
 #endif

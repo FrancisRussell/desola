@@ -369,6 +369,16 @@ public:
     result->setExpression(operand->getExpression().abs());
   }
 
+  virtual void visit(TGSquareRoot<T_element>& e)
+  {
+    using namespace tg;
+
+    boost::shared_ptr< TGScalar<T_element> > result(e.getInternal());
+    boost::shared_ptr< TGScalar<T_element> > operand(e.getOperand().getInternal());
+    
+    result->setExpression(operand->getExpression().sqrt());
+  }
+
 private:
   static inline TGScalarExpr<T_element> performOp(TGPairwiseOp op, const TGScalarExpr<T_element>& left, const TGScalarExpr<T_element>& right)
   {

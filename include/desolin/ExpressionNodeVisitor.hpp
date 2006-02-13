@@ -40,6 +40,7 @@ public:
   virtual void visit(Negate<matrix, T_element>& e)= 0;
 
   virtual void visit(Absolute<T_element>& e)= 0;
+  virtual void visit(SquareRoot<T_element>& e)= 0;
       
   virtual ~ExpressionNodeVisitor() {}
 };
