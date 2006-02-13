@@ -16,7 +16,7 @@ namespace itl {
     typedef typename Vec::value_type value_type;
     typedef typename Vec::size_type size_type;
   };
-
+  
   template <class Vec>
   inline typename itl::number_traits< typename Vec::value_type >::magnitude_type two_norm(const Vec& v)
   {
@@ -89,13 +89,15 @@ namespace itl {
     return x.numRows();
   }
 
-
+// Only define this when semantics are understood
+/*
   template <class Vector>
   inline void resize(Vector& x, const int sz) 
   {
     x.resize(sz);
   }
-
+*/
+  
   template <class Matrix, class VecX, class VecY>
   inline void trans_mult(const Matrix& A, const VecX& x, VecY& y) 
   {
