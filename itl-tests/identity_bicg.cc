@@ -58,28 +58,19 @@
 //
 //===========================================================================
 
-#include <mtl/matrix.h>
-#include <mtl/mtl.h>
-#include <mtl/utils.h>
-#include "mtl/harwell_boeing_stream.h"
-
-#include <itl/interface/mtl.h>
-#include <itl/preconditioner/ssor.h>
+#include <desolin/Desolin.hpp>
+#include <desolin/itl_interface.hpp>
 #include <itl/krylov/bicg.h>
 
 /*
-  In thsi example, we show how to use bicgstab algorithm.
+  In this example, we show how to use bicgstab algorithm.
 */
-using namespace mtl;
 using namespace itl;
 
-typedef  double Type;
-
-//begin
-typedef matrix< Type, rectangle<>, 
-	        array< compressed<> >, 
-                row_major >::type Matrix;
-//end
+typedef double Type;
+typedef desolin::Matrix<Type> Matrix;
+typedef desolin::Vector<Type> Vector;
+typedef desolin::Scalar<Type> Scalar;
 
 int main (int argc, char* argv[]) 
 {
@@ -93,26 +84,25 @@ int main (int argc, char* argv[])
     return 0;
   }
 
-  harwell_boeing_stream<Type> hbs(argv[1]);
+  desolin::harwell_boeing_stream<Type> hbs(argv[1]);
 
   int max_iter = 256;
   //begin
   Matrix A(hbs);
 
-  dense1D<Type> x(A.nrows(), Type(0));
-  dense1D<Type> b(A.ncols());
-  for (dense1D<Type>::iterator i=b.begin(); i!=b.end(); i++)
-    *i = 1.;
-  //SSOR preconditioner
-  SSOR<Matrix> precond(A);
+  Vector x(A.numRows(), Type(0));
+  Vector b(A.numCols(), Type(1.));
+  
+  identity_preconditioner precond;
+  
   //iteration
-  noisy_iteration<double> iter(b, max_iter, 1e-6);
+  noisy_iteration<Scalar> iter(b, max_iter, 1e-6);
   //bicgstab algorithm
   bicg(A, x, b, precond(), iter);
   //end
 
   //verify the result
-  dense1D<Type> b1(A.ncols());
+  Vector b1(A.numCols());
   itl::mult(A, x, b1);
   itl::add(b1, itl::scaled(b, -1.), b1);
 
