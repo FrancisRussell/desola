@@ -160,6 +160,16 @@ public:
   {
     return row;
   }
+
+  inline bool operator==(const ElementIndex& i) const
+  {
+    return row == i.row;
+  }
+
+  inline bool operator<(const ElementIndex& i) const
+  {
+    return row < i.row;
+  }
 };
 
 template<>
@@ -182,6 +192,23 @@ public:
   inline const int getCol() const
   {
     return col;
+  }
+
+  inline bool operator==(const ElementIndex& i) const
+  {
+    return row == i.row && col == i.col;
+  }
+
+  inline bool operator<(const ElementIndex& i) const
+  {
+    if(row != i.row)
+    {
+      return row < i.row;
+    }
+    else
+    {
+      return col < i.col;
+    }
   }
 };
 

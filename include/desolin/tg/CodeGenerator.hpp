@@ -2,6 +2,10 @@
 #define DESOLIN_TG_CODE_GENERATOR_HPP
 
 #include <string>
+#include <map>
+#include <algorithm>
+#include <boost/bind.hpp>
+#include <boost/ref.hpp>
 #include <boost/shared_ptr.hpp>
 #include <TaskGraph>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
@@ -39,15 +43,21 @@ public:
     using namespace tg;
 
     boost::shared_ptr< TGVector<T_element> > newVector(e.getInternal());
-    boost::shared_ptr< TGVector<T_element> > vector(e.getLeft().getInternal());
-    boost::shared_ptr< TGScalar<T_element> > scalar(e.getRight().getInternal());
+    boost::shared_ptr< TGVector<T_element> > vector(e.getOperand().getInternal());
 
     tVarNamed(int, i, getIndexName());
     tFor(i, 0, vector->getRows()-1)
     {
       newVector->setExpression(i, vector->getExpression(i));
     }
-    newVector->setExpression(TaskExpression(e.getIndex().getRow()), scalar->getExpression());
+
+    const std::map<TGElementIndex<tg_vector>, TGExprNode<tg_scalar, T_element>*> assignments(e.getAssignments());
+    std::for_each(assignments.begin(), assignments.end(), boost::bind(setVectorElement, boost::ref(*newVector), _1));
+  }
+
+  static void setVectorElement(TGVector<T_element>& vector, const std::pair<TGElementIndex<tg_vector>, TGExprNode<tg_scalar, T_element>*>& pair)
+  {
+    vector.setExpression(tg::TaskExpression(pair.first.getRow()), pair.second->getInternal()->getExpression());
   }
 
   virtual void visit(TGElementSet<tg_matrix, T_element>& e)
@@ -55,8 +65,7 @@ public:
     using namespace tg;
 
     boost::shared_ptr< TGMatrix<T_element> > newMatrix(e.getInternal());
-    boost::shared_ptr< TGMatrix<T_element> > matrix(e.getLeft().getInternal());
-    boost::shared_ptr< TGScalar<T_element> > scalar(e.getRight().getInternal());
+    boost::shared_ptr< TGMatrix<T_element> > matrix(e.getOperand().getInternal());
 
     tVarNamed(int, i, getIndexName());
     tVarNamed(int, j, getIndexName());
@@ -67,7 +76,14 @@ public:
         newMatrix->setExpression(i, j, matrix->getExpression(i, j));
       }
     }
-    newMatrix->setExpression(TaskExpression(e.getIndex().getRow()), TaskExpression(e.getIndex().getCol()), scalar->getExpression());
+
+    const std::map<TGElementIndex<tg_matrix>, TGExprNode<tg_scalar, T_element>*> assignments(e.getAssignments());
+    std::for_each(assignments.begin(), assignments.end(), boost::bind(setMatrixElement, boost::ref(*newMatrix), _1));
+  }
+
+  static void setMatrixElement(TGMatrix<T_element>& matrix, const std::pair<TGElementIndex<tg_matrix>, TGExprNode<tg_scalar, T_element>*>& pair)
+  {
+    matrix.setExpression(tg::TaskExpression(pair.first.getRow()), tg::TaskExpression(pair.first.getCol()), pair.second->getInternal()->getExpression());
   }
 
   virtual void visit(TGElementGet<tg_vector, T_element>& e)

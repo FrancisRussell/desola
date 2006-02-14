@@ -32,6 +32,16 @@ public:
   {
     return row;
   }
+
+  inline bool operator==(const TGElementIndex& i) const
+  {
+    return row == i.row;
+  }
+
+  inline bool operator<(const TGElementIndex& i) const
+  {
+    return row < i.row;
+  }
 };
 
 template<>
@@ -59,6 +69,23 @@ public:
   {
     return col;
   }
+
+  inline bool operator==(const TGElementIndex& i) const
+  {
+    return row == i.row && col == i.col;
+  }
+
+  inline bool operator<(const TGElementIndex& i) const
+  {
+    if(row != i.row)
+    {
+      return row < i.row;
+    }
+    else
+    {
+      return col < i.col;
+    }
+  }
 };
 
 template<typename T_element>
@@ -68,6 +95,9 @@ private:
   // Forbid copying and assignment
   TGExpressionNode(const TGExpressionNode&);
   TGExpressionNode& operator=(const TGExpressionNode&);
+
+protected:
+  std::set<TGExpressionNode<T_element>*> dependencies;
   
 public:
   TGExpressionNode()
@@ -76,7 +106,10 @@ public:
   
   virtual void accept(TGExpressionNodeVisitor<T_element>& visitor) = 0;
 
-  virtual std::set<TGExpressionNode<T_element>*> getDependencies() const = 0;
+  std::set<TGExpressionNode<T_element>*> getDependencies() const
+  {
+    return dependencies;
+  }
 
   virtual ~TGExpressionNode()
   {
@@ -99,7 +132,7 @@ public:
     return internal;
   }
 
-  bool isParameter() const
+  inline bool isParameter() const
   {
     return internal->isParameter();
   }

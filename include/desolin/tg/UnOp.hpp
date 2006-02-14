@@ -15,18 +15,12 @@ private:
 public:
   TGUnOp(typename TGInternalType<resultType, T_element>::type* internal, TGExprNode<exprType, T_element>& e) : TGExprNode<resultType, T_element>(internal), expr(&e)
   {
+    this->dependencies.insert(expr);
   }
 
   inline TGExprNode<exprType, T_element>& getOperand()
   {
     return *expr;
-  }
-
-  virtual std::set<TGExpressionNode<T_element>*> getDependencies() const
-  {
-    std::set<TGExpressionNode<T_element>*> dependencies;
-    dependencies.insert(expr);
-    return dependencies;
   }
 };
 

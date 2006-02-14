@@ -16,6 +16,8 @@ private:
 public:
   TGBinOp(typename TGInternalType<resultType, T_element>::type* internal, TGExprNode<leftType, T_element>& l, TGExprNode<rightType, T_element>& r) : TGExprNode<resultType, T_element>(internal), left(&l), right(&r)
   {
+    this->dependencies.insert(left);
+    this->dependencies.insert(right);
   }
 
   inline TGExprNode<leftType, T_element>& getLeft()
@@ -26,14 +28,6 @@ public:
   inline TGExprNode<rightType, T_element>& getRight()
   {
     return *right;
-  }
-
-  virtual std::set<TGExpressionNode<T_element>*> getDependencies() const
-  {
-    std::set<TGExpressionNode<T_element>*> dependencies;
-    dependencies.insert(left);
-    dependencies.insert(right);
-    return dependencies;
   }
 };
 

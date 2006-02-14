@@ -1,6 +1,9 @@
 #ifndef DESOLIN_TG_ELEMENTAL_HPP
 #define DESOLIN_TG_ELEMENTAL_HPP
 
+#include <map>
+#include <algorithm>
+#include <boost/bind.hpp>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 
 namespace desolin_internal
@@ -32,22 +35,27 @@ public:
 };
 
 template<TGExprType exprType, typename T_element>
-class TGElementSet : public TGBinOp<exprType, exprType, tg_scalar, T_element>
+class TGElementSet : public TGUnOp<exprType, exprType, T_element>
 {
 private:
-  const TGElementIndex<exprType> index;
+  const std::map<TGElementIndex<exprType>, TGExprNode<tg_scalar, T_element>*> assignments;
 
+  void registerDependency(const std::pair<TGElementIndex<exprType>, TGExprNode<tg_scalar, T_element>*>& pair)
+  {
+    this->dependencies.insert(pair.second);
+  }
+  
 public:
   TGElementSet(typename TGInternalType<exprType, T_element>::type* internal,
-		  TGExprNode<exprType, T_element>& o,
-		  TGExprNode<tg_scalar, T_element>& s,
-		  const TGElementIndex<exprType> i) : TGBinOp<exprType, exprType, tg_scalar, T_element>(internal, o, s), index(i)
+	       TGExprNode<exprType, T_element>& o,
+	       std::map<TGElementIndex<exprType>, TGExprNode<tg_scalar, T_element>*> a) : TGUnOp<exprType, exprType, T_element>(internal, o), assignments(a)
   {
+    std::for_each(assignments.begin(), assignments.end(), boost::bind(&TGElementSet::registerDependency, this, _1));
   }
 
-  inline const TGElementIndex<exprType>& getIndex() const
+  std::map<TGElementIndex<exprType>, TGExprNode<tg_scalar, T_element>*> getAssignments() const
   {
-    return index;
+    return assignments;
   }
 
   virtual void accept(TGExpressionNodeVisitor<T_element>& v)

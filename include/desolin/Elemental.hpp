@@ -1,6 +1,9 @@
 #ifndef DESOLIN_ELEMENTAL_HPP
 #define DESOLIN_ELEMENTAL_HPP
 
+#include <map>
+#include <algorithm>
+#include <boost/bind.hpp>
 #include <desolin/Desolin_fwd.hpp>
 
 namespace desolin_internal
@@ -39,19 +42,25 @@ public:
 };
 
 template<ExprType exprType, typename T_element>
-class ElementSet : public BinOp<exprType, exprType, scalar, T_element>
+class ElementSet : public UnOp<exprType, exprType, T_element>
 {
 private:
-  const ElementIndex<exprType> index;
+  const std::map<ElementIndex<exprType>, ExprNode<scalar, T_element>*> assignments;
 
-public:
-  ElementSet(ExprNode<exprType, T_element>& e, ExprNode<scalar, T_element>& s, const ElementIndex<exprType>& i) : BinOp<exprType, exprType, scalar, T_element>(e.getDims(), e, s), index(i)
-  { 
+  void registerAssignmentDependency(const std::pair<ElementIndex<exprType>, ExprNode<scalar, T_element>*>& pair)
+  {
+    this->registerDependency(pair.second);
   }
   
-  inline const ElementIndex<exprType>& getIndex() const
-  { 
-    return index;
+public:
+  ElementSet(ExprNode<exprType, T_element>& e, const std::map<ElementIndex<exprType>, ExprNode<scalar, T_element>*>& a) : UnOp<exprType, exprType, T_element>(e.getDims(), e), assignments(a)
+  {
+    std::for_each(assignments.begin(), assignments.end(), boost::bind(&ElementSet::registerAssignmentDependency, this, _1));
+  }
+
+  inline std::map<ElementIndex<exprType>, ExprNode<scalar, T_element>*> getAssignments() const
+  {
+    return assignments;
   }
   
   virtual void accept(ExpressionNodeVisitor<T_element>& visitor)

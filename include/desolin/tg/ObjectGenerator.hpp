@@ -1,6 +1,7 @@
 #ifndef DESOLIN_TG_OBJECT_GENERATOR_HPP
 #define DESOLIN_TG_OBJECT_GENERATOR_HPP
 
+#include <map>
 #include <cassert>
 #include <TaskGraph>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
@@ -72,21 +73,39 @@ public:
   void visit(ElementSet<vector, T_element>& e)
   {
     TGVector<T_element>* internal = vectorHandler.createTGRep(e);
-    TGExprNode<tg_vector, T_element>& v = vectorHandler.getTGExprNode(e.getLeft());
-    TGExprNode<tg_scalar, T_element>& s = scalarHandler.getTGExprNode(e.getRight());
-    TGElementIndex<tg_vector> index(e.getIndex());
-    vectorHandler.handleNode(e, new TGElementSet<tg_vector, T_element>(internal, v, s, index));
+    TGExprNode<tg_vector, T_element>& v = vectorHandler.getTGExprNode(e.getOperand());
+    
+    const std::map<ElementIndex<vector>, ExprNode<scalar, T_element>*> assignments(e.getAssignments());
+    std::map<TGElementIndex<tg_vector>, TGExprNode<tg_scalar, T_element>*> tgAssignments;
+    
+    typedef typename std::map<ElementIndex<vector>, ExprNode<scalar, T_element>*>::const_iterator Iterator;
+    for(Iterator i = assignments.begin(); i != assignments.end(); ++i)
+    {
+      const TGElementIndex<tg_vector> index(i->first);
+      TGExprNode<tg_scalar, T_element>& s = scalarHandler.getTGExprNode(*(i->second));
+      tgAssignments[index] = &s;
+    }
+    vectorHandler.handleNode(e, new TGElementSet<tg_vector, T_element>(internal, v, tgAssignments));
   }
 
   void visit(ElementSet<matrix, T_element>& e)
   {
     TGMatrix<T_element>* internal = matrixHandler.createTGRep(e);
-    TGExprNode<tg_matrix, T_element>& m = matrixHandler.getTGExprNode(e.getLeft());
-    TGExprNode<tg_scalar, T_element>& s = scalarHandler.getTGExprNode(e.getRight());
-    TGElementIndex<tg_matrix> index(e.getIndex());
-    matrixHandler.handleNode(e, new TGElementSet<tg_matrix, T_element>(internal, m, s, index));
+    TGExprNode<tg_matrix, T_element>& v = matrixHandler.getTGExprNode(e.getOperand());
+		        
+    const std::map<ElementIndex<matrix>, ExprNode<scalar, T_element>*> assignments(e.getAssignments());
+    std::map<TGElementIndex<tg_matrix>, TGExprNode<tg_scalar, T_element>*> tgAssignments;
+		        
+    typedef typename std::map<ElementIndex<matrix>, ExprNode<scalar, T_element>*>::const_iterator Iterator;
+    for(Iterator i = assignments.begin(); i != assignments.end(); ++i)
+    {
+      const TGElementIndex<tg_matrix> index(i->first);
+      TGExprNode<tg_scalar, T_element>& s = scalarHandler.getTGExprNode(*(i->second));
+      tgAssignments[index] = &s;
+    }
+    matrixHandler.handleNode(e, new TGElementSet<tg_matrix, T_element>(internal, v, tgAssignments));
   }
-  
+    
   void visit(Literal<scalar, T_element>& e)
   {
     assert(false);

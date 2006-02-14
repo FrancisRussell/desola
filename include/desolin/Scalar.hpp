@@ -2,6 +2,7 @@
 #define DESOLIN_SCALAR_HPP
 
 #include <iostream>
+#include <map>
 #include <desolin/Desolin_fwd.hpp>
 
 namespace desolin
@@ -165,7 +166,9 @@ public:
     using namespace desolin_internal;
     if(this != &right)
     {
-      node.setExpr(*new ElementSet<exprType, T_element>(node.getExpr(), right.getExpr(), index));
+      std::map<desolin_internal::ElementIndex<exprType>, desolin_internal::ExprNode<desolin_internal::scalar, T_element>*> mappings;
+      mappings[index] = &right.getExpr();
+      node.setExpr(*new ElementSet<exprType, T_element>(node.getExpr(), mappings));
     }
     return *this;
   }
