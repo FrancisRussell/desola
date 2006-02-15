@@ -31,10 +31,8 @@ private:
   
 public:
   template<typename InputIterator>
-  ExpressionGraph(const InputIterator& start, const InputIterator& end)
+  ExpressionGraph(const InputIterator& start, const InputIterator& end) : exprVector(start, end)
   {
-    std::back_insert_iterator< std::vector<ExpressionNode<T_elementType>*> > out(exprVector);
-    std::copy(start, end, out);
   }
 
   inline std::vector< ExpressionNode<T_elementType>* > getSortedNodes() const
