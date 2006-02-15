@@ -21,7 +21,7 @@ void ParameterHolder::addParameter(const std::string& name, void* value)
   parameters[name]=value;
 }
 
-void ParameterHolder::setParameter(tg::tuTaskGraph& taskGraphObject, const std::pair<std::string, void*>& parameterMapping)
+void ParameterHolder::setParameter(tg::tuTaskGraph& taskGraphObject, const std::pair<const std::string, void*>& parameterMapping)
 {
   taskGraphObject.setParameter(parameterMapping.first.c_str(), parameterMapping.second);
 }

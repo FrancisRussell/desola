@@ -15,7 +15,7 @@ private:
   ParameterHolder& operator=(const ParameterHolder&);
   std::map<std::string, void*> parameters;
  
-  static void setParameter(tg::tuTaskGraph& taskGraphObject, const std::pair<std::string, void*>& parameterMapping);
+  static void setParameter(tg::tuTaskGraph& taskGraphObject, const std::pair<const std::string, void*>& parameterMapping);
 
 public:
   ParameterHolder();

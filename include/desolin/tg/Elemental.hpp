@@ -40,7 +40,7 @@ class TGElementSet : public TGUnOp<exprType, exprType, T_element>
 private:
   const std::map<TGElementIndex<exprType>, TGExprNode<tg_scalar, T_element>*> assignments;
 
-  void registerDependency(const std::pair<TGElementIndex<exprType>, TGExprNode<tg_scalar, T_element>*>& pair)
+  void registerDependency(const std::pair<const TGElementIndex<exprType>, TGExprNode<tg_scalar, T_element>*>& pair)
   {
     this->dependencies.insert(pair.second);
   }

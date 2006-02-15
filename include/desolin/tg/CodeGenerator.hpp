@@ -55,7 +55,7 @@ public:
     std::for_each(assignments.begin(), assignments.end(), boost::bind(setVectorElement, boost::ref(*newVector), _1));
   }
 
-  static void setVectorElement(TGVector<T_element>& vector, const std::pair<TGElementIndex<tg_vector>, TGExprNode<tg_scalar, T_element>*>& pair)
+  static void setVectorElement(TGVector<T_element>& vector, const std::pair<const TGElementIndex<tg_vector>, TGExprNode<tg_scalar, T_element>*>& pair)
   {
     vector.setExpression(tg::TaskExpression(pair.first.getRow()), pair.second->getInternal()->getExpression());
   }
@@ -81,7 +81,7 @@ public:
     std::for_each(assignments.begin(), assignments.end(), boost::bind(setMatrixElement, boost::ref(*newMatrix), _1));
   }
 
-  static void setMatrixElement(TGMatrix<T_element>& matrix, const std::pair<TGElementIndex<tg_matrix>, TGExprNode<tg_scalar, T_element>*>& pair)
+  static void setMatrixElement(TGMatrix<T_element>& matrix, const std::pair<const TGElementIndex<tg_matrix>, TGExprNode<tg_scalar, T_element>*>& pair)
   {
     matrix.setExpression(tg::TaskExpression(pair.first.getRow()), tg::TaskExpression(pair.first.getCol()), pair.second->getInternal()->getExpression());
   }

@@ -79,7 +79,7 @@ private:
   std::map< ExprNode<matrix, T_element>*, Literal<matrix, T_element>* > matrixMap;
   
   template<ExprType exprType>
-  static void freeLiteral(const std::pair<ExprNode<exprType, T_element>*, Literal<exprType, T_element>*>& pair)
+  static void freeLiteral(const std::pair<const ExprNode<exprType, T_element>*, Literal<exprType, T_element>*>& pair)
   {
     pair.second->deleteIfUnused();
   }
@@ -98,7 +98,7 @@ private:
   }
 
   template<ExprType exprType>
-  static void allocateLiteral(const std::pair<ExprNode<exprType, T_element>*, Literal<exprType, T_element>*>& pair)
+  static void allocateLiteral(const std::pair<const ExprNode<exprType, T_element>*, Literal<exprType, T_element>*>& pair)
   {
     pair.second->getValue()->allocate();
   }

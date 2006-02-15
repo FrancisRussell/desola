@@ -5,6 +5,7 @@
 #include <map>
 #include <algorithm>
 #include <boost/bind.hpp>
+#include <boost/ref.hpp>
 #include <desolin/Desolin_fwd.hpp>
 
 namespace desolin_internal
@@ -46,18 +47,27 @@ template<ExprType exprType, typename T_element>
 class ElementSet : public UnOp<exprType, exprType, T_element>
 {
 private:
-  const std::map<ElementIndex<exprType>, ExprNode<scalar, T_element>*> assignments;
+  std::map<ElementIndex<exprType>, ExprNode<scalar, T_element>*> assignments;
 
-  void registerAssignmentDependency(const std::pair<ElementIndex<exprType>, ExprNode<scalar, T_element>*>& pair)
+  void registerAssignmentDependency(const std::pair<const ElementIndex<exprType>, ExprNode<scalar, T_element>*>& pair)
   {
     this->registerDependency(pair.second);
+  }
+
+  void updateAssignmentDependency(std::pair<const ElementIndex<exprType>, ExprNode<scalar, T_element>*>& pair, ExprNode<scalar, T_element>& previous, ExprNode<scalar, T_element>& next)
+  {
+    if (pair.second == &previous)
+    {
+      this->registerDependency(&next);
+      this->unregisterDependency(&previous);
+      pair.second = &next;
+    }
   }
   
 public:
   ElementSet(ExprNode<exprType, T_element>& e, const std::map<ElementIndex<exprType>, ExprNode<scalar, T_element>*>& a) : UnOp<exprType, exprType, T_element>(e.getDims(), e), assignments(a)
   {
     // Implement update support before removing this assert
-    assert(false);
     std::for_each(assignments.begin(), assignments.end(), boost::bind(&ElementSet::registerAssignmentDependency, this, _1));
   }
 
@@ -70,6 +80,18 @@ public:
   { 
     visitor.visit(*this);
   }
+
+  virtual void update(ExprNode<scalar, T_element>& previous, ExprNode<scalar, T_element>& next)
+  {
+    // Not strictly necessary as Scalars don't have elements to set.
+    UnOp<exprType, exprType, T_element>::update(previous, next);
+   
+    for(typename std::map<ElementIndex<exprType>, ExprNode<scalar, T_element>*>::iterator i=assignments.begin(); i!=assignments.end(); ++i)
+    {
+      updateAssignmentDependency(*i, previous, next);
+    }
+  }
+  
 };
 
 }
