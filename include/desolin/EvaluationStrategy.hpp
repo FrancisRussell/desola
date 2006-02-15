@@ -100,7 +100,7 @@ private:
   template<ExprType exprType>
   static void allocateLiteral(const std::pair<const ExprNode<exprType, T_element>*, Literal<exprType, T_element>*>& pair)
   {
-    pair.second->getValue()->allocate();
+    pair.second->getValue().allocate();
   }
 
   template<ExprType exprType>

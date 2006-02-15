@@ -2,7 +2,7 @@
 #define DESOLIN_TG_EXPRESSION_NODE_HPP
 
 #include <set>
-#include <boost/shared_ptr.hpp>
+#include <boost/scoped_ptr.hpp>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 
 namespace desolin_internal
@@ -121,15 +121,15 @@ class TGExprNode : public TGExpressionNode<T_element>
 {
 private:
   typedef typename TGInternalType<exprType, T_element>::type T_internal;
-  boost::shared_ptr< T_internal > internal;
+  boost::scoped_ptr< T_internal > internal;
 public:
   TGExprNode(T_internal* i) : internal(i)
   {
   }
 
-  inline boost::shared_ptr< T_internal > getInternal()
+  inline T_internal& getInternal()
   {
-    return internal;
+    return *internal;
   }
 
   inline bool isParameter() const

@@ -92,7 +92,7 @@ public:
   void execute(const ParameterHolder& parameterHolder)
   {
     taskGraphObject.applyOptimisation("fusion");
-    taskGraphObject.compile(tg::GCC, true);
+    taskGraphObject.compile(tg::GCC, false);
     parameterHolder.setParameters(taskGraphObject);
     taskGraphObject.execute();
   }

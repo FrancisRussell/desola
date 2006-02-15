@@ -2,7 +2,7 @@
 #define DESOLIN_LITERAL_HPP
 
 #include <cassert>
-#include <boost/shared_ptr.hpp>
+#include <boost/scoped_ptr.hpp>
 #include <boost/static_assert.hpp>
 #include <desolin/Desolin_fwd.hpp>
 
@@ -20,7 +20,7 @@ template<typename T_element>
 class Literal<scalar, T_element> : public ExprNode<scalar, T_element>
 {
 protected:
-  boost::shared_ptr<InternalScalar<T_element> > value;
+  boost::scoped_ptr<InternalScalar<T_element> > value;
 
   virtual void update(ExprNode<scalar, T_element>& previous, ExprNode<scalar, T_element>& next) {}
   virtual void update(ExprNode<vector, T_element>& previous, ExprNode<vector, T_element>& next) {}
@@ -32,9 +32,9 @@ public:
     assert(val != NULL);
   }
 
-  boost::shared_ptr<InternalScalar<T_element> > getValue()
+  InternalScalar<T_element>& getValue()
   {
-    return value;
+    return *value;
   }
 
   void accept(ExpressionNodeVisitor<T_element>& v)
@@ -80,9 +80,9 @@ public:
     assert(val != NULL);
   }
 
-  boost::shared_ptr<InternalVector<T_element> > getValue()
+  InternalVector<T_element>& getValue()
   {
-    return value;
+    return *value;
   }
 
   void accept(ExpressionNodeVisitor<T_element>& v)
@@ -128,9 +128,9 @@ public:
     assert(val != NULL);
   }
 
-  boost::shared_ptr<InternalMatrix<T_element> > getValue()
+  InternalMatrix<T_element>& getValue()
   {
-    return value;
+    return *value;
   }
 
   void accept(ExpressionNodeVisitor<T_element>& v)

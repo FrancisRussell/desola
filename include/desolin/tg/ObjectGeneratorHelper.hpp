@@ -62,7 +62,7 @@ public:
     {
       Literal<exprType, T_element>* const literal = getStrategy().getEvaluatedExpr(&e);
       typename ExprTGTraits<exprType, T_element>::internalRepCreator creator(getGraph().getNameGenerator());
-      literal->getValue()->accept(creator);
+      literal->getValue().accept(creator);
       handleNode(e, new TGLiteral<tgExprType, T_element>(creator.getResult()));
       return *nodeMap[&e];
     }
@@ -86,8 +86,8 @@ public:
       if (iterator->second->isParameter())
       {
          Literal<exprType, T_element>* const literal = getStrategy().getEvaluatedExpr(iterator->first);
-         typename ExprTraits<exprType, T_element>::internalRep& internal = *(literal->getValue());
-         typename ExprTGTraits<exprType, T_element>::internalRep& tgInternal = *((iterator->second)->getInternal());
+         typename ExprTraits<exprType, T_element>::internalRep& internal = literal->getValue();
+         typename ExprTGTraits<exprType, T_element>::internalRep& tgInternal = (iterator->second)->getInternal();
          tgInternal.addParameterMappings(internal, parameterHolder);
       }
     }
