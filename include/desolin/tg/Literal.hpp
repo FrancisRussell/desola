@@ -20,11 +20,6 @@ public:
   {
     v.visit(*this);
   }
-
-  virtual std::set<TGExpressionNode<T_element>*> getDependencies() const
-  {
-    return std::set<TGExpressionNode<T_element>*>();
-  }
 };
 
 }
