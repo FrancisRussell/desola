@@ -1,6 +1,7 @@
 #ifndef DESOLIN_ELEMENTAL_HPP
 #define DESOLIN_ELEMENTAL_HPP
 
+#include <cassert>
 #include <map>
 #include <algorithm>
 #include <boost/bind.hpp>
@@ -55,6 +56,8 @@ private:
 public:
   ElementSet(ExprNode<exprType, T_element>& e, const std::map<ElementIndex<exprType>, ExprNode<scalar, T_element>*>& a) : UnOp<exprType, exprType, T_element>(e.getDims(), e), assignments(a)
   {
+    // Implement update support before removing this assert
+    assert(false);
     std::for_each(assignments.begin(), assignments.end(), boost::bind(&ElementSet::registerAssignmentDependency, this, _1));
   }
 

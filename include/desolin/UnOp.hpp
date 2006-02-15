@@ -2,6 +2,7 @@
 #define DESOLIN_UNOP_HPP
 
 #include <cmath>
+#include <cassert>
 #include <boost/array.hpp>
 #include <boost/cast.hpp>
 #include <desolin/Desolin_fwd.hpp>
@@ -17,6 +18,8 @@ private:
 
   void updateImpl(ExpressionNode<T_element>& previous, ExpressionNode<T_element>& next)
   {
+    assert(expr != NULL);
+    
     if (expr == &previous)
     {
       this->registerDependency(&next);

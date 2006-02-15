@@ -1,7 +1,6 @@
 #ifndef DESOLIN_SCALAR_HPP
 #define DESOLIN_SCALAR_HPP
 
-#include <iostream>
 #include <map>
 #include <desolin/Desolin_fwd.hpp>
 

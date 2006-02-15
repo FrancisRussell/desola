@@ -4,6 +4,7 @@
 #include <desolin/Desolin_fwd.hpp>
 #include <boost/array.hpp>
 #include <boost/cast.hpp>
+#include <cassert>
 
 namespace desolin_internal
 {
@@ -17,6 +18,9 @@ private:
 
   void updateImpl(ExpressionNode<T_element>& previous, ExpressionNode<T_element>& next)
   {
+    assert(left != NULL);
+    assert(right != NULL);
+
     if (left == &previous)
     {
       this->registerDependency(&next);

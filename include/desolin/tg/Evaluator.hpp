@@ -1,7 +1,6 @@
 #ifndef DESOLIN_TG_EVALUATOR_HPP
 #define DESOLIN_TG_EVALUATOR_HPP
 
-#include <iostream>
 #include <boost/shared_ptr.hpp>
 #include <boost/function.hpp>
 #include <boost/bind.hpp>

@@ -1,7 +1,6 @@
 #ifndef DESOLIN_EVALUATION_STRATEGY_HPP
 #define DESOLIN_EVALUATION_STRATEGY_HPP
 
-#include <iostream>
 #include <map>
 #include <set>
 #include <vector>
@@ -57,7 +56,7 @@ public:
     if (i != matrixMap.end())
     {
       i->first->replace(*(i->second));
-    }	
+    }
   }      
 };
 

@@ -1,7 +1,6 @@
 #ifndef DESOLIN_EXPRESSION_NODE_HPP
 #define DESOLIN_EXPRESSION_NODE_HPP
 
-#include <iostream>
 #include <cassert>
 #include <set>
 #include <map>
@@ -57,7 +56,9 @@ public:
   inline void unregisterRequiredBy(const Variable<T_element>& v)
   {
     // We only want to erase one instance from the multiset
-    external_reqBy.erase(external_reqBy.find(&v));
+    const typename std::multiset<const Variable<T_element>*>::iterator location = external_reqBy.find(&v);
+    assert(location != external_reqBy.end());
+    external_reqBy.erase(location);
     checkSelfDestruct();
   }
 
@@ -112,26 +113,34 @@ protected:
   
   inline void registerDependency(ExpressionNode* e)
   {
+    assert(e != NULL);
     deps.insert(e);
     e->registerRequiredBy(this);  
   }
   
   inline void unregisterDependency(ExpressionNode* e)
   {
+    assert(e != NULL);
     // We only want to erase one instance from the multiset
-    deps.erase(deps.find(e));
+    const typename std::multiset<ExpressionNode*>::iterator location = deps.find(e);
+    assert(location != deps.end()); 
+    deps.erase(location);
     e->unregisterRequiredBy(this);  
   }
   
   inline void registerRequiredBy(ExpressionNode* e)
   {
+    assert(e != NULL);
     internal_reqBy.insert(e);
   }
   
   inline void unregisterRequiredBy(ExpressionNode* e)
   {
+    assert(e != NULL);
     // We only want to erase one instance from the multiset
-    internal_reqBy.erase(internal_reqBy.find(e));
+    const typename std::multiset<ExpressionNode*>::iterator location = internal_reqBy.find(e);
+    assert(location != internal_reqBy.end());
+    internal_reqBy.erase(location);
     checkSelfDestruct();
   }
   
@@ -139,7 +148,8 @@ protected:
   {
     if(internal_reqBy.empty() && external_reqBy.empty())
     {
-      std::for_each(deps.begin(), deps.end(), boost::bind(&ExpressionNode::unregisterDependency, this, _1));
+      std::multiset<ExpressionNode*> local_deps(deps); 
+      std::for_each(local_deps.begin(), local_deps.end(), boost::bind(&ExpressionNode::unregisterDependency, this, _1));
       delete this;
     }
   }
