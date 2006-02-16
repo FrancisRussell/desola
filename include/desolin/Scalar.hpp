@@ -63,11 +63,10 @@ public:
     return T_rightType(*new ScalarPiecewise<T_rightType::expressionType, T_element>(multiply, this->getExpr(), right.getExpr()));
   }
 
-  template<typename T_rightType>
-  const Scalar operator/(const T_rightType& right) const
+  const Scalar operator/(const Scalar& right) const
   {
     using namespace desolin_internal;
-    return T_rightType(*new ScalarPiecewise<T_rightType::expressionType, T_element>(divide, this->getExpr(), right.getExpr()));
+    return Scalar(*new ScalarPiecewise<scalar, T_element>(divide, this->getExpr(), right.getExpr()));
   }
 
   const Scalar abs() const
