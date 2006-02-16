@@ -36,8 +36,8 @@ private:
   {
     switch(op)
     {
-      case add: return tg_add;
-      case sub: return tg_sub;
+      case pair_add: return tg_pair_add;
+      case pair_sub: return tg_pair_sub;
       default: throw TGInvalidOperationError("Unrecognised DesoLin Pairwise Operation");
     }
   }

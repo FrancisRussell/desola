@@ -41,13 +41,13 @@ public:
   const Scalar operator+(const Scalar& right) const
   {
     using namespace desolin_internal;
-    return Scalar(*new Pairwise<scalar, T_element>(add, this->getExpr(), right.getExpr()));
+    return Scalar(*new Pairwise<scalar, T_element>(pair_add, this->getExpr(), right.getExpr()));
   }
 
   const Scalar operator-(const Scalar& right) const
   {
     using namespace desolin_internal;
-    return Scalar(*new Pairwise<scalar, T_element>(sub, this->getExpr(), right.getExpr()));
+    return Scalar(*new Pairwise<scalar, T_element>(pair_sub, this->getExpr(), right.getExpr()));
   }
 
   const Scalar operator-() const

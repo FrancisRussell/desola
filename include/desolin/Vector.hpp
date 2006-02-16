@@ -64,13 +64,13 @@ public:
   const Vector operator+(const Vector& right) const
   {
     using namespace desolin_internal;
-    return Vector(*new Pairwise<vector, T_element>(add, this->getExpr(), right.getExpr()));
+    return Vector(*new Pairwise<vector, T_element>(pair_add, this->getExpr(), right.getExpr()));
   }
 
   const Vector operator-(const Vector& right) const
   {
     using namespace desolin_internal;
-    return Vector(*new Pairwise<vector, T_element>(sub, this->getExpr(), right.getExpr()));
+    return Vector(*new Pairwise<vector, T_element>(pair_sub, this->getExpr(), right.getExpr()));
   }
 
   const Vector operator-() const

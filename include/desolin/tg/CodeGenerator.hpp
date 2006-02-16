@@ -399,8 +399,8 @@ private:
   {
     switch(op)
     {
-      case tg_add: return left.add(right);
-      case tg_sub: return left.sub(right);
+      case tg_pair_add: return left.add(right);
+      case tg_pair_sub: return left.sub(right);
       default: throw TGInvalidOperationError("Unrecognised TaskGraph Evaluator Pairwise Operation"); 
     }
   }

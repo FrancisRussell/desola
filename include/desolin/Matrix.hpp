@@ -68,13 +68,13 @@ public:
   const Matrix operator+(const Matrix& right) const
   {
     using namespace desolin_internal;
-    return Matrix(*new Pairwise<matrix, T_element>(add, this->getExpr(), right.getExpr()));
+    return Matrix(*new Pairwise<matrix, T_element>(pair_add, this->getExpr(), right.getExpr()));
   }
 
   const Matrix operator-(const Matrix& right) const
   {
     using namespace desolin_internal;
-    return Matrix(*new Pairwise<matrix, T_element>(sub, this->getExpr(), right.getExpr()));
+    return Matrix(*new Pairwise<matrix, T_element>(pair_sub, this->getExpr(), right.getExpr()));
   }
 
   const Matrix operator-() const
