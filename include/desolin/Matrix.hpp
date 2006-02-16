@@ -120,6 +120,18 @@ public:
     return transpose()*right;
   }
 
+  const Matrix ele_mul(const Matrix& right) const
+  {
+    using namespace desolin_internal;
+    return Matrix(*new Pairwise<matrix, T_element>(pair_mul, this->getExpr(), right.getExpr()));
+  }
+
+  const Matrix ele_div(const Matrix& right) const
+  {  
+    using namespace desolin_internal;
+    return Matrix(*new Pairwise<matrix, T_element>(pair_div, this->getExpr(), right.getExpr()));
+  }
+
   ScalarElement<desolin_internal::matrix, T_element> operator()(const int row, const int col) const
   {
     using namespace desolin_internal;

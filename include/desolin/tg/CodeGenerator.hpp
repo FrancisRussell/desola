@@ -395,17 +395,19 @@ public:
   }
 
 private:
-  static inline TGScalarExpr<T_element> performOp(TGPairwiseOp op, const TGScalarExpr<T_element>& left, const TGScalarExpr<T_element>& right)
+  static inline TGScalarExpr<T_element> performOp(const TGPairwiseOp op, const TGScalarExpr<T_element>& left, const TGScalarExpr<T_element>& right)
   {
     switch(op)
     {
       case tg_pair_add: return left.add(right);
       case tg_pair_sub: return left.sub(right);
+      case tg_pair_mul: return left.mul(right);
+      case tg_pair_div: return left.div(right);
       default: throw TGInvalidOperationError("Unrecognised TaskGraph Evaluator Pairwise Operation"); 
     }
   }
 
-  static inline TGScalarExpr<T_element> performOp(TGScalarPiecewiseOp op, const TGScalarExpr<T_element>& left, const TGScalarExpr<T_element>& right)
+  static inline TGScalarExpr<T_element> performOp(const TGScalarPiecewiseOp op, const TGScalarExpr<T_element>& left, const TGScalarExpr<T_element>& right)
   {
     switch(op)
     {

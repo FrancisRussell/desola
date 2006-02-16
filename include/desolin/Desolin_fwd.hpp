@@ -17,7 +17,9 @@ enum ExprType
 enum PairwiseOp
 {
   pair_add,
-  pair_sub
+  pair_sub,
+  pair_mul,
+  pair_div
 };
 
 enum ScalarPiecewiseOp

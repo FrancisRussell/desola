@@ -16,7 +16,9 @@ enum TGExprType
 enum TGPairwiseOp
 {
   tg_pair_add,
-  tg_pair_sub
+  tg_pair_sub,
+  tg_pair_mul,
+  tg_pair_div
 };
 
 enum TGScalarPiecewiseOp

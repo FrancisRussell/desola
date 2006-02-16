@@ -109,6 +109,18 @@ public:
     return Scalar<T_element>(*new VectorNorm<T_element>(this->getExpr()));
   }
 
+  const Vector ele_mul(const Vector& right) const
+  {
+    using namespace desolin_internal;
+    return Vector(*new Pairwise<vector, T_element>(pair_mul, this->getExpr(), right.getExpr()));
+  }
+
+  const Vector ele_div(const Vector& right) const
+  {
+    using namespace desolin_internal;
+    return Vector(*new Pairwise<vector, T_element>(pair_div, this->getExpr(), right.getExpr()));
+  }
+
   ScalarElement<desolin_internal::vector, T_element> operator()(const int row) const
   {
     using namespace desolin_internal;

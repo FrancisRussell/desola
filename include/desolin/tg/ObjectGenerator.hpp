@@ -21,7 +21,7 @@ private:
   TGObjectGeneratorHelper<vector, T_element> vectorHandler;
   TGObjectGeneratorHelper<matrix, T_element> matrixHandler;
   
-  static TGScalarPiecewiseOp getTGScalarPiecewiseOp(ScalarPiecewiseOp op)
+  static TGScalarPiecewiseOp getTGScalarPiecewiseOp(const ScalarPiecewiseOp op)
   {
     switch(op)
     {
@@ -32,12 +32,14 @@ private:
     }
   }
 
-  static TGPairwiseOp getTGPairwiseOp(PairwiseOp op)
+  static TGPairwiseOp getTGPairwiseOp(const PairwiseOp op)
   {
     switch(op)
     {
       case pair_add: return tg_pair_add;
       case pair_sub: return tg_pair_sub;
+      case pair_mul: return tg_pair_mul;
+      case pair_div: return tg_pair_div;
       default: throw TGInvalidOperationError("Unrecognised DesoLin Pairwise Operation");
     }
   }
