@@ -63,7 +63,7 @@
 
 #include <desolin/Desolin.hpp>
 #include <desolin/itl_interface.hpp>
-#include <itl/krylov/cheby.h>
+#include <itl/krylov/richardson.h>
 
 using namespace itl;
 
@@ -86,9 +86,7 @@ int main (int argc, char* argv[])
 
   desolin::harwell_boeing_stream<Type> hbs(argv[1]);
 
-  int max_iter = 60;
-  Scalar eigmin(0.01);
-  Scalar eigmax(10.0);
+  int max_iter = 50;
   //begin
   Matrix A(hbs);
 
@@ -99,8 +97,8 @@ int main (int argc, char* argv[])
   
   //iteration
   noisy_iteration<Scalar> iter(b, max_iter, 1.0e-6);
-  //cheby algorithm
-  cheby(A, x, b, precond(), iter, eigmin, eigmax);
+  //richardson algorithm
+  richardson(A, x, b, precond(), iter);
   //end
 
   //verify the result
