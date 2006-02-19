@@ -23,14 +23,12 @@ private:
 
     if (left == &previous)
     {
-      this->registerDependency(&next);
-      this->unregisterDependency(&previous);
+      this->replaceDependency(&previous, &next);
       left = boost::polymorphic_downcast< ExprNode<leftType, T_element>* >(&next);
     }
     if(right == &previous)
     {
-      this->registerDependency(&next);
-      this->unregisterDependency(&previous);
+      this->replaceDependency(&previous, &next);
       right = boost::polymorphic_downcast< ExprNode<rightType, T_element>* >(&next);
     }
   }

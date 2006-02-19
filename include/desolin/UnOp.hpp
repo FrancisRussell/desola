@@ -22,8 +22,7 @@ private:
     
     if (expr == &previous)
     {
-      this->registerDependency(&next);
-      this->unregisterDependency(&previous);
+      this->replaceDependency(&previous, &next);
       expr = boost::polymorphic_downcast< ExprNode<exprType, T_element>* >(&next);
     }
   }

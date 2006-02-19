@@ -167,9 +167,9 @@ public:
       return true;
 
     // It's an output if it has nodes depending on it that are node evaluated by the evaluator
-    const std::multiset<ExpressionNode<T_element>*> internal_reqBy(node.getInternalRequiredBy());
+    const std::vector<ExpressionNode<T_element>*> internal_reqBy(node.getInternalRequiredBy());
     const std::set<ExpressionNode<T_element>*>& claimed = claimedMap.find(&evaluator)->second;
-    for(typename std::multiset<ExpressionNode<T_element>*>::const_iterator iterator=internal_reqBy.begin(); iterator!=internal_reqBy.end(); ++iterator)
+    for(typename std::vector<ExpressionNode<T_element>*>::const_iterator iterator=internal_reqBy.begin(); iterator!=internal_reqBy.end(); ++iterator)
     {
       if (claimed.find(*iterator) == claimed.end())
         return true;

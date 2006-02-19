@@ -58,8 +58,7 @@ private:
   {
     if (pair.second == &previous)
     {
-      this->registerDependency(&next);
-      this->unregisterDependency(&previous);
+      this->replaceDependency(&previous, &next);
       pair.second = &next;
     }
   }

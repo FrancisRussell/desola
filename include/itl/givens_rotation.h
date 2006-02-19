@@ -306,7 +306,7 @@ public:
   inline T scaled_abs(C t) {
     T ret;
     T x = std::abs(std::real(t));
-    T y = stdLLabs(std::imag(t));
+    T y = std::abs(std::imag(t));
     T w = std::max(x, y);
     T z = std::min(x, y);
     if ( z == T(0) )

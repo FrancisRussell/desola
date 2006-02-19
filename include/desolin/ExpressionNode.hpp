@@ -25,15 +25,15 @@ private:
   ExpressionNode& operator=(const ExpressionNode&);
   
   std::multiset<const Variable<T_element>*> external_reqBy;
-  std::multiset<ExpressionNode*> internal_reqBy;
-  std::multiset<ExpressionNode*> deps;
+  std::vector<ExpressionNode*> internal_reqBy;
+  std::vector<ExpressionNode*> deps;
 
 public:
   ExpressionNode()
   {
   }
 
-  inline std::multiset<ExpressionNode*> getInternalRequiredBy() const
+  inline std::vector<ExpressionNode*> getInternalRequiredBy() const
   {
     return internal_reqBy;
   }
@@ -43,7 +43,7 @@ public:
     return external_reqBy;
   }
   
-  inline std::multiset<ExpressionNode*> getDependencies() const
+  inline std::vector<ExpressionNode*> getDependencies() const
   {
     return deps;
   }
@@ -92,7 +92,7 @@ protected:
   }
 
   template<ExprType exprType>
-  static void updateExpressionNode(ExpressionNode<T_element>* expressionNode, ExprNode<exprType, T_element>& previous, ExprNode<exprType, T_element>& next)
+  static void updateExpressionNode(ExpressionNode<T_element>* const expressionNode, ExprNode<exprType, T_element>& previous, ExprNode<exprType, T_element>& next)
   {
     expressionNode->update(previous, next);
   }
@@ -105,40 +105,43 @@ protected:
     
     // We make copies because this node might be deleted during this method
     const std::multiset<const Variable<T_element>*> localExternalReqBy(external_reqBy);
-    const std::multiset<ExpressionNode<T_element>*> localInternalReqBy(internal_reqBy);
+    const std::vector<ExpressionNode<T_element>*> localInternalReqBy(internal_reqBy);
 
     std::for_each(localExternalReqBy.begin(), localExternalReqBy.end(), boost::bind(updateVariable<exprType>, _1, boost::ref(previous), boost::ref(next)));
     std::for_each(localInternalReqBy.begin(), localInternalReqBy.end(), boost::bind(updateExpressionNode<exprType>, _1, boost::ref(previous), boost::ref(next)));
   }
   
-  inline void registerDependency(ExpressionNode* e)
+  inline void registerDependency(ExpressionNode* const e)
   {
     assert(e != NULL);
-    deps.insert(e);
+    
+    deps.push_back(e);
     e->registerRequiredBy(this);  
   }
+ 
+  inline void replaceDependency(ExpressionNode* const previous, ExpressionNode* const next)
+  {
+    assert(previous != NULL);
+    assert(next != NULL);
+    
+    const typename std::vector<ExpressionNode*>::iterator location = std::find(deps.begin(), deps.end(), previous);
+    assert(location != deps.end());
+    *location = next;
+    next->registerRequiredBy(this);
+    previous->unregisterRequiredBy(this);
+  }
   
-  inline void unregisterDependency(ExpressionNode* e)
+  inline void registerRequiredBy(ExpressionNode* const e)
+  {
+    assert(e != NULL);
+    internal_reqBy.push_back(e);
+  }
+  
+  inline void unregisterRequiredBy(ExpressionNode* const e)
   {
     assert(e != NULL);
     // We only want to erase one instance from the multiset
-    const typename std::multiset<ExpressionNode*>::iterator location = deps.find(e);
-    assert(location != deps.end()); 
-    deps.erase(location);
-    e->unregisterRequiredBy(this);  
-  }
-  
-  inline void registerRequiredBy(ExpressionNode* e)
-  {
-    assert(e != NULL);
-    internal_reqBy.insert(e);
-  }
-  
-  inline void unregisterRequiredBy(ExpressionNode* e)
-  {
-    assert(e != NULL);
-    // We only want to erase one instance from the multiset
-    const typename std::multiset<ExpressionNode*>::iterator location = internal_reqBy.find(e);
+    const typename std::vector<ExpressionNode*>::iterator location = std::find(internal_reqBy.begin(), internal_reqBy.end(), e);
     assert(location != internal_reqBy.end());
     internal_reqBy.erase(location);
     checkSelfDestruct();
@@ -148,19 +151,22 @@ protected:
   {
     if(internal_reqBy.empty() && external_reqBy.empty())
     {
-      std::multiset<ExpressionNode*> local_deps(deps); 
-      std::for_each(local_deps.begin(), local_deps.end(), boost::bind(&ExpressionNode::unregisterDependency, this, _1));
+      typedef typename std::vector<ExpressionNode*>::iterator Iterator;
+      for(Iterator i = deps.begin(); i != deps.end(); ++i)
+      {
+        (*i)->unregisterRequiredBy(this);
+      }
       delete this;
     }
   }
 
-  static void getLeavesHelper(std::set<ExpressionNode*>& visited, std::set<ExpressionNode*>& leaves, ExpressionNode* node)
+  static void getLeavesHelper(std::set<ExpressionNode*>& visited, std::vector<ExpressionNode*>& leaves, ExpressionNode* const node)
   {
     if (visited.insert(node).second)
     {
       if (node->internal_reqBy.empty())
       {
-        leaves.insert(node);
+        leaves.push_back(node);
       }
 
       std::for_each(node->deps.begin(), node->deps.end(), boost::bind(getLeavesHelper, boost::ref(visited), boost::ref(leaves), _1));
@@ -168,16 +174,16 @@ protected:
     }	   
   }
 
-  std::set<ExpressionNode*> getLeaves() 
+  std::vector<ExpressionNode*> getLeaves() 
   {
     std::set<ExpressionNode*> visited;
-    std::set<ExpressionNode*> leaves;
+    std::vector<ExpressionNode*> leaves;
     getLeavesHelper(visited, leaves, this);
     return leaves;
   }
 
   template<typename OutputIterator>
-  static void getTopologicallySortedNodesHelper(ExpressionNode* node, std::set<ExpressionNode*>& visited, OutputIterator out)
+  static void getTopologicallySortedNodesHelper(ExpressionNode* const node, std::set<ExpressionNode*>& visited, OutputIterator out)
   {
     if (visited.insert(node).second)
     {
@@ -188,7 +194,7 @@ protected:
 
   std::vector<ExpressionNode*> getTopologicallySortedNodes() 
   {
-    const std::set<ExpressionNode*> leaves(getLeaves());
+    const std::vector<ExpressionNode*> leaves(getLeaves());
     std::vector<ExpressionNode*> nodes;
     std::set<ExpressionNode*> visited;
     typedef std::back_insert_iterator< std::vector<ExpressionNode*> > OutputIterator;
