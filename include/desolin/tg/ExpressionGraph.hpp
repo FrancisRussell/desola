@@ -2,7 +2,7 @@
 #define DESOLIN_TG_EXPRESSION_GRAPH_HPP
 
 #include <algorithm>
-#include <boost/shared_ptr.hpp>
+#include <boost/functional/hash.hpp>
 #include <boost/bind.hpp>
 #include <boost/ref.hpp>
 #include <boost/function.hpp>
@@ -21,6 +21,7 @@ private:
   TGExpressionGraph(const TGExpressionGraph&);
   TGExpressionGraph& operator=(const TGExpressionGraph&);
   
+  std::map<TGExpressionNode<T_element>*, int> nodeNumberings;
   std::vector< TGExpressionNode<T_element>* >  exprVector;
   tg::tuTaskGraph taskGraphObject;
   NameGenerator generator;
@@ -36,41 +37,23 @@ private:
     node->accept(visitor);
   }
 
-  static void addDependencies(TGExpressionNode<T_element>* node, std::set<TGExpressionNode<T_element>*>& deps)
-  {
-    const std::set<TGExpressionNode<T_element>*> dependencies(node->getDependencies());
-    deps.insert(dependencies.begin(), dependencies.end());
-  }
-
-  std::set<TGExpressionNode<T_element>*> getLeaves()
-  {
-    std::set<TGExpressionNode<T_element>*> all(exprVector.begin(), exprVector.end());
-    
-    std::set<TGExpressionNode<T_element>*> dependencies;
-    std::for_each(all.begin(), all.end(), boost::bind(addDependencies, _1, boost::ref(dependencies)));
-    
-    std::set<TGExpressionNode<T_element>*> leaves;
-    std::insert_iterator< std::set<TGExpressionNode<T_element>*> > leafInserter(leaves, leaves.begin());
-    std::set_difference(all.begin(), all.end(), dependencies.begin(), dependencies.end(), leafInserter);
-    return leaves;
-  }
-  
 public:
   TGExpressionGraph()
   {
   }
   
-  void add(TGExpressionNode<T_element>* value)
+  inline void add(TGExpressionNode<T_element>* value)
   {
     exprVector.push_back(value);
+    nodeNumberings[value] = nodeNumberings.size();
   }
 
-  NameGenerator& getNameGenerator()
+  inline NameGenerator& getNameGenerator()
   {
     return generator;
   }
 
-  const int size() const
+  const inline int size() const
   {
     return exprVector.size();
   }
@@ -84,7 +67,7 @@ public:
     };
   }
 
-  void print() const
+  inline void print() const
   {
     taskGraphObject.print();
   }
@@ -100,6 +83,16 @@ public:
   void accept(TGExpressionNodeVisitor<T_element>& visitor)
   {
     std::for_each(exprVector.begin(), exprVector.end(), boost::bind(applyVisitor, _1, boost::ref(visitor)));
+  }
+
+  std::size_t hashValue() const
+  {
+    std::vector<std::size_t> hashes(exprVector.size());
+    std::transform(exprVector.begin(), exprVector.end(), 
+		   std::back_insert_iterator< std::vector<std::size_t> >(hashes), 
+		   boost::bind(&TGExpressionNode<T_element>::hashValue, _1, boost::cref(nodeNumberings)));
+
+    return boost::hash_range(hashes.begin(), hashes.end());
   }
 
   ~TGExpressionGraph()

@@ -66,13 +66,11 @@ public:
   
   virtual void evaluate()
   {
-    if (!evaluated)
-    {
-      evaluated = true;
-      ParameterHolder parameterHolder;
-      objectGenerator.addTaskGraphMappings(parameterHolder);
-      graph->execute(parameterHolder);
-    }
+    assert(!evaluated); 
+    evaluated = true;
+    ParameterHolder parameterHolder;
+    objectGenerator.addTaskGraphMappings(parameterHolder);
+    graph->execute(parameterHolder);
   }
 };
 

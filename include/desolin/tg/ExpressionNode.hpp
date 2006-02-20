@@ -2,7 +2,9 @@
 #define DESOLIN_TG_EXPRESSION_NODE_HPP
 
 #include <set>
+#include <string>
 #include <boost/scoped_ptr.hpp>
+#include <boost/functional/hash.hpp>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 
 namespace desolin_internal
@@ -43,6 +45,11 @@ public:
     return row < i.row;
   }
 };
+
+std::size_t hash_value(const TGElementIndex<tg_vector>& index)
+{
+  return boost::hash<int>()(index.getRow());
+}
 
 template<>
 class TGElementIndex<tg_matrix>
@@ -88,6 +95,14 @@ public:
   }
 };
 
+std::size_t hash_value(const TGElementIndex<tg_matrix>& index)
+{
+  std::size_t seed = boost::hash<int>()(index.getRow());
+  boost::hash_combine(seed, index.getCol());
+  return seed;
+}
+
+
 template<typename T_element>
 class TGExpressionNode
 {
@@ -106,6 +121,8 @@ public:
   
   virtual void accept(TGExpressionNodeVisitor<T_element>& visitor) = 0;
 
+  virtual std::size_t hashValue(const std::map<TGExpressionNode*, int>& nodeNumberings) const = 0;
+  
   std::set<TGExpressionNode<T_element>*> getDependencies() const
   {
     return dependencies;
@@ -135,6 +152,13 @@ public:
   inline bool isParameter() const
   {
     return internal->isParameter();
+  }
+
+  inline virtual std::size_t hashValue(const std::map<TGExpressionNode<T_element>*, int>& nodeNumberings) const
+  {
+    std::size_t seed = boost::hash<std::string>()(typeid(*this).name());
+    boost::hash_combine(seed, internal->hashValue());
+    return seed;
   }
 };
 

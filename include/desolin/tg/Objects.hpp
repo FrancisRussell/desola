@@ -1,6 +1,8 @@
 #ifndef DESOLIN_TG_OBJECTS_HPP
 #define DESOLIN_TG_OBJECTS_HPP
 
+#include <boost/functional/hash.hpp>
+#include <typeinfo>
 #include <cassert>
 #include <string>
 #include <map>
@@ -10,7 +12,7 @@
 
 namespace desolin_internal
 {
-
+	
 template<typename T_elementType>
 class TGScalar
 {
@@ -21,7 +23,8 @@ public:
   virtual ~TGScalar() {}
   virtual InternalScalar<T_elementType>* createInternalRep() const = 0;
   virtual bool isParameter() const = 0;
-  virtual void addParameterMappings(InternalScalar<T_elementType>& internal, ParameterHolder& params) = 0;
+  virtual void addParameterMappings(InternalScalar<T_elementType>& internal, ParameterHolder& params) const = 0;
+  virtual std::size_t hashValue() const = 0;
 };
 
 template<typename T_elementType>
@@ -35,8 +38,8 @@ public:
   virtual ~TGVector() {}
   virtual InternalVector<T_elementType>* createInternalRep() const = 0;
   virtual bool isParameter() const = 0;
-  virtual void addParameterMappings(InternalVector<T_elementType>& internal, ParameterHolder& params) = 0;
-    
+  virtual void addParameterMappings(InternalVector<T_elementType>& internal, ParameterHolder& params) const = 0;
+  virtual std::size_t hashValue() const = 0;
 };
 
 template<typename T_elementType>
@@ -51,7 +54,8 @@ public:
   virtual ~TGMatrix() {}
   virtual InternalMatrix<T_elementType>* createInternalRep() const = 0;
   virtual bool isParameter() const = 0;
-  virtual void addParameterMappings(InternalMatrix<T_elementType>& internal, ParameterHolder& params) = 0;
+  virtual void addParameterMappings(InternalMatrix<T_elementType>& internal, ParameterHolder& params) const = 0;
+  virtual std::size_t hashValue() const = 0;
 };
 
 template<typename T_elementType>
@@ -174,7 +178,14 @@ public:
     return parameter;
   }
 
-  virtual void addParameterMappings(InternalScalar<T_elementType>& internal, ParameterHolder& params)
+  virtual std::size_t hashValue() const
+  {
+    std::size_t seed = boost::hash<std::string>()(typeid(*this).name());
+    boost::hash_combine(seed, parameter);
+    return seed;
+  }
+
+  virtual void addParameterMappings(InternalScalar<T_elementType>& internal, ParameterHolder& params) const
   {
     assert(parameter);
     Mapper mapper(*this, params);
@@ -184,11 +195,11 @@ public:
   class Mapper : public InternalScalarVisitor<T_elementType>
   {
   private:
-    TGConventionalScalar<T_elementType>& internal;
+    const TGConventionalScalar<T_elementType>& internal;
     ParameterHolder& parameterHolder;
   
   public:
-    Mapper(TGConventionalScalar<T_elementType>& i, ParameterHolder& p) : internal(i), parameterHolder(p)
+    Mapper(const TGConventionalScalar<T_elementType>& i, ParameterHolder& p) : internal(i), parameterHolder(p)
     {
     }
     
@@ -269,21 +280,29 @@ public:
     return parameter;
   }
 
-  virtual void addParameterMappings(InternalVector<T_elementType>& internal, ParameterHolder& params)
+  virtual void addParameterMappings(InternalVector<T_elementType>& internal, ParameterHolder& params) const
   {
     assert(parameter);
     Mapper mapper(*this, params);
     internal.accept(mapper);
   }
+  
+  virtual std::size_t hashValue() const
+  {
+    std::size_t seed = boost::hash<std::string>()(typeid(*this).name());
+    boost::hash_combine(seed, parameter);
+    boost::hash_combine(seed, rows);
+    return seed;
+  }
     
   class Mapper : public InternalVectorVisitor<T_elementType>
   {
   private:
-    TGConventionalVector<T_elementType>& internal;
+    const TGConventionalVector<T_elementType>& internal;
     ParameterHolder& parameterHolder;
 
   public:
-    Mapper(TGConventionalVector<T_elementType>& i, ParameterHolder& p) : internal(i), parameterHolder(p)
+    Mapper(const TGConventionalVector<T_elementType>& i, ParameterHolder& p) : internal(i), parameterHolder(p)
     {
     }
 
@@ -371,21 +390,30 @@ public:
     return parameter;
   }
 
-  virtual void addParameterMappings(InternalMatrix<T_elementType>& internal, ParameterHolder& params)
+  virtual void addParameterMappings(InternalMatrix<T_elementType>& internal, ParameterHolder& params) const
   {
     assert(parameter);
     Mapper mapper(*this, params);
     internal.accept(mapper);
   }
+
+  virtual std::size_t hashValue() const
+  {
+    std::size_t seed = boost::hash<std::string>()(typeid(*this).name());
+    boost::hash_combine(seed, parameter);
+    boost::hash_combine(seed, rows);
+    boost::hash_combine(seed, cols);
+    return seed;
+  }
    
   class Mapper : public InternalMatrixVisitor<T_elementType>
   {
   private:
-    TGConventionalMatrix<T_elementType>& internal;
+    const TGConventionalMatrix<T_elementType>& internal;
     ParameterHolder& parameterHolder;
 
   public:
-    Mapper(TGConventionalMatrix<T_elementType>& i, ParameterHolder& p) : internal(i), parameterHolder(p)
+    Mapper(const TGConventionalMatrix<T_elementType>& i, ParameterHolder& p) : internal(i), parameterHolder(p)
     {
     }
 

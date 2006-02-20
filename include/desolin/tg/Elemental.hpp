@@ -3,7 +3,11 @@
 
 #include <map>
 #include <algorithm>
+#include <vector>
+#include <cassert>
+#include <boost/functional/hash.hpp>
 #include <boost/bind.hpp>
+#include <boost/ref.hpp>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 
 namespace desolin_internal
@@ -32,6 +36,13 @@ public:
   {
     v.visit(*this);
   }
+
+  inline virtual std::size_t hashValue(const std::map<TGExpressionNode<T_element>*, int>& nodeNumberings) const
+  {
+    std::size_t seed = TGUnOp<tg_scalar, exprType, T_element>::hashValue(nodeNumberings);
+    boost::hash_combine(seed, index);
+    return seed;
+  } 
 };
 
 template<TGExprType exprType, typename T_element>
@@ -62,6 +73,26 @@ public:
   {
     v.visit(*this);
   }
+
+  static std::size_t calculateHash(const std::map<TGExpressionNode<T_element>*, int>& nodeNumberings, 
+		                   const std::pair<const TGElementIndex<exprType>, TGExprNode<tg_scalar, T_element>*>& pair)
+  {
+    std::size_t seed = boost::hash< TGElementIndex<exprType> >()(pair.first);
+    assert(nodeNumberings.find(pair.second) != nodeNumberings.end());
+    boost::hash_combine(seed, nodeNumberings.find(pair.second)->second);
+    return seed;
+  }
+  
+  inline virtual std::size_t hashValue(const std::map<TGExpressionNode<T_element>*, int>& nodeNumberings) const
+  {
+    std::size_t seed = TGUnOp<exprType, exprType, T_element>::hashValue(nodeNumberings);
+    std::vector<std::size_t> hashes(assignments.size());
+    std::transform(assignments.begin(), assignments.end(), 
+		   std::back_insert_iterator< std::vector<std::size_t> >(hashes), 
+		   boost::bind(&TGElementSet<exprType, T_element>::calculateHash, boost::cref(nodeNumberings), _1));
+    boost::hash_combine(seed, boost::hash_range(hashes.begin(), hashes.end()));
+    return seed;
+  }  
 };
 
 }

@@ -2,6 +2,9 @@
 #define DESOLIN_TG_BINOP_HPP
 
 #include <set>
+#include <map>
+#include <cassert>
+#include <boost/functional/hash.hpp>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 
 namespace desolin_internal
@@ -29,6 +32,17 @@ public:
   {
     return *right;
   }
+  
+  inline virtual std::size_t hashValue(const std::map<TGExpressionNode<T_element>*, int>& nodeNumberings) const
+  {
+    std::size_t seed = TGExprNode<resultType, T_element>::hashValue(nodeNumberings);
+    assert(nodeNumberings.find(left) != nodeNumberings.end());
+    assert(nodeNumberings.find(right) != nodeNumberings.end());
+    boost::hash_combine(seed, nodeNumberings.find(left)->second);
+    boost::hash_combine(seed, nodeNumberings.find(right)->second);
+    return seed;
+  }
+  
 };
 
 }
