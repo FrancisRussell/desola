@@ -405,7 +405,7 @@ public:
     boost::hash_combine(seed, parameter);
     boost::hash_combine(seed, rows);
     boost::hash_combine(seed, cols);
-    boost::hash_combine(sees, name);
+    boost::hash_combine(seed, name);
     return seed;
   }
    

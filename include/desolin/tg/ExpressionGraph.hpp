@@ -21,11 +21,13 @@ private:
   TGExpressionGraph(const TGExpressionGraph&);
   TGExpressionGraph& operator=(const TGExpressionGraph&);
   
-  std::map<TGExpressionNode<T_element>*, int> nodeNumberings;
   std::vector< TGExpressionNode<T_element>* >  exprVector;
   tg::tuTaskGraph taskGraphObject;
   NameGenerator generator;
 
+  mutable bool isHashCached;
+  mutable std::size_t cachedHash;
+  
   void generateCode()
   {
     TGCodeGenerator<T_element> codeGenerator(*this);
@@ -38,14 +40,13 @@ private:
   }
 
 public:
-  TGExpressionGraph()
+  TGExpressionGraph() : isHashCached(false)
   {
   }
   
   inline void add(TGExpressionNode<T_element>* value)
   {
     exprVector.push_back(value);
-    nodeNumberings[value] = nodeNumberings.size();
   }
 
   inline NameGenerator& getNameGenerator()
@@ -87,12 +88,21 @@ public:
 
   std::size_t hashValue() const
   {
-    std::vector<std::size_t> hashes(exprVector.size());
-    std::transform(exprVector.begin(), exprVector.end(), 
-		   std::back_insert_iterator< std::vector<std::size_t> >(hashes), 
-		   boost::bind(&TGExpressionNode<T_element>::hashValue, _1, boost::cref(nodeNumberings)));
-
-    return boost::hash_range(hashes.begin(), hashes.end());
+    if (!isHashCached)
+    {
+      std::map<TGExpressionNode<T_element>*, int> nodeNumberings;
+      for(int index=0; index<exprVector.size(); ++index)
+      {
+        nodeNumberings[exprVector[index]] = index;
+      }
+    
+      std::vector<std::size_t> hashes(exprVector.size());
+      std::transform(exprVector.begin(), exprVector.end(), 
+  		     std::back_insert_iterator< std::vector<std::size_t> >(hashes), 
+		     boost::bind(&TGExpressionNode<T_element>::hashValue, _1, boost::cref(nodeNumberings)));
+      cachedHash = boost::hash_range(hashes.begin(), hashes.end());
+    }
+    return cachedHash;
   }
 
   ~TGExpressionGraph()
