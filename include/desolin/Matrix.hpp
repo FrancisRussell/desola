@@ -22,6 +22,11 @@ public:
   Matrix()
   {
   }
+ 
+  explicit Matrix(const int rows, const int cols) : desolin_internal::Var<desolin_internal::matrix, T_element>(*new desolin_internal::Literal<desolin_internal::matrix, T_element>(new desolin_internal::ConventionalMatrix<T_element>(rows, cols, 0)))
+  {
+  }
+  
   
   Matrix(const int rows, const int cols, const T_element initialValue) : desolin_internal::Var<desolin_internal::matrix, T_element>(*new desolin_internal::Literal<desolin_internal::matrix, T_element>(new desolin_internal::ConventionalMatrix<T_element>(rows, cols, initialValue)))
   {

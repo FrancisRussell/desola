@@ -116,7 +116,7 @@ namespace itl {
   
     template <class Vector>
     basic_iteration(const Vector& b, int max_iter_, Real t, Real a = Real(0))
-      : error(0), i(0), normb_(std::abs(itl::two_norm(b))), 
+      : error(0), i(0), normb_(abs(itl::two_norm(b))), 
 	       max_iter(max_iter_), rtol_(t), atol_(a) { }
   
     basic_iteration(Real nb, int max_iter_, Real t, Real a = Real(0))
@@ -125,7 +125,7 @@ namespace itl {
   
     template <class Vector>
     bool finished(const Vector& r) {
-      Real normr_ = std::abs(itl::two_norm(r)); 
+      Real normr_ = abs(itl::two_norm(r)); 
       if (converged(normr_))
 	return true;
       else if (i < max_iter)
@@ -150,7 +150,7 @@ namespace itl {
 
     template <typename T>
     bool finished(const std::complex<T>& r) { 
-      if (converged(std::abs(r)))
+      if (converged(abs(r)))
 	return true;
       else if (i < max_iter)
 	return false;
@@ -214,7 +214,7 @@ namespace itl {
       using std::cout;
       using std::endl;
 
-      Real normr_ = std::abs(itl::two_norm(r)); 
+      Real normr_ = abs(itl::two_norm(r)); 
       bool ret;
       if (converged(normr_))
 	ret = true;
@@ -254,7 +254,7 @@ namespace itl {
       using std::endl;
 
       bool ret;
-      if (converged(std::abs(r)))
+      if (converged(abs(r)))
 	ret = true;
       else if (this->i < this->max_iter)
 	ret = false;

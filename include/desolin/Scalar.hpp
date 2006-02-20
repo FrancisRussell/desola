@@ -3,6 +3,8 @@
 
 #include <map>
 #include <desolin/Desolin_fwd.hpp>
+#include <boost/static_assert.hpp>
+#include <boost/type_traits.hpp>
 
 namespace desolin
 {
@@ -38,47 +40,58 @@ public:
     return *this;
   }
 
-  const Scalar operator+(const Scalar& right) const
-  {
-    using namespace desolin_internal;
-    return Scalar(*new Pairwise<scalar, T_element>(pair_add, this->getExpr(), right.getExpr()));
-  }
-
-  const Scalar operator-(const Scalar& right) const
-  {
-    using namespace desolin_internal;
-    return Scalar(*new Pairwise<scalar, T_element>(pair_sub, this->getExpr(), right.getExpr()));
-  }
-
   const Scalar operator-() const
   {
     using namespace desolin_internal;
     return Scalar(*new Negate<scalar, T_element>(this->getExpr()));
   }
-
-  template<typename T_rightType>
-  const T_rightType operator*(const T_rightType& right) const
+  
+  friend const Scalar abs(const Scalar& operand)
   {
     using namespace desolin_internal;
-    return T_rightType(*new ScalarPiecewise<T_rightType::expressionType, T_element>(multiply, this->getExpr(), right.getExpr()));
+    return Scalar(*new Absolute<T_element>(operand.getExpr()));
   }
 
-  const Scalar operator/(const Scalar& right) const
+  friend const Scalar sqrt(const Scalar& operand)
   {
     using namespace desolin_internal;
-    return Scalar(*new ScalarPiecewise<scalar, T_element>(divide, this->getExpr(), right.getExpr()));
+    return Scalar(*new SquareRoot<T_element>(operand.getExpr()));
   }
 
-  const Scalar abs() const
+  friend const Scalar operator+(const Scalar& left, const Scalar& right)
   {
     using namespace desolin_internal;
-    return Scalar(*new Absolute<T_element>(this->getExpr()));
+    return Scalar(*new Pairwise<scalar, T_element>(pair_add, left.getExpr(), right.getExpr()));
   }
 
-  const Scalar sqrt() const
+  friend const Scalar operator-(const Scalar& left, const Scalar& right)
   {
     using namespace desolin_internal;
-    return Scalar(*new SquareRoot<T_element>(this->getExpr()));
+    return Scalar(*new Pairwise<scalar, T_element>(pair_sub, left.getExpr(), right.getExpr()));
+  }
+
+  friend const Scalar operator*(const Scalar& left, const Scalar& right)
+  {
+    using namespace desolin_internal;
+    return Scalar(*new ScalarPiecewise<scalar, T_element>(multiply, left.getExpr(), right.getExpr()));
+  }
+
+  friend const Vector<T_element> operator*(const Scalar& left, const Vector<T_element>& right)
+  {
+    using namespace desolin_internal;
+    return Vector<T_element>(*new ScalarPiecewise<vector, T_element>(multiply, left.getExpr(), right.getExpr()));
+  }
+
+  friend const Matrix<T_element> operator*(const Scalar& left, const Matrix<T_element>& right)
+  {
+    using namespace desolin_internal;
+    return Matrix<T_element>(*new ScalarPiecewise<matrix, T_element>(multiply, left.getExpr(), right.getExpr()));
+  }
+
+  friend const Scalar operator/(const Scalar& left, const Scalar& right)
+  {
+    using namespace desolin_internal;
+    return Scalar(*new ScalarPiecewise<scalar, T_element>(divide, left.getExpr(), right.getExpr()));
   }
 
   bool operator==(const Scalar& right) const
@@ -172,20 +185,5 @@ public:
   }
 };
 
-}
-
-namespace std
-{
-  template<typename T_element>
-  const desolin::Scalar<T_element> abs(const desolin::Scalar<T_element>& s)
-  {
-    return s.abs();
-  }
-
-  template<typename T_element>
-  const desolin::Scalar<T_element> sqrt(const desolin::Scalar<T_element>& s)
-  {
-    return s.sqrt();
-  }
 }
 #endif

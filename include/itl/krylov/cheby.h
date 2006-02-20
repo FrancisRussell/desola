@@ -81,11 +81,11 @@ cheby(const Matrix &A, Vector &x, const VectorB &b,
 
     if ( iter.first() ) {
       itl::copy(z, p);          
-      alpha = Real(2.0) / d;
+      alpha = 2.0 / d;
     } else {
       beta = c * alpha / 2.0;    
       beta = beta * beta;
-      alpha = Real(1.0) / (d - beta);  
+      alpha = 1.0 / (d - beta);  
       itl::add(z, itl::scaled(p, beta), p);
     }
 

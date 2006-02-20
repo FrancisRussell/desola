@@ -46,6 +46,7 @@ public:
   
   inline void add(TGExpressionNode<T_element>* value)
   {
+    assert(!isHashCached);
     exprVector.push_back(value);
   }
 
@@ -86,23 +87,23 @@ public:
     std::for_each(exprVector.begin(), exprVector.end(), boost::bind(applyVisitor, _1, boost::ref(visitor)));
   }
 
-  std::size_t hashValue() const
+  friend std::size_t hash_value(const TGExpressionGraph<T_element>& graph)
   {
-    if (!isHashCached)
+    if (!graph.isHashCached)
     {
       std::map<TGExpressionNode<T_element>*, int> nodeNumberings;
-      for(int index=0; index<exprVector.size(); ++index)
+      for(int index=0; index<graph.exprVector.size(); ++index)
       {
-        nodeNumberings[exprVector[index]] = index;
+        nodeNumberings[graph.exprVector[index]] = index;
       }
     
-      std::vector<std::size_t> hashes(exprVector.size());
-      std::transform(exprVector.begin(), exprVector.end(), 
+      std::vector<std::size_t> hashes(graph.exprVector.size());
+      std::transform(graph.exprVector.begin(), graph.exprVector.end(), 
   		     std::back_insert_iterator< std::vector<std::size_t> >(hashes), 
 		     boost::bind(&TGExpressionNode<T_element>::hashValue, _1, boost::cref(nodeNumberings)));
-      cachedHash = boost::hash_range(hashes.begin(), hashes.end());
+      graph.cachedHash = boost::hash_range(hashes.begin(), hashes.end());
     }
-    return cachedHash;
+    return graph.cachedHash;
   }
 
   ~TGExpressionGraph()
@@ -113,6 +114,7 @@ public:
     }
   }
 };
+
 
 }
 #endif

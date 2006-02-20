@@ -23,7 +23,7 @@ public:
   {
   }
  
-  Vector(const int rows) : desolin_internal::Var<desolin_internal::vector, T_element>(*new desolin_internal::Literal<desolin_internal::vector, T_element>(new desolin_internal::ConventionalVector<T_element>(rows, 0)))
+  explicit Vector(const int rows) : desolin_internal::Var<desolin_internal::vector, T_element>(*new desolin_internal::Literal<desolin_internal::vector, T_element>(new desolin_internal::ConventionalVector<T_element>(rows, 0)))
   {
   }
   

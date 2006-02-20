@@ -154,7 +154,7 @@ int tfqmr(const Matrix& A, Vector& x, const VectorB& b,
     theta  = itl::two_norm(w) / tau;
     
     // 15. c=1/sqrt(1+theta^2)
-    c = Real(1.) / std::sqrt(Real(1.) + theta * theta);
+    c = 1. / sqrt(1. + theta * theta);
 
     // 16. tau=tau0*theta*c
     tau = tau * c * theta;
@@ -166,7 +166,7 @@ int tfqmr(const Matrix& A, Vector& x, const VectorB& b,
     //x += eta * d;
     itl::add(x, itl::scaled(d, eta), x);
     // 20. kappa=tau*sqrt(m+1)
-    kappa = tau * std::sqrt( Real(2.) * Real(iter.iterations()+1) );
+    kappa = tau * sqrt( 2.* (iter.iterations()+1) );
 
     // 21. check stopping criterion
     if ( iter.finished(kappa) ) {
@@ -191,7 +191,7 @@ int tfqmr(const Matrix& A, Vector& x, const VectorB& b,
     theta = itl::two_norm(w) / tau;
     
     // 15. c=1/sqrt(1+theta^2)
-    c = Real(1.) / std::sqrt(Real(1.) + theta * theta);
+    c = 1. / sqrt(1. + theta * theta);
 
     // 16. tau=tau0*theta*c
     tau = tau * c * theta;
@@ -204,7 +204,7 @@ int tfqmr(const Matrix& A, Vector& x, const VectorB& b,
     itl::add(x, itl::scaled(d, eta), x);
 
     // 20. kappa=tau*sqrt(m+1)
-    kappa = tau * std::sqrt(Real(2.) * Real(iter.iterations()+1)  + 1.);
+    kappa = tau * sqrt(2.* (iter.iterations()+1)  + 1.);
 
     // 21. check stopping criterion
     if ( iter.finished(kappa) ) {
