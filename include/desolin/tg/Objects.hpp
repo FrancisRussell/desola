@@ -182,6 +182,7 @@ public:
   {
     std::size_t seed = boost::hash<std::string>()(typeid(*this).name());
     boost::hash_combine(seed, parameter);
+    boost::hash_combine(seed, name);
     return seed;
   }
 
@@ -292,6 +293,7 @@ public:
     std::size_t seed = boost::hash<std::string>()(typeid(*this).name());
     boost::hash_combine(seed, parameter);
     boost::hash_combine(seed, rows);
+    boost::hash_combine(seed, name);
     return seed;
   }
     
@@ -403,6 +405,7 @@ public:
     boost::hash_combine(seed, parameter);
     boost::hash_combine(seed, rows);
     boost::hash_combine(seed, cols);
+    boost::hash_combine(sees, name);
     return seed;
   }
    
