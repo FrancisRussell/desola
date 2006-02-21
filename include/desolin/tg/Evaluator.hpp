@@ -14,12 +14,12 @@
 
 namespace desolin_internal
 {
-
 template<typename T_element>
 class TGEvaluator : public Evaluator<T_element>
 {
 private:
-  static std::map<std::size_t, boost::shared_ptr< TGExpressionGraph<T_element> > > cachedGraphs;
+  typedef std::map<std::size_t, boost::shared_ptr< TGExpressionGraph<T_element> > > T_cachedGraphMap;
+  static T_cachedGraphMap cachedGraphs;
 	
   TGEvaluator(const TGEvaluator&);
   TGEvaluator& operator=(const TGEvaluator&);
@@ -71,9 +71,23 @@ public:
   {
     assert(!evaluated); 
     evaluated = true;
-    graph->compile();
+
+    const std::size_t hash = boost::hash< TGExpressionGraph<T_element> >()(*graph);
+    const typename T_cachedGraphMap::iterator cachedGraphIterator = cachedGraphs.find(hash);
+
     ParameterHolder parameterHolder;
     objectGenerator.addTaskGraphMappings(parameterHolder);
+	    
+    if (cachedGraphIterator != cachedGraphs.end() && (*graph)==(*cachedGraphIterator->second))
+    {
+      graph = cachedGraphIterator->second;
+    }
+    else
+    {
+      graph->compile();
+      cachedGraphs[hash] = graph;
+    }
+    
     graph->execute(parameterHolder);
   }
 };
@@ -87,6 +101,9 @@ public:
     return boost::shared_ptr< Evaluator<T_element> >(new TGEvaluator<T_element>(strategy));
   }
 };
+
+template<typename T_element>
+std::map<std::size_t, boost::shared_ptr< TGExpressionGraph<T_element> > > TGEvaluator<T_element>::cachedGraphs;
 
 }
 #endif

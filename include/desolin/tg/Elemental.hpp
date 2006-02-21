@@ -19,7 +19,7 @@ private:
   const TGElementIndex<exprType> index;
 
 public:
-  inline bool isEqual(const TGElementGet& node, const std::map<TGExpressionNode<T_element>*, TGExpressionNode<T_element>*>& mappings) const
+  inline bool isEqual(const TGElementGet& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
   {
     return TGUnOp<tg_scalar, exprType, T_element>::isEqual(node, mappings) &&
     index == node.index;
@@ -55,7 +55,7 @@ private:
   }
 
 public:
-  bool isEqual(const TGElementSet& node, const std::map<TGExpressionNode<T_element>*, TGExpressionNode<T_element>*>& mappings) const
+  bool isEqual(const TGElementSet& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
   {
     if (!TGUnOp<exprType, exprType, T_element>::isEqual(node, mappings))
       return false;

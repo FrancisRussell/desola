@@ -72,6 +72,8 @@ public:
 
   void compile()
   {
+    // Twice for good measure ;)
+    taskGraphObject.applyOptimisation("fusion");
     taskGraphObject.applyOptimisation("fusion");
     taskGraphObject.compile(tg::GCC, false);	
   }
@@ -100,8 +102,8 @@ public:
     }
     else
     {
-      std::map<TGExpressionNode<T_element>*, TGExpressionNode<T_element>*> mappings;
-      for(int index = 0; index<exprVector.size(); ++index)
+      std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*> mappings;
+      for(std::size_t index = 0; index<exprVector.size(); ++index)
       {
         mappings[exprVector[index]] = right.exprVector[index];
       }
@@ -116,7 +118,7 @@ public:
   {
     if (!graph.isHashCached)
     {
-      std::map<TGExpressionNode<T_element>*, int> nodeNumberings;
+      std::map<const TGExpressionNode<T_element>*, int> nodeNumberings;
       for(std::size_t index=0; index<graph.exprVector.size(); ++index)
       {
         nodeNumberings[graph.exprVector[index]] = index;

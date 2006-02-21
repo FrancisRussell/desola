@@ -26,6 +26,12 @@ public:
     v.visit(*this);
   }
 
+  inline bool isEqual(const TGPairwise& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
+  {
+    return  TGBinOp<exprType, exprType, exprType, T_element>::isEqual(node, mappings) &&
+	    op == node.op;
+  } 
+
   TGPairwiseOp getOperation() const
   {
     return op;

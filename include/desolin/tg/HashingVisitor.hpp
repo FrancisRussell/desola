@@ -16,7 +16,7 @@ template<typename T_element>
 class TGHashingVisitor : public TGExpressionNodeVisitor<T_element>
 {
 private:
-  const std::map<TGExpressionNode<T_element>*, int> nodeNumberings;
+  const std::map<const TGExpressionNode<T_element>*, int> nodeNumberings;
   std::size_t hash;
 
   template<TGExprType exprType>
@@ -95,7 +95,7 @@ private:
   } 
   
 public:
-  TGHashingVisitor(const std::map<TGExpressionNode<T_element>*, int>& numberings) : nodeNumberings(numberings), hash(0)
+  TGHashingVisitor(const std::map<const TGExpressionNode<T_element>*, int>& numberings) : nodeNumberings(numberings), hash(0)
   {
   }
 

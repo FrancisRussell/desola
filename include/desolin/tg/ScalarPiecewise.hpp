@@ -20,6 +20,12 @@ public:
   {
   }
 
+  inline bool isEqual(const TGScalarPiecewise& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
+  {
+    return  TGBinOp<exprType, exprType, tg_scalar, T_element>::isEqual(node, mappings) &&
+	    op == node.op;
+  }
+
   TGScalarPiecewiseOp getOperation() const
   {
     return op;

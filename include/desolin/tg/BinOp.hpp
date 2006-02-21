@@ -17,7 +17,7 @@ private:
   TGExprNode<rightType, T_element>* right;
 
 public:
-  inline bool isEqual(const TGBinOp& node, const std::map<TGExpressionNode<T_element>*, TGExpressionNode<T_element>*>& mappings) const
+  inline bool isEqual(const TGBinOp& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
   {
     assert(mappings.find(left) != mappings.end());
     assert(mappings.find(right) != mappings.end());

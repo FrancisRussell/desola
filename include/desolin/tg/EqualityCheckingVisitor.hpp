@@ -13,19 +13,19 @@ template<typename T_element>
 class TGEqualityCheckingVisitor : public TGExpressionNodeVisitor<T_element>
 {
 private:
-  const std::map<TGExpressionNode<T_element>*, TGExpressionNode<T_element>*> mappings;
+  const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*> mappings;
   bool equal;
   
   template<typename T_node>
   inline void checkMatch(const T_node& left)
   {
     assert(mappings.find(&left) != mappings.end());
-    const TGExpressionNode<T_element>& right = *mappings.find(&left).second;
+    const TGExpressionNode<T_element>& right = *(mappings.find(&left)->second);
 
     if (typeid(left) == typeid(right))
     {
       const T_node& castedRight = static_cast<const T_node&>(right);
-      equal = equal && left.isEqual(right, mappings);
+      equal = equal && left.isEqual(castedRight, mappings);
     }
     else
     {
@@ -34,7 +34,7 @@ private:
   }
   
 public:
-  TGEqualityCheckingVisitor(const std::map<TGExpressionNode<T_element>*, TGExpressionNode<T_element>*>& m) : mappings(m), equal(true)
+  TGEqualityCheckingVisitor(const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& m) : mappings(m), equal(true)
   {
   }
 

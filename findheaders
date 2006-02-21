@@ -1,2 +1,0 @@
-#!/bin/sh
-find include -name "*[hpp|h]" -type f | tr "\n" " "

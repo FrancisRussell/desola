@@ -11,7 +11,7 @@ template<TGExprType exprType, typename T_element>
 class TGLiteral : public TGExprNode<exprType, T_element>
 {
 public:
-  inline bool isEqual(const TGLiteral& node, const std::map<TGExpressionNode<T_element>*, TGExpressionNode<T_element>*>& mappings) const
+  inline bool isEqual(const TGLiteral& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
   {
     return TGExprNode<exprType, T_element>::isEqual(node, mappings);
   }
