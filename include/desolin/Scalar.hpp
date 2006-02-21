@@ -76,16 +76,16 @@ public:
     return Scalar(*new ScalarPiecewise<scalar, T_element>(multiply, left.getExpr(), right.getExpr()));
   }
 
-  friend const Vector<T_element> operator*(const Scalar& left, const Vector<T_element>& right)
+  const Vector<T_element> operator*(const Vector<T_element>& right) const
   {
     using namespace desolin_internal;
-    return Vector<T_element>(*new ScalarPiecewise<vector, T_element>(multiply, left.getExpr(), right.getExpr()));
+    return Vector<T_element>(*new ScalarPiecewise<vector, T_element>(multiply, this->getExpr(), right.getExpr()));
   }
 
-  friend const Matrix<T_element> operator*(const Scalar& left, const Matrix<T_element>& right)
+  const Matrix<T_element> operator*(const Matrix<T_element>& right) const
   {
     using namespace desolin_internal;
-    return Matrix<T_element>(*new ScalarPiecewise<matrix, T_element>(multiply, left.getExpr(), right.getExpr()));
+    return Matrix<T_element>(*new ScalarPiecewise<matrix, T_element>(multiply, this->getExpr(), right.getExpr()));
   }
 
   friend const Scalar operator/(const Scalar& left, const Scalar& right)

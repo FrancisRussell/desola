@@ -38,12 +38,6 @@ public:
   {
     return *expr;
   }
-
-  virtual bool matches(const TGExpressionNode<T_element>& node, const std::map<TGExpressionNode<T_element>*, TGExpressionNode<T_element>*>& mappings) const
-  {
-    return TGExpressionNode<T_element>::matches(*this, node, mappings);
-  }
-  
 };
 
 template<TGExprType exprType, typename T_element>
@@ -54,6 +48,11 @@ public:
   {
   }
 
+  inline bool isEqual(const TGNegate& node, const std::map<TGExpressionNode<T_element>*, TGExpressionNode<T_element>*>& mappings) const
+  {
+    return TGUnOp<exprType, exprType, T_element>::isEqual(node, mappings);
+  }
+  
   virtual void accept(TGExpressionNodeVisitor<T_element>& v)
   {
     v.visit(*this);
@@ -68,6 +67,11 @@ public:
   {
   }
 
+  inline bool isEqual(const TGAbsolute& node, const std::map<TGExpressionNode<T_element>*, TGExpressionNode<T_element>*>& mappings) const
+  {
+    return TGUnOp<tg_scalar, tg_scalar, T_element>::isEqual(node, mappings);
+  }
+  
   virtual void accept(TGExpressionNodeVisitor<T_element>& v)
   {
     v.visit(*this);
@@ -81,6 +85,11 @@ public:
   TGSquareRoot(typename TGInternalType<tg_scalar, T_element>::type* internal, TGExprNode<tg_scalar, T_element>& e) : TGUnOp<tg_scalar, tg_scalar, T_element>(internal, e)
   {
   }
+
+  inline bool isEqual(const TGSquareRoot& node, const std::map<TGExpressionNode<T_element>*, TGExpressionNode<T_element>*>& mappings) const
+  {
+    return TGUnOp<tg_scalar, tg_scalar, T_element>::isEqual(node, mappings);
+  } 
 
   virtual void accept(TGExpressionNodeVisitor<T_element>& v)
   {

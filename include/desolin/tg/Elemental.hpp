@@ -41,11 +41,6 @@ public:
   {
     v.visit(*this);
   }
-
-  virtual bool matches(const TGExpressionNode<T_element>& node, const std::map<TGExpressionNode<T_element>*, TGExpressionNode<T_element>*>& mappings) const 
-  {
-    return TGExpressionNode<T_element>::matches(*this, node, mappings);
-  }
 };
 
 template<TGExprType exprType, typename T_element>
@@ -100,11 +95,6 @@ public:
   virtual void accept(TGExpressionNodeVisitor<T_element>& v)
   {
     v.visit(*this);
-  }
-
-  virtual bool matches(const TGExpressionNode<T_element>& node, const std::map<TGExpressionNode<T_element>*, TGExpressionNode<T_element>*>& mappings) const 
-  {
-    return TGExpressionNode<T_element>::matches(*this, node, mappings);
   }
 };
 

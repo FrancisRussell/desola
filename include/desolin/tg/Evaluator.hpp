@@ -4,6 +4,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
+#include <boost/functional/hash.hpp>
 #include <vector>
 #include <map>
 #include <set>
@@ -18,6 +19,8 @@ template<typename T_element>
 class TGEvaluator : public Evaluator<T_element>
 {
 private:
+  static std::map<std::size_t, boost::shared_ptr< TGExpressionGraph<T_element> > > cachedGraphs;
+	
   TGEvaluator(const TGEvaluator&);
   TGEvaluator& operator=(const TGEvaluator&);
 	
@@ -68,6 +71,7 @@ public:
   {
     assert(!evaluated); 
     evaluated = true;
+    graph->compile();
     ParameterHolder parameterHolder;
     objectGenerator.addTaskGraphMappings(parameterHolder);
     graph->execute(parameterHolder);

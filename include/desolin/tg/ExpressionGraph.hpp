@@ -1,7 +1,6 @@
 #ifndef DESOLIN_TG_EXPRESSION_GRAPH_HPP
 #define DESOLIN_TG_EXPRESSION_GRAPH_HPP
 
-#include <iostream>
 #include <algorithm>
 #include <boost/shared_ptr.hpp>
 #include <boost/functional/hash.hpp>
@@ -20,8 +19,6 @@ template<typename T_element>
 class TGExpressionGraph
 {
 private:
-  static std::map<std::size_t, boost::shared_ptr< TGExpressionGraph > > cachedGraphs;
-
   TGExpressionGraph(const TGExpressionGraph&);
   TGExpressionGraph& operator=(const TGExpressionGraph&);
   
@@ -73,6 +70,12 @@ public:
     };
   }
 
+  void compile()
+  {
+    taskGraphObject.applyOptimisation("fusion");
+    taskGraphObject.compile(tg::GCC, false);	
+  }
+
   inline void print() const
   {
     const_cast<tg::tuTaskGraph&>(taskGraphObject).print();
@@ -80,8 +83,6 @@ public:
 
   void execute(const ParameterHolder& parameterHolder)
   {
-    taskGraphObject.applyOptimisation("fusion");
-    taskGraphObject.compile(tg::GCC, false);
     parameterHolder.setParameters(taskGraphObject);
     taskGraphObject.execute();
   }
@@ -100,18 +101,14 @@ public:
     else
     {
       std::map<TGExpressionNode<T_element>*, TGExpressionNode<T_element>*> mappings;
-
       for(int index = 0; index<exprVector.size(); ++index)
       {
         mappings[exprVector[index]] = right.exprVector[index];
       }
 
-      for(int index = 0; index<exprVector.size(); ++index)
-      {
-        if (!exprVector[index]->matches(*right.exprVector[index], mappings))
-          return false;
-      }
-      return true;
+      TGEqualityCheckingVisitor<T_element> checker(mappings);
+      const_cast<TGExpressionGraph<T_element>&>(*this).accept(checker);
+      return checker.isEqual();
     }
   }
 
@@ -119,7 +116,7 @@ public:
   {
     if (!graph.isHashCached)
     {
-      std::map<const TGExpressionNode<T_element>*, int> nodeNumberings;
+      std::map<TGExpressionNode<T_element>*, int> nodeNumberings;
       for(std::size_t index=0; index<graph.exprVector.size(); ++index)
       {
         nodeNumberings[graph.exprVector[index]] = index;
@@ -140,9 +137,6 @@ public:
     }
   }
 };
-
-template<typename T_element>
-std::map<std::size_t, boost::shared_ptr< TGExpressionGraph<T_element> > > TGExpressionGraph<T_element>::cachedGraphs;
 
 }
 #endif

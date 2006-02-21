@@ -39,6 +39,7 @@ template<TGExprType resultType, TGExprType leftType, TGExprType rightType, typen
 template<TGExprType resultType, TGExprType exprType, typename T_element> class TGUnOp;
 template<typename T_element> class TGExpressionNodeVisitor;
 template<typename T_element> class TGHashingVisitor;
+template<typename T_element> class TGEqualityCheckingVisitor;
 template<TGExprType exprType, typename T_element> class TGElementGet;
 template<TGExprType exprType, typename T_element> class TGElementSet;
 template<TGExprType exprType, typename T_element> class TGLiteral;

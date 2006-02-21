@@ -52,11 +52,6 @@ public:
   {
     return *right;
   }
-   
-  virtual bool matches(const TGExpressionNode<T_element>& node, const std::map<TGExpressionNode<T_element>*, TGExpressionNode<T_element>*>& mappings) const 
-  {
-    return TGExpressionNode<T_element>::matches(*this, node, mappings);
-  }
 };
 
 }
