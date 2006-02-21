@@ -225,6 +225,7 @@ class InternalScalarVisitor
 {
 public:
   virtual void visit(ConventionalScalar<T_elementType>& value) = 0;
+  virtual ~InternalScalarVisitor() {}
 };
 
 template<typename T_elementType>
@@ -232,6 +233,7 @@ class InternalVectorVisitor
 {
 public:
   virtual void visit(ConventionalVector<T_elementType>& value) = 0;
+  virtual ~InternalVectorVisitor() {}
 }; 
 
 template<typename T_elementType>
@@ -239,6 +241,7 @@ class InternalMatrixVisitor
 {
 public:
   virtual void visit(ConventionalMatrix<T_elementType>& value) = 0;
+  virtual ~InternalMatrixVisitor() {}
 };
 
 }

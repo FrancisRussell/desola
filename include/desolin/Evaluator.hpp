@@ -24,6 +24,7 @@ class EvaluatorFactory
 {
 public:
   virtual boost::shared_ptr< Evaluator<T_element> > createEvaluator(EvaluationStrategy<T_element>& strategy) = 0;
+  virtual ~EvaluatorFactory() {}
 };
 
 }

@@ -1,7 +1,9 @@
 #ifndef DESOLIN_TG_EXPRESSION_GRAPH_HPP
 #define DESOLIN_TG_EXPRESSION_GRAPH_HPP
 
+#include <iostream>
 #include <algorithm>
+#include <boost/shared_ptr.hpp>
 #include <boost/functional/hash.hpp>
 #include <boost/bind.hpp>
 #include <boost/ref.hpp>
@@ -18,6 +20,8 @@ template<typename T_element>
 class TGExpressionGraph
 {
 private:
+  static std::map<std::size_t, boost::shared_ptr< TGExpressionGraph > > cachedGraphs;
+
   TGExpressionGraph(const TGExpressionGraph&);
   TGExpressionGraph& operator=(const TGExpressionGraph&);
   
@@ -71,7 +75,7 @@ public:
 
   inline void print() const
   {
-    taskGraphObject.print();
+    const_cast<tg::tuTaskGraph&>(taskGraphObject).print();
   }
 
   void execute(const ParameterHolder& parameterHolder)
@@ -85,6 +89,30 @@ public:
   void accept(TGExpressionNodeVisitor<T_element>& visitor)
   {
     std::for_each(exprVector.begin(), exprVector.end(), boost::bind(applyVisitor, _1, boost::ref(visitor)));
+  }
+
+  bool operator==(const TGExpressionGraph& right) const
+  {
+    if (exprVector.size() != right.exprVector.size())
+    {
+      return false;
+    }
+    else
+    {
+      std::map<TGExpressionNode<T_element>*, TGExpressionNode<T_element>*> mappings;
+
+      for(int index = 0; index<exprVector.size(); ++index)
+      {
+        mappings[exprVector[index]] = right.exprVector[index];
+      }
+
+      for(int index = 0; index<exprVector.size(); ++index)
+      {
+        if (!exprVector[index]->matches(*right.exprVector[index], mappings))
+          return false;
+      }
+      return true;
+    }
   }
 
   friend std::size_t hash_value(const TGExpressionGraph<T_element>& graph)
@@ -115,6 +143,8 @@ public:
   }
 };
 
+template<typename T_element>
+std::map<std::size_t, boost::shared_ptr< TGExpressionGraph<T_element> > > TGExpressionGraph<T_element>::cachedGraphs;
 
 }
 #endif

@@ -14,6 +14,8 @@ AC_PROG_LIBTOOL
 
 # Checks for libraries.
 
+CXXFLAGS="$CXXFLAGS -Wall -pedantic"
+
 AC_ARG_WITH([taskgraph-prefix],
             AC_HELP_STRING([--with-taskgraph-prefix=PFX], [Use the TaskGraph installation in PFX]),
             [

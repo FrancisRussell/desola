@@ -2,6 +2,7 @@
 #define DESOLIN_TG_EXPRESSION_NODE_HPP
 
 #include <set>
+#include <map>
 #include <string>
 #include <boost/scoped_ptr.hpp>
 #include <boost/functional/hash.hpp>
@@ -113,6 +114,20 @@ private:
 
 protected:
   std::set<TGExpressionNode<T_element>*> dependencies;
+
+  template<typename T_leftType>
+  static inline bool matches(const T_leftType& left, const TGExpressionNode<T_element>& right,  const std::map<TGExpressionNode<T_element>*, TGExpressionNode<T_element>*>& mappings)
+  {
+    if (typeid(left) == typeid(right))
+    {
+      const T_leftType& castedRight = static_cast<const T_leftType&>(right);
+      return left.isEqual(castedRight, mappings);
+    }
+    else
+    {
+      return false;
+    }
+  }
   
 public:
   TGExpressionNode()
@@ -122,6 +137,8 @@ public:
   virtual void accept(TGExpressionNodeVisitor<T_element>& visitor) = 0;
 
   virtual std::size_t hashValue(const std::map<TGExpressionNode*, int>& nodeNumberings) const = 0;
+
+  virtual bool matches(const TGExpressionNode& node, const std::map<TGExpressionNode*, TGExpressionNode*>& mappings) const = 0;
   
   std::set<TGExpressionNode<T_element>*> getDependencies() const
   {
@@ -139,7 +156,13 @@ class TGExprNode : public TGExpressionNode<T_element>
 private:
   typedef typename TGInternalType<exprType, T_element>::type T_internal;
   boost::scoped_ptr< T_internal > internal;
+
 public:
+  bool isEqual(const TGExprNode& node, const std::map<TGExpressionNode<T_element>*, TGExpressionNode<T_element>*>& mappings) const
+  {
+    return internal->matches(*node.internal);
+  }
+  
   TGExprNode(T_internal* i) : internal(i)
   {
   }

@@ -30,6 +30,8 @@ protected:
   virtual void internal_update(ExprNode<scalar, T_element>& previous, ExprNode<scalar, T_element>& next) const = 0;
   virtual void internal_update(ExprNode<vector, T_element>& previous, ExprNode<vector, T_element>& next) const = 0;
   virtual void internal_update(ExprNode<matrix, T_element>& previous, ExprNode<matrix, T_element>& next) const = 0;
+
+  virtual ~Variable() {}
 };
 
 template<ExprType expressionType, typename T_element>

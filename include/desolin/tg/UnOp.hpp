@@ -15,7 +15,16 @@ class TGUnOp : public TGExprNode<resultType, T_element>
 {
 private:
   TGExprNode<exprType, T_element>* expr;
+
 public:
+  inline bool isEqual(const TGUnOp& node, const std::map<TGExpressionNode<T_element>*, TGExpressionNode<T_element>*>& mappings) const
+  {
+    assert(mappings.find(expr) != mappings.end());
+
+    return TGExprNode<resultType, T_element>::isEqual(node, mappings) && 
+           mappings.find(expr)->second == node.expr;
+  }
+    
   TGUnOp(typename TGInternalType<resultType, T_element>::type* internal, TGExprNode<exprType, T_element>& e) : TGExprNode<resultType, T_element>(internal), expr(&e)
   {
     this->dependencies.insert(expr);
@@ -33,6 +42,12 @@ public:
     boost::hash_combine(seed, nodeNumberings.find(expr)->second);
     return seed;
   }
+
+  virtual bool matches(const TGExpressionNode<T_element>& node, const std::map<TGExpressionNode<T_element>*, TGExpressionNode<T_element>*>& mappings) const
+  {
+    return TGExpressionNode<T_element>::matches(*this, node, mappings);
+  }
+  
 };
 
 template<TGExprType exprType, typename T_element>
