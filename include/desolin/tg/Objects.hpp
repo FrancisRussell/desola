@@ -20,7 +20,6 @@ public:
   virtual const TGScalarExpr<T_element> getExpression() const = 0;
   virtual void setExpression(const TGScalarExpr<T_element>& e) = 0;
   virtual void addExpression(const TGScalarExpr<T_element>& e) = 0;
-  virtual ~TGScalar() {}
   virtual InternalScalar<T_element>* createInternalRep() const = 0;
   virtual bool isParameter() const = 0;
   virtual void addParameterMappings(InternalScalar<T_element>& internal, ParameterHolder& params) const = 0;
@@ -37,7 +36,6 @@ public:
   virtual void setExpression(const tg::TaskExpression& row, const TGScalarExpr<T_element>& e) = 0;
   virtual void addExpression(const tg::TaskExpression& row, const TGScalarExpr<T_element>& e) = 0;
   virtual int getRows() const = 0;
-  virtual ~TGVector() {}
   virtual InternalVector<T_element>* createInternalRep() const = 0;
   virtual bool isParameter() const = 0;
   virtual void addParameterMappings(InternalVector<T_element>& internal, ParameterHolder& params) const = 0;
@@ -55,7 +53,6 @@ public:
   virtual void addExpression(const tg::TaskExpression& row, const tg::TaskExpression& col, const TGScalarExpr<T_element>& e) = 0;
   virtual int getRows() const = 0;
   virtual int getCols() const = 0;
-  virtual ~TGMatrix() {}
   virtual InternalMatrix<T_element>* createInternalRep() const = 0;
   virtual bool isParameter() const = 0;
   virtual void addParameterMappings(InternalMatrix<T_element>& internal, ParameterHolder& params) const = 0;
