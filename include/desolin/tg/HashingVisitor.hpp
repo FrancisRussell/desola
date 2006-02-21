@@ -56,7 +56,7 @@ private:
   }
 
   template<TGExprType exprType>
-  std::size_t hashSingleElementSet(const std::pair<const TGElementIndex<exprType>, TGExprNode<tg_scalar, T_element>*>& pair) const
+  std::size_t hashSingleElementSet(const std::pair<const TGElementIndex<exprType>, const TGExprNode<tg_scalar, T_element>*>& pair) const
   {
     std::size_t seed = boost::hash< TGElementIndex<exprType> >()(pair.first);
     assert(nodeNumberings.find(pair.second) != nodeNumberings.end());
@@ -68,7 +68,7 @@ private:
   std::size_t hashElementSet(const TGElementSet<exprType, T_element>& node) const
   {
     std::size_t seed = hashUnOp(node);
-    typedef std::map<TGElementIndex<exprType>, TGExprNode<tg_scalar, T_element>*> T_assignmentMap;
+    typedef std::map<TGElementIndex<exprType>, const TGExprNode<tg_scalar, T_element>*> T_assignmentMap;
     const T_assignmentMap assignments(node.getAssignments());
 
     for(typename T_assignmentMap::const_iterator i = assignments.begin(); i != assignments.end(); ++i)

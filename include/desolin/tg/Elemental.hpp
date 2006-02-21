@@ -87,9 +87,14 @@ public:
     std::for_each(assignments.begin(), assignments.end(), boost::bind(&TGElementSet::registerDependency, this, _1));
   }
 
-  std::map<TGElementIndex<exprType>, TGExprNode<tg_scalar, T_element>*> getAssignments() const
+  std::map<TGElementIndex<exprType>, TGExprNode<tg_scalar, T_element>*> getAssignments() 
   {
     return assignments;
+  }
+
+  std::map<TGElementIndex<exprType>, const TGExprNode<tg_scalar, T_element>*> getAssignments() const
+  {
+    return std::map<TGElementIndex<exprType>, const TGExprNode<tg_scalar, T_element>*>(assignments.begin(), assignments.end());
   }
 
   virtual void accept(TGExpressionNodeVisitor<T_element>& v)
