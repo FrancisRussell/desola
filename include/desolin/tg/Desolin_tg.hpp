@@ -12,6 +12,7 @@
 #include <desolin/tg/Pairwise.hpp>
 #include <desolin/tg/ScalarPiecewise.hpp>
 #include <desolin/tg/ExpressionNodeVisitor.hpp>
+#include <desolin/tg/HashingVisitor.hpp>
 #include <desolin/tg/Objects.hpp>
 #include <desolin/tg/ExpressionGraph.hpp>
 #include <desolin/tg/Evaluator.hpp>

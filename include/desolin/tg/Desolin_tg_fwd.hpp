@@ -38,6 +38,7 @@ template<typename T_element> class TGExpressionNode;
 template<TGExprType resultType, TGExprType leftType, TGExprType rightType, typename T_element> class TGBinOp;
 template<TGExprType resultType, TGExprType exprType, typename T_element> class TGUnOp;
 template<typename T_element> class TGExpressionNodeVisitor;
+template<typename T_element> class TGHashingVisitor;
 template<TGExprType exprType, typename T_element> class TGElementGet;
 template<TGExprType exprType, typename T_element> class TGElementSet;
 template<TGExprType exprType, typename T_element> class TGLiteral;

@@ -4,7 +4,6 @@
 #include <set>
 #include <map>
 #include <cassert>
-#include <boost/functional/hash.hpp>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 
 namespace desolin_internal
@@ -39,21 +38,21 @@ public:
     return *left;
   }
 
+  inline const TGExprNode<leftType, T_element>& getLeft() const
+  {
+    return *left;
+  }
+
   inline TGExprNode<rightType, T_element>& getRight()
   {
     return *right;
   }
-  
-  inline virtual std::size_t hashValue(const std::map<TGExpressionNode<T_element>*, int>& nodeNumberings) const
-  {
-    std::size_t seed = TGExprNode<resultType, T_element>::hashValue(nodeNumberings);
-    assert(nodeNumberings.find(left) != nodeNumberings.end());
-    assert(nodeNumberings.find(right) != nodeNumberings.end());
-    boost::hash_combine(seed, nodeNumberings.find(left)->second);
-    boost::hash_combine(seed, nodeNumberings.find(right)->second);
-    return seed;
-  }
 
+  inline const TGExprNode<rightType, T_element>& getRight() const
+  {
+    return *right;
+  }
+   
   virtual bool matches(const TGExpressionNode<T_element>& node, const std::map<TGExpressionNode<T_element>*, TGExpressionNode<T_element>*>& mappings) const 
   {
     return TGExpressionNode<T_element>::matches(*this, node, mappings);

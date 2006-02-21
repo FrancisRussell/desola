@@ -136,8 +136,6 @@ public:
   
   virtual void accept(TGExpressionNodeVisitor<T_element>& visitor) = 0;
 
-  virtual std::size_t hashValue(const std::map<TGExpressionNode*, int>& nodeNumberings) const = 0;
-
   virtual bool matches(const TGExpressionNode& node, const std::map<TGExpressionNode*, TGExpressionNode*>& mappings) const = 0;
   
   std::set<TGExpressionNode<T_element>*> getDependencies() const
@@ -172,16 +170,14 @@ public:
     return *internal;
   }
 
+  inline const T_internal& getInternal() const
+  {
+    return *internal;
+  }
+
   inline bool isParameter() const
   {
     return internal->isParameter();
-  }
-
-  inline virtual std::size_t hashValue(const std::map<TGExpressionNode<T_element>*, int>& nodeNumberings) const
-  {
-    std::size_t seed = boost::hash<std::string>()(typeid(*this).name());
-    boost::hash_combine(seed, internal->hashValue());
-    return seed;
   }
 };
 

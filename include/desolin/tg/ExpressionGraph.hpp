@@ -119,17 +119,15 @@ public:
   {
     if (!graph.isHashCached)
     {
-      std::map<TGExpressionNode<T_element>*, int> nodeNumberings;
-      for(int index=0; index<graph.exprVector.size(); ++index)
+      std::map<const TGExpressionNode<T_element>*, int> nodeNumberings;
+      for(std::size_t index=0; index<graph.exprVector.size(); ++index)
       {
         nodeNumberings[graph.exprVector[index]] = index;
       }
-    
-      std::vector<std::size_t> hashes(graph.exprVector.size());
-      std::transform(graph.exprVector.begin(), graph.exprVector.end(), 
-  		     std::back_insert_iterator< std::vector<std::size_t> >(hashes), 
-		     boost::bind(&TGExpressionNode<T_element>::hashValue, _1, boost::cref(nodeNumberings)));
-      graph.cachedHash = boost::hash_range(hashes.begin(), hashes.end());
+
+      TGHashingVisitor<T_element> hasher(nodeNumberings);
+      const_cast<TGExpressionGraph<T_element>&>(graph).accept(hasher);
+      graph.cachedHash = hasher.getHash();
     }
     return graph.cachedHash;
   }
