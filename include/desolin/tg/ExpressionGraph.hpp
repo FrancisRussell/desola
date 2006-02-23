@@ -2,8 +2,7 @@
 #define DESOLIN_TG_EXPRESSION_GRAPH_HPP
 
 #include <algorithm>
-#include <boost/shared_ptr.hpp>
-#include <boost/functional/hash.hpp>
+#include <boost/ptr_container/ptr_vector.hpp>
 #include <boost/bind.hpp>
 #include <boost/ref.hpp>
 #include <boost/function.hpp>
@@ -22,7 +21,7 @@ private:
   TGExpressionGraph(const TGExpressionGraph&);
   TGExpressionGraph& operator=(const TGExpressionGraph&);
   
-  std::vector< TGExpressionNode<T_element>* >  exprVector;
+  boost::ptr_vector< TGExpressionNode<T_element> >  exprVector;
   tg::tuTaskGraph taskGraphObject;
   NameGenerator generator;
 
@@ -35,9 +34,9 @@ private:
     accept(codeGenerator);
   }
 
-  static void applyVisitor(TGExpressionNode<T_element>* node, TGExpressionNodeVisitor<T_element>& visitor)
+  static void applyVisitor(TGExpressionNode<T_element>& node, TGExpressionNodeVisitor<T_element>& visitor)
   {
-    node->accept(visitor);
+    node.accept(visitor);
   }
 
 public:
@@ -105,7 +104,7 @@ public:
       std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*> mappings;
       for(std::size_t index = 0; index<exprVector.size(); ++index)
       {
-        mappings[exprVector[index]] = right.exprVector[index];
+        mappings[&exprVector[index]] = &right.exprVector[index];
       }
 
       TGEqualityCheckingVisitor<T_element> checker(mappings);
@@ -121,7 +120,7 @@ public:
       std::map<const TGExpressionNode<T_element>*, int> nodeNumberings;
       for(std::size_t index=0; index<graph.exprVector.size(); ++index)
       {
-        nodeNumberings[graph.exprVector[index]] = index;
+        nodeNumberings[&graph.exprVector[index]] = index;
       }
 
       TGHashingVisitor<T_element> hasher(nodeNumberings);
@@ -129,14 +128,6 @@ public:
       graph.cachedHash = hasher.getHash();
     }
     return graph.cachedHash;
-  }
-
-  ~TGExpressionGraph()
-  {
-    for(typename std::vector<TGExpressionNode<T_element>*>::iterator i = exprVector.begin(); i!=exprVector.end(); ++i)
-    {
-      delete *i;
-    }
   }
 };
 
