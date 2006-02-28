@@ -94,7 +94,7 @@ private:
   T_element value;
   
 public:
-  ConventionalScalar() : InternalScalar<T_element>(true)
+  ConventionalScalar() : InternalScalar<T_element>(true), value(T_element())
   {
   }
 
@@ -183,7 +183,7 @@ public:
   }
 
   template<typename StreamType>
-  ConventionalMatrix(StreamType& stream) : InternalMatrix<T_element>(true, stream.nrows(), stream.ncols()), value(stream.nrows()*stream.ncols())
+  ConventionalMatrix(StreamType& stream) : InternalMatrix<T_element>(true, stream.nrows(), stream.ncols()), value(stream.nrows()*stream.ncols(), T_element())
   {
     while(!stream.eof())
     {
