@@ -45,6 +45,7 @@ template<TGExprType exprType, typename T_element> class TGElementSet;
 template<TGExprType exprType, typename T_element> class TGLiteral;
 template<typename T_element> class TGMatrixMult;
 template<typename T_element> class TGMatrixVectorMult;
+template<typename T_element> class TGTransposeMatrixVectorMult;
 template<typename T_element> class TGVectorDot;
 template<typename T_element> class TGVectorCross;
 template<typename T_element> class TGVectorNorm;

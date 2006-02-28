@@ -174,6 +174,31 @@ public:
       }
     }
   }
+
+  virtual void visit(TGTransposeMatrixVectorMult<T_element>& e)
+  {
+    using namespace tg;
+
+    TGVector<T_element>& result(e.getInternal());
+    TGMatrix<T_element>& matrix(e.getLeft().getInternal());
+    TGVector<T_element>& vector(e.getRight().getInternal());
+
+    tVarNamed(int, i, getIndexName());
+    tVarNamed(int, j, getIndexName());
+
+    tFor(j, 0, matrix.getRows()-1)
+    {
+      result.setExpression(j, TGScalarExpr<T_element>());
+    }
+			 
+    tFor(i, 0, matrix.getRows()-1)
+    {
+      tFor(j, 0, matrix.getCols()-1)
+      {
+        result.addExpression(j, matrix.getExpression(i, j).mul(vector.getExpression(i)));
+      }
+    }	
+  }
  
   virtual void visit(TGVectorDot<T_element>& e)
   {

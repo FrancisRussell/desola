@@ -46,6 +46,7 @@ template<ExprType exprType, typename T_element> class Pairwise;
 template<ExprType exprType, typename T_element> class ScalarPiecewise;
 template<typename T_element> class MatrixMult;
 template<typename T_element> class MatrixVectorMult;
+template<typename T_element> class TransposeMatrixVectorMult;
 template<typename T_element> class VectorDot;
 template<typename T_element> class VectorCross;
 template<typename T_element> class VectorNorm;

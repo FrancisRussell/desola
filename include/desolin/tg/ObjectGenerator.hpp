@@ -138,6 +138,14 @@ public:
     TGExprNode<tg_vector, T_element>& right = vectorHandler.getTGExprNode(e.getRight());
     vectorHandler.handleNode(e, new TGMatrixVectorMult<T_element>(internal, left, right));
   }
+
+  void visit(TransposeMatrixVectorMult<T_element>& e)
+  {
+    TGVector<T_element>* internal = vectorHandler.createTGRep(e);
+    TGExprNode<tg_matrix, T_element>& left = matrixHandler.getTGExprNode(e.getLeft());
+    TGExprNode<tg_vector, T_element>& right = vectorHandler.getTGExprNode(e.getRight());
+    vectorHandler.handleNode(e, new TGTransposeMatrixVectorMult<T_element>(internal, left, right));		
+  }
   
   void visit(VectorDot<T_element>& e)
   { 

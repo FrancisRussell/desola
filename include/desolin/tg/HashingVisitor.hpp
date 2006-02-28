@@ -148,6 +148,11 @@ public:
   {
     boost::hash_combine(hash, hashBinOp(e));
   }
+
+  virtual void visit(TGTransposeMatrixVectorMult<T_element>& e)
+  {
+    boost::hash_combine(hash, hashBinOp(e));
+  } 
   
   virtual void visit(TGVectorDot<T_element>& e)
   {

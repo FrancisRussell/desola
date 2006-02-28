@@ -101,7 +101,7 @@ namespace itl {
   template <class Matrix, class VecX, class VecY>
   inline void trans_mult(const Matrix& A, const VecX& x, VecY& y) 
   {
-    y = A.transpose() * x;
+    y = A.trans_mult(x);
   }
 }
 

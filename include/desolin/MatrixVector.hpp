@@ -50,6 +50,28 @@ public:
 };
 
 template<typename T_element>
+class TransposeMatrixVectorMult : public BinOp<vector, matrix, vector, T_element>
+{
+private:
+  inline static const boost::array<int, 1> getDims(const ExprNode<matrix, T_element>& l, const ExprNode<vector, T_element>& r)
+  {
+    boost::array<int, 1> dimensions = {l.getColCount()};
+    return dimensions;
+  }
+
+public:
+  TransposeMatrixVectorMult(ExprNode<matrix, T_element>& left, ExprNode<vector, T_element>& right) : BinOp<vector, matrix, vector, T_element>(getDims(left, right), left, right)
+  {
+  }
+
+  void accept(ExpressionNodeVisitor<T_element>& v)
+  {
+    v.visit(*this);
+  }
+};
+
+
+template<typename T_element>
 class VectorDot : public BinOp<scalar, vector, vector, T_element>
 {
 private:

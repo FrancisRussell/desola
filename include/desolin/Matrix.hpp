@@ -122,7 +122,7 @@ public:
   const Vector<T_element> trans_mult(const Vector<T_element>& right) const
   {
     using namespace desolin_internal;
-    return transpose()*right;
+    return Vector<T_element>(*new TransposeMatrixVectorMult<T_element>(this->getExpr(), right.getExpr()));
   }
 
   const Matrix ele_mul(const Matrix& right) const

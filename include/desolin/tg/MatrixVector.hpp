@@ -49,6 +49,28 @@ public:
 };
 
 template<typename T_element>
+class TGTransposeMatrixVectorMult : public TGBinOp<tg_vector, tg_matrix, tg_vector, T_element>
+{
+public:
+  inline bool isEqual(const TGTransposeMatrixVectorMult& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
+  {
+    return TGBinOp<tg_vector, tg_matrix, tg_vector, T_element>::isEqual(node, mappings);
+  }
+
+  TGTransposeMatrixVectorMult(TGVector<T_element>* internal,
+                              TGExprNode<tg_matrix, T_element>& left,
+			      TGExprNode<tg_vector, T_element>& right) : TGBinOp<tg_vector, tg_matrix, tg_vector, T_element>(internal, left, right)
+  {
+  }
+
+  void accept(TGExpressionNodeVisitor<T_element>& v)
+  {
+    v.visit(*this);
+  }
+};
+
+
+template<typename T_element>
 class TGVectorDot : public TGBinOp<tg_scalar, tg_vector, tg_vector, T_element>
 {
 public:
