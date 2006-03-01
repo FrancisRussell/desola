@@ -3,8 +3,6 @@
 
 #include <map>
 #include <desolin/Desolin_fwd.hpp>
-#include <boost/static_assert.hpp>
-#include <boost/type_traits.hpp>
 
 namespace desolin
 {

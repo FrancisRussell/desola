@@ -182,46 +182,49 @@ public:
     return expressionGraph;
   }
 
-  inline void addEvaluatedExprMapping(ExprNode<scalar, T_element>* e, Literal<scalar, T_element>* l)
+  inline void addEvaluatedExprMapping(ExprNode<scalar, T_element>* const e, Literal<scalar, T_element>* const l)
   {
     assert(e != NULL);
     assert(l != NULL);
     scalarMap[e] = l;
   }
 
-  inline void addEvaluatedExprMapping(ExprNode<vector, T_element>* e, Literal<vector, T_element>* l)
+  inline void addEvaluatedExprMapping(ExprNode<vector, T_element>* const e, Literal<vector, T_element>* const l)
   {
     assert(e != NULL);
     assert(l != NULL);
     vectorMap[e] = l;
   }
 
-  inline void addEvaluatedExprMapping(ExprNode<matrix, T_element>* e, Literal<matrix, T_element>* l)
+  inline void addEvaluatedExprMapping(ExprNode<matrix, T_element>* const e, Literal<matrix, T_element>* const l)
   {
     assert(e != NULL);
     assert(l != NULL);
     matrixMap[e] = l;
   }
 
-  inline Literal<scalar, T_element>* getEvaluatedExpr(ExprNode<scalar, T_element>* e) 
+  inline Literal<scalar, T_element>* getEvaluatedExpr(ExprNode<scalar, T_element>* const e) 
   {
     assert(e != NULL);
-    assert(scalarMap[e] != NULL);
-    return scalarMap[e];
+    Literal<scalar, T_element>* const evaluated = scalarMap[e];
+    assert(evaluated != NULL);
+    evaluated;
   }
 
-  inline Literal<vector, T_element>* getEvaluatedExpr(ExprNode<vector, T_element>* e)
+  inline Literal<vector, T_element>* getEvaluatedExpr(ExprNode<vector, T_element>* const e)
   {
     assert(e != NULL);
-    assert(vectorMap[e] != NULL);
-    return vectorMap[e];
+    Literal<vector, T_element>* const evaluated = vectorMap[e];
+    assert(evaluated != NULL);
+    return evaluated;
   }
 
-  inline Literal<matrix, T_element>* getEvaluatedExpr(ExprNode<matrix, T_element>* e)
+  inline Literal<matrix, T_element>* getEvaluatedExpr(ExprNode<matrix, T_element>* const e)
   {
     assert(e != NULL);
-    assert(matrixMap[e] != NULL);
-    return matrixMap[e];
+    Literal<matrix, T_element>* const evaluated = matrixMap[e];
+    assert(evaluated != NULL);
+    return evaluated;
   }
 
   ~EvaluationStrategy()

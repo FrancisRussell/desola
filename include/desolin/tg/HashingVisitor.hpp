@@ -20,7 +20,7 @@ private:
   std::size_t hash;
 
   template<TGExprType exprType>
-  std::size_t hashExprNode(const TGExprNode<exprType, T_element>& node) const
+  inline std::size_t hashExprNode(const TGExprNode<exprType, T_element>& node) const
   {
     std::size_t seed = boost::hash<std::string>()(typeid(node).name());
     boost::hash_combine(seed, node.getInternal().hashValue());
@@ -30,7 +30,7 @@ private:
   template<TGExprType resultType, TGExprType exprType>
   std::size_t hashUnOp(const TGUnOp<resultType, exprType, T_element>& unop) const
   {
-    std::size_t seed = hashExprNode(unop); 
+    std::size_t seed = hashExprNode(unop);
     assert(nodeNumberings.find(&unop.getOperand()) != nodeNumberings.end());
     boost::hash_combine(seed, nodeNumberings.find(&unop.getOperand())->second);
     return seed;
