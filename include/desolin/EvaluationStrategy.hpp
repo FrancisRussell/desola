@@ -208,7 +208,7 @@ public:
     assert(e != NULL);
     Literal<scalar, T_element>* const evaluated = scalarMap[e];
     assert(evaluated != NULL);
-    evaluated;
+    return evaluated;
   }
 
   inline Literal<vector, T_element>* getEvaluatedExpr(ExprNode<vector, T_element>* const e)
