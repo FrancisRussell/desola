@@ -1,4 +1,3 @@
-- See if binaries can be made smaller (maybe too much inlining or template independent code inside templated classes).
 - Make updating dependency information for expression nodes more efficient (especially important for ElementSet node).
 - Make Vector and Matrix classes use the same ElementSet node for multiple setting of elements.
 - Implement sparse matrices.
