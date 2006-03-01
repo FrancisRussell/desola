@@ -31,8 +31,9 @@ private:
   std::size_t hashUnOp(const TGUnOp<resultType, exprType, T_element>& unop) const
   {
     std::size_t seed = hashExprNode(unop);
-    assert(nodeNumberings.find(&unop.getOperand()) != nodeNumberings.end());
-    boost::hash_combine(seed, nodeNumberings.find(&unop.getOperand())->second);
+    const typename std::map<const TGExpressionNode<T_element>*, int>::const_iterator operand = nodeNumberings.find(&unop.getOperand());
+    assert(operand != nodeNumberings.end());
+    boost::hash_combine(seed, operand->second);
     return seed;
   }
 
@@ -40,10 +41,12 @@ private:
   std::size_t hashBinOp(const TGBinOp<resultType, leftType, rightType, T_element>& binop) const
   {
     std::size_t seed = hashExprNode(binop);
-    assert(nodeNumberings.find(&binop.getLeft()) != nodeNumberings.end());
-    assert(nodeNumberings.find(&binop.getRight()) != nodeNumberings.end());
-    boost::hash_combine(seed, nodeNumberings.find(&binop.getLeft())->second);
-    boost::hash_combine(seed, nodeNumberings.find(&binop.getRight())->second);
+    const typename std::map<const TGExpressionNode<T_element>*, int>::const_iterator left = nodeNumberings.find(&binop.getLeft());
+    const typename std::map<const TGExpressionNode<T_element>*, int>::const_iterator right = nodeNumberings.find(&binop.getRight());
+    assert(left != nodeNumberings.end());
+    assert(right != nodeNumberings.end());
+    boost::hash_combine(seed, left->second);
+    boost::hash_combine(seed, right->second);
     return seed;
   }
 
@@ -59,7 +62,8 @@ private:
   std::size_t hashSingleElementSet(const std::pair<const TGElementIndex<exprType>, const TGExprNode<tg_scalar, T_element>*>& pair) const
   {
     std::size_t seed = boost::hash< TGElementIndex<exprType> >()(pair.first);
-    assert(nodeNumberings.find(pair.second) != nodeNumberings.end());
+    const typename std::map<const TGExpressionNode<T_element>*, int>::const_iterator element = nodeNumberings.find(pair.second);
+    assert(element != nodeNumberings.end());
     boost::hash_combine(seed, nodeNumberings.find(pair.second)->second);
     return seed;
   }
