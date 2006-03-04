@@ -71,10 +71,8 @@ public:
 
   void compile()
   {
-    // Twice for good measure ;)
     taskGraphObject.applyOptimisation("fusion");
-    taskGraphObject.applyOptimisation("fusion");
-    taskGraphObject.compile(tg::ICC, false);	
+    taskGraphObject.compile(tg::GCC, true);	
   }
 
   inline void print() const

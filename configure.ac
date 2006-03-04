@@ -13,8 +13,8 @@ AC_PROG_CXX
 AC_PROG_LIBTOOL
 
 # Checks for libraries.
-
-CXXFLAGS="-O3 -Wall -pedantic"
+CXXFLAGS="-O3 -Wall -pedantic -pipe"
+AX_GCC_ARCHFLAG([no], [CXXFLAGS="$CXXFLAGS $ax_cv_gcc_archflag" CCFLAGS="$CCFLAGS $ax_cv_gcc_archflag"])
 
 AC_ARG_WITH([taskgraph-prefix],
             AC_HELP_STRING([--with-taskgraph-prefix=PFX], [Use the TaskGraph installation in PFX]),
