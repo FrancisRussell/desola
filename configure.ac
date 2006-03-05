@@ -40,8 +40,23 @@ AC_ARG_WITH([boost-prefix],
            ]
            )
 
+AC_ARG_WITH([mtl-prefix],
+          AC_HELP_STRING([--with-mtl-prefix=PFX], [Use the MTL installation in PFX]),
+	  [
+	    if test -f "$withval/include/mtl/mtl.h"; then
+              CPPFLAGS="$CPPFLAGS -I$withval/include"
+	    else
+	      AC_MSG_ERROR("$withval does not appear to be a prefix for a MTL installation")
+             fi
+          ]
+          )
+
 AC_TRY_COMPILE([@%:@include <TaskGraph>], [], AC_MSG_NOTICE([Found TaskGraph]), AC_MSG_FAILURE([Failed to find TaskGraph]))
 AC_TRY_COMPILE([@%:@include <boost/version.hpp>], [], AC_MSG_NOTICE([Found Boost]), AC_MSG_FAILURE([Failed to find Boost]))
+AC_TRY_COMPILE([@%:@include <mtl/mtl.h>], [], [AC_MSG_NOTICE([Found MTL. Building MTL examples.]); using_mtl=yes], [AC_MSG_NOTICE([Failed to find MTL. Not building MTL examples.]); using_mtl=no])
+
+AM_CONDITIONAL([build_mtl_examples], [test "$using_mtl" = yes])
+
 
 # Checks for header files.
 
@@ -58,5 +73,6 @@ AC_CONFIG_FILES([Makefile
                  include/Makefile
 		 lib/Makefile
 		 example/Makefile
-		 itl-tests/Makefile])
+		 itl-tests/Makefile
+		 mtl-itl-tests/Makefile])
 AC_OUTPUT

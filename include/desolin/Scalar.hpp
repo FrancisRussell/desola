@@ -43,18 +43,18 @@ public:
     using namespace desolin_internal;
     return Scalar(*new Negate<scalar, T_element>(this->getExpr()));
   }
-  
-  friend const Scalar abs(const Scalar& operand)
-  {
-    using namespace desolin_internal;
-    return Scalar(*new Absolute<T_element>(operand.getExpr()));
-  }
 
-  friend const Scalar sqrt(const Scalar& operand)
+  const Scalar abs() const
   {
     using namespace desolin_internal;
-    return Scalar(*new SquareRoot<T_element>(operand.getExpr()));
+    return Scalar(*new Absolute<T_element>(this->getExpr()));
   }
+      
+  const Scalar sqrt() const
+  { 
+    using namespace desolin_internal;
+    return Scalar(*new SquareRoot<T_element>(this->getExpr()));
+  }     
 
   friend const Scalar operator+(const Scalar& left, const Scalar& right)
   {
@@ -183,5 +183,20 @@ public:
   }
 };
 
+}
+
+namespace std
+{
+  template<typename T_element>
+  const desolin::Scalar<T_element> abs(const desolin::Scalar<T_element>& operand)
+  {
+    return operand.abs();
+  }
+
+  template<typename T_element>
+  const desolin::Scalar<T_element> sqrt(const desolin::Scalar<T_element>& operand)
+  {
+    return operand.sqrt();
+  }
 }
 #endif
