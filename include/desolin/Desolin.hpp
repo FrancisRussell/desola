@@ -6,34 +6,34 @@
 
 // Boost STL compliant array with partial specialisation for size 0
 // See http://www.josuttis.com/cppcode
-#include <desolin/boost_array.hpp>
+#include "boost_array.hpp"
 
-#include <desolin/Exceptions.hpp>
-#include <desolin/Traits.hpp>
-#include <desolin/ExpressionNode.hpp>
-#include <desolin/ExprNode.hpp>
-#include <desolin/UnOp.hpp>
-#include <desolin/BinOp.hpp>
-#include <desolin/Elemental.hpp>
-#include <desolin/Pairwise.hpp>
-#include <desolin/ScalarPiecewise.hpp>
-#include <desolin/MatrixVector.hpp>
-#include <desolin/InternalReps.hpp>
-#include <desolin/Literal.hpp>
-#include <desolin/ExpressionNodeVisitor.hpp>
-#include <desolin/ExpressionGraph.hpp>
-#include <desolin/EvaluationStrategy.hpp>
-#include <desolin/Evaluator.hpp>
-#include <desolin/NullEvaluator.hpp>
-#include <desolin/Variable.hpp>
-#include <desolin/Scalar.hpp>
-#include <desolin/Vector.hpp>
-#include <desolin/Matrix.hpp>
-#include <desolin/Printing.hpp>
+#include "Exceptions.hpp"
+#include "Traits.hpp"
+#include "ExpressionNode.hpp"
+#include "ExprNode.hpp"
+#include "UnOp.hpp"
+#include "BinOp.hpp"
+#include "Elemental.hpp"
+#include "Pairwise.hpp"
+#include "ScalarPiecewise.hpp"
+#include "MatrixVector.hpp"
+#include "InternalReps.hpp"
+#include "Literal.hpp"
+#include "ExpressionNodeVisitor.hpp"
+#include "ExpressionGraph.hpp"
+#include "EvaluationStrategy.hpp"
+#include "Evaluator.hpp"
+#include "NullEvaluator.hpp"
+#include "Variable.hpp"
+#include "Scalar.hpp"
+#include "Vector.hpp"
+#include "Matrix.hpp"
+#include "Printing.hpp"
 
-#include <desolin/tg/Desolin_tg.hpp>
+#include "tg/Desolin_tg.hpp"
 
-#include <desolin/file-access/mtl_harwell_boeing_stream.hpp>
-#include <desolin/file-access/mtl_matrix_market_stream.hpp>
+#include "file-access/mtl_harwell_boeing_stream.hpp"
+#include "file-access/mtl_matrix_market_stream.hpp"
 
 #endif

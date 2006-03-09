@@ -72,7 +72,7 @@ public:
   void compile()
   {
     taskGraphObject.applyOptimisation("fusion");
-    taskGraphObject.compile(tg::GCC, false);	
+    taskGraphObject.compile(tg::GCC, true);	
   }
 
   inline void print() const

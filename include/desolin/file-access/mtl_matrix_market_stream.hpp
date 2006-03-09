@@ -18,9 +18,9 @@
 #include <stdio.h>
 #include <cassert>
 
-#include <desolin/file-access/mtl_complex.hpp>
-#include <desolin/file-access/mtl_entry.hpp>
-#include <desolin/file-access/mmio.h>
+#include "mtl_complex.hpp"
+#include "mtl_entry.hpp"
+#include "mmio.h"
 
 namespace desolin {
 
