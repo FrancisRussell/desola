@@ -1,6 +1,7 @@
 #ifndef DESOLIN_TG_HASHING_VISITOR_HPP
 #define DESOLIN_TG_HASHING_VISITOR_HPP
 
+#include <utility>
 #include <typeinfo>
 #include <cassert>
 #include <vector>

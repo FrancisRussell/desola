@@ -1,6 +1,7 @@
 #ifndef DESOLIN_EVALUATION_STRATEGY_HPP
 #define DESOLIN_EVALUATION_STRATEGY_HPP
 
+#include <utility>
 #include <map>
 #include <set>
 #include <vector>

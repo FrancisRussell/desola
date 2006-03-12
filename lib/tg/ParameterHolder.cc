@@ -3,6 +3,7 @@
 #include <map>
 #include <cassert>
 #include <algorithm>
+#include <utility>
 #include <boost/bind.hpp>
 #include <boost/ref.hpp>
 #include <TaskGraph>
