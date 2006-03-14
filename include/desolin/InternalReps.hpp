@@ -94,7 +94,7 @@ private:
   T_element value;
   
 public:
-  ConventionalScalar() : InternalScalar<T_element>(true), value(T_element())
+  ConventionalScalar() : InternalScalar<T_element>(true), value(T_element(0))
   {
   }
 
@@ -144,7 +144,7 @@ public:
   {
     if(!this->allocated)
     {
-      value.reserve(this->rows);
+      value.resize(this->rows, T_element(0));
       this->allocated=true;
     }
   }
@@ -183,7 +183,7 @@ public:
   }
 
   template<typename StreamType>
-  ConventionalMatrix(StreamType& stream) : InternalMatrix<T_element>(true, stream.nrows(), stream.ncols()), value(stream.nrows()*stream.ncols(), T_element())
+  ConventionalMatrix(StreamType& stream) : InternalMatrix<T_element>(true, stream.nrows(), stream.ncols()), value(stream.nrows()*stream.ncols(), T_element(0))
   {
     while(!stream.eof())
     {
@@ -197,7 +197,7 @@ public:
   {
     if(!this->allocated)
     {
-      value.reserve(this->rows * this->cols);
+      value.resize(this->rows * this->cols, T_element(0));
       this->allocated=true;
     }
   }
