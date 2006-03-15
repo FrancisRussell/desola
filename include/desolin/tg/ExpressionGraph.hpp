@@ -3,8 +3,7 @@
 
 #include <algorithm>
 #include <boost/ptr_container/ptr_vector.hpp>
-#include <boost/bind.hpp>
-#include <boost/ref.hpp>
+#include <functional>
 #include <boost/function.hpp>
 #include <vector>
 #include <map>
@@ -34,10 +33,22 @@ private:
     accept(codeGenerator);
   }
 
-  static void applyVisitor(TGExpressionNode<T_element>& node, TGExpressionNodeVisitor<T_element>& visitor)
+  template<typename VisitorType>
+  class ApplyVisitor : public std::unary_function< void, TGExpressionNode<T_element> >
   {
-    node.accept(visitor);
-  }
+  private:
+    VisitorType& visitor;
+
+  public:
+    ApplyVisitor(VisitorType& v) : visitor(v)
+    {
+    }
+
+    inline void operator()(TGExpressionNode<T_element>& node) const
+    {
+      node.accept(visitor);
+    }
+  };
 
 public:
   TGExpressionGraph() : isHashCached(false)
@@ -88,7 +99,7 @@ public:
 
   void accept(TGExpressionNodeVisitor<T_element>& visitor)
   {
-    std::for_each(exprVector.begin(), exprVector.end(), boost::bind(applyVisitor, _1, boost::ref(visitor)));
+    std::for_each(exprVector.begin(), exprVector.end(), ApplyVisitor< TGExpressionNodeVisitor<T_element> >(visitor));
   }
 
   bool operator==(const TGExpressionGraph& right) const
