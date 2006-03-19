@@ -6,8 +6,8 @@
 *
 */
 
-#ifndef MM_IO_H
-#define MM_IO_H
+#ifndef DESOLIN_MM_IO_H
+#define DESOLIN_MM_IO_H
 
 #ifdef  __cplusplus
 extern "C" {

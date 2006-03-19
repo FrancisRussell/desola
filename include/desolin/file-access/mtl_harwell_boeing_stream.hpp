@@ -10,8 +10,8 @@
 // 
 // See also license.mtl.txt in the distribution.
 //===========================================================================
-#ifndef HARWELL_BOEING_STREAM_H
-#define HARWELL_BOEING_STREAM_H
+#ifndef DESOLIN_HARWELL_BOEING_STREAM_H
+#define DESOLIN_HARWELL_BOEING_STREAM_H
 
 #include <stdlib.h>
 #include <cassert>

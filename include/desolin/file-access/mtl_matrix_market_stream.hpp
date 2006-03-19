@@ -12,8 +12,8 @@
 //===========================================================================
 
 
-#ifndef MATRIX_MARKET_STREAM_H
-#define MATRIX_MARKET_STREAM_H
+#ifndef DESOLIN_MATRIX_MARKET_STREAM_H
+#define DESOLIN_MATRIX_MARKET_STREAM_H
 
 #include <stdio.h>
 #include <cassert>

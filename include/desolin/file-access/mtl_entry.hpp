@@ -12,8 +12,8 @@
 //
 
 
-#ifndef ENTRY_H
-#define ENTRY_H
+#ifndef DESOLIN_ENTRY_H
+#define DESOLIN_ENTRY_H
 
 #include <iosfwd>
 
