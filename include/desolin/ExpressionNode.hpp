@@ -16,6 +16,12 @@
 namespace desolin_internal
 {
 
+enum EvaluationDirective
+{
+  EVALUATE,
+  NO_EVALUATE
+};
+
 template<typename T_element>
 class ExpressionNode
 {
@@ -24,6 +30,7 @@ private:
   ExpressionNode(const ExpressionNode&);
   ExpressionNode& operator=(const ExpressionNode&);
   
+  EvaluationDirective evaluationDirective;
   std::multiset<const Variable<T_element>*> external_reqBy;
   std::vector<ExpressionNode*> internal_reqBy;
   std::vector<ExpressionNode*> deps;

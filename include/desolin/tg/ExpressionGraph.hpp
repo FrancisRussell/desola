@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <boost/ptr_container/ptr_vector.hpp>
 #include <functional>
+#include <cstddef>
 #include <boost/function.hpp>
 #include <vector>
 #include <map>
@@ -126,6 +127,8 @@ public:
   {
     if (!graph.isHashCached)
     {
+      graph.isHashCached = true;
+	    
       std::map<const TGExpressionNode<T_element>*, int> nodeNumberings;
       for(std::size_t index=0; index<graph.exprVector.size(); ++index)
       {

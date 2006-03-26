@@ -38,6 +38,11 @@ public:
     return *expr;
   }
 
+  inline const ExprNode<exprType, T_element>& getOperand() const
+  {
+    return *expr;
+  } 
+
   virtual void update(ExprNode<scalar, T_element>& previous, ExprNode<scalar, T_element>& next) 
   {
     updateImpl(previous, next);
@@ -51,7 +56,7 @@ public:
   virtual void update(ExprNode<matrix, T_element>& previous, ExprNode<matrix, T_element>& next) 
   {
     updateImpl(previous, next);
-  }       
+  }
 };
 
 template<ExprType exprType, typename T_element>

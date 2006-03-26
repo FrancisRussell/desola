@@ -5,6 +5,7 @@
 #include <map>
 #include <string>
 #include <cassert>
+#include <cstddef>
 #include <boost/scoped_ptr.hpp>
 #include <boost/functional/hash.hpp>
 #include <desolin/tg/Desolin_tg_fwd.hpp>

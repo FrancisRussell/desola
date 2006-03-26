@@ -45,7 +45,17 @@ public:
     return *left;
   }
 
+  inline const ExprNode<leftType, T_element>& getLeft() const
+  {
+    return *left;
+  }
+  
   inline ExprNode<rightType, T_element>& getRight()
+  {
+    return *right;
+  }
+
+  inline const ExprNode<rightType, T_element>& getRight() const
   {
     return *right;
   }

@@ -6,8 +6,8 @@
 #include <map>
 #include <cassert>
 #include <boost/array.hpp>
+#include <boost/functional/hash.hpp>
 #include <boost/static_assert.hpp>
-#include <boost/cast.hpp>
 #include <desolin/Desolin_fwd.hpp>
 
 namespace desolin_internal
@@ -172,6 +172,11 @@ public:
   }
 };
 
+std::size_t hash_value(const ElementIndex<vector>& index)
+{
+  return boost::hash<int>()(index.getRow());
+}
+
 template<>
 class ElementIndex<matrix>
 {
@@ -211,6 +216,13 @@ public:
     }
   }
 };
+
+std::size_t hash_value(const ElementIndex<matrix>& index)
+{
+  std::size_t seed = boost::hash<int>()(index.getRow());
+  boost::hash_combine(seed, index.getCol());
+  return seed;
+}
 
 template<ExprType exprType>
 struct ExprDimensions

@@ -4,6 +4,7 @@
 #include <boost/functional/hash.hpp>
 #include <typeinfo>
 #include <cassert>
+#include <cstddef>
 #include <string>
 #include <map>
 #include <boost/format.hpp>

@@ -20,14 +20,14 @@ template<typename T_element>
 class Literal<scalar, T_element> : public ExprNode<scalar, T_element>
 {
 protected:
-  boost::scoped_ptr<InternalScalar<T_element> > value;
+  boost::scoped_ptr< InternalScalar<T_element> > value;
 
   virtual void update(ExprNode<scalar, T_element>& previous, ExprNode<scalar, T_element>& next) {}
   virtual void update(ExprNode<vector, T_element>& previous, ExprNode<vector, T_element>& next) {}
   virtual void update(ExprNode<matrix, T_element>& previous, ExprNode<matrix, T_element>& next) {}
 	
 public:
-  Literal(InternalScalar<T_element>* val) : value(val)
+  Literal(InternalScalar<T_element>* const val) : value(val)
   {
     assert(val != NULL);
   }
@@ -62,7 +62,7 @@ template<typename T_element>
 class Literal<vector, T_element> : public ExprNode<vector, T_element>
 {
 protected:
-  boost::shared_ptr<InternalVector<T_element> > value;
+  boost::scoped_ptr< InternalVector<T_element> > value;
 
   virtual void update(ExprNode<scalar, T_element>& previous, ExprNode<scalar, T_element>& next) {}
   virtual void update(ExprNode<vector, T_element>& previous, ExprNode<vector, T_element>& next) {}
@@ -75,7 +75,7 @@ protected:
   }
   
 public:
-  Literal(InternalVector<T_element>* val) : ExprNode<vector, T_element>(getDimensions(*val)), value(val)
+  Literal(InternalVector<T_element>* const val) : ExprNode<vector, T_element>(getDimensions(*val)), value(val)
   {
     assert(val != NULL);
   }
@@ -110,7 +110,7 @@ template<typename T_element>
 class Literal<matrix, T_element> : public ExprNode<matrix, T_element>
 {
 protected:
-  boost::shared_ptr<InternalMatrix<T_element> > value;
+  boost::scoped_ptr< InternalMatrix<T_element> > value;
 
   virtual void update(ExprNode<scalar, T_element>& previous, ExprNode<scalar, T_element>& next) {}
   virtual void update(ExprNode<vector, T_element>& previous, ExprNode<vector, T_element>& next) {}
@@ -118,12 +118,12 @@ protected:
 
   inline static const boost::array<int, 2> getDimensions(const InternalMatrix<T_element>& internal)
   {
-   const boost::array<int, 2> dims = {internal.getRowCount(), internal.getColCount()};
-   return dims;
+    const boost::array<int, 2> dims = {internal.getRowCount(), internal.getColCount()};
+    return dims;
   }
   
 public:
-  Literal(InternalMatrix<T_element>* val) : ExprNode<matrix, T_element>(getDimensions(*val)), value(val)
+  Literal(InternalMatrix<T_element>* const val) : ExprNode<matrix, T_element>(getDimensions(*val)), value(val)
   {
     assert(val != NULL);
   }

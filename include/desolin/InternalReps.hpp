@@ -12,6 +12,7 @@ class InternalValue
 {
 protected:
   bool allocated;
+
 public:
   InternalValue(const bool isAllocated) : allocated(isAllocated) 
   {
@@ -23,6 +24,7 @@ public:
   }
   
   virtual void allocate() = 0;
+
   virtual ~InternalValue() {}
 };
 

@@ -4,9 +4,9 @@
 #include <utility>
 #include <typeinfo>
 #include <cassert>
-#include <vector>
+#include <cstddef>
+#include <string>
 #include <map>
-#include <algorithm>
 #include <boost/functional/hash.hpp>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 

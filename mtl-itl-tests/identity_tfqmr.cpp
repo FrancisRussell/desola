@@ -92,7 +92,7 @@ int main(int argc, char* argv[])
 
   harwell_boeing_stream<Type> hbs(argv[1]);
 
-  int max_iter = 1000;
+  int max_iter = 50;
   //begin
   Matrix A(hbs);
   //end

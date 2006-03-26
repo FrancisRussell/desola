@@ -70,10 +70,15 @@ public:
     std::for_each(assignments.begin(), assignments.end(), boost::bind(&ElementSet::registerAssignmentDependency, this, _1));
   }
 
-  inline std::map<ElementIndex<exprType>, ExprNode<scalar, T_element>*> getAssignments() const
+  inline std::map<ElementIndex<exprType>, ExprNode<scalar, T_element>*> getAssignments()
   {
     return assignments;
   }
+
+  inline std::map<ElementIndex<exprType>, const ExprNode<scalar, T_element>*> getAssignments() const
+  { 
+    return std::map<ElementIndex<exprType>, const ExprNode<scalar, T_element>*>(assignments.begin(), assignments.end());
+  } 
   
   virtual void accept(ExpressionNodeVisitor<T_element>& visitor)
   { 
