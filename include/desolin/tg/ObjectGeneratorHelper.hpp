@@ -35,6 +35,7 @@ private:
     return evaluator.getStrategy();
   }
 
+  // Creates a storage representation for a new TGScalar/TGVector/TGMatrix
   typename ExprTGTraits<exprType, T_element>::internalRep* createTGInternalRep(const bool external, const ExprNode<exprType, T_element>& e)
   {
     return new typename ExprTGTraits<exprType, T_element>::conventionalStorage(external, getGraph().getNameGenerator(), e);
@@ -44,16 +45,21 @@ public:
   TGObjectGeneratorHelper(TGEvaluator<T_element>& e) : evaluator(e)
   {
   }
-  
+ 
+  // Handle the addition of a new TGExprNode corresponding to an ExprNode
   void handleNode(ExprNode<exprType, T_element>& e, TGExprNode<tgExprType, T_element>* const tge)
   {
     getGraph().add(tge);
     nodeMap[&e] = tge;
   }
 
+  // Locates the TGExprNode corresponding to an ExprNode.
   TGExprNode<tgExprType, T_element>& getTGExprNode(ExprNode<exprType, T_element>& e)
   {
     const typename std::map<ExprNode<exprType, T_element>*, TGExprNode<tgExprType, T_element>*>::iterator nodeIterator(nodeMap.find(&e));
+    // Either find corresponding TGExprNode, or the ExprNode node has never been
+    // encountered so we assume it will be evaluated by some other evaluator
+    // and map it to a TGLiteral.
     if (nodeIterator != nodeMap.end())
     {
       return *nodeIterator->second;
@@ -68,6 +74,9 @@ public:
     }
   }
 
+  // Creates the TGScalar/TGVector/TGMatrix storage representation for an
+  // ExprNode, and maps this to a new Literal with the same storage 
+  // representation if necessary.
   typename ExprTGTraits<exprType, T_element>::internalRep* createTGRep(ExprNode<exprType, T_element>& e) 
   {
     const bool external = getStrategy().isExternal(evaluator, e);
@@ -79,6 +88,8 @@ public:
     return tgInternalRep;			 
   }
 
+  // Adds mappings between ExprNode storage representations and TGExprNode storage representations
+  // to a ParameterHolder.
   void addTaskGraphMappings(ParameterHolder& parameterHolder)
   {
     for(typename std::map<ExprNode<exprType, T_element>*, TGExprNode<tgExprType, T_element>*>::iterator iterator=nodeMap.begin(); iterator!=nodeMap.end(); ++iterator)
