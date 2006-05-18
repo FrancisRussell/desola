@@ -83,7 +83,7 @@ public:
 public:
   TGElementSet(typename TGInternalType<exprType, T_element>::type* internal,
 	       TGExprNode<exprType, T_element>& o,
-	       std::map<TGElementIndex<exprType>, TGExprNode<tg_scalar, T_element>*> a) : TGUnOp<exprType, exprType, T_element>(internal, o), assignments(a)
+	       const std::map<TGElementIndex<exprType>, TGExprNode<tg_scalar, T_element>*>& a) : TGUnOp<exprType, exprType, T_element>(internal, o), assignments(a)
   {
     std::for_each(assignments.begin(), assignments.end(), boost::bind(&TGElementSet::registerDependency, this, _1));
   }

@@ -32,6 +32,7 @@
 #include "Printing.hpp"
 
 #include "tg/Desolin_tg.hpp"
+#include "profiling/Desolin_profiling.hpp"
 
 #include "file-access/mtl_harwell_boeing_stream.hpp"
 #include "file-access/mtl_matrix_market_stream.hpp"

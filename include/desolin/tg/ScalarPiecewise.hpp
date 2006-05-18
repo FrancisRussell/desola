@@ -14,7 +14,7 @@ private:
 
 public:  
   TGScalarPiecewise(typename TGInternalType<exprType, T_element>::type* internal,
-		  TGScalarPiecewiseOp o,
+		  const TGScalarPiecewiseOp o,
 		  TGExprNode<exprType, T_element>& operand,
 		  TGExprNode<tg_scalar, T_element>& s) : TGBinOp<exprType, exprType, tg_scalar, T_element>(internal, operand, s), op(o)
   {
@@ -26,7 +26,7 @@ public:
 	    op == node.op;
   }
 
-  TGScalarPiecewiseOp getOperation() const
+  const TGScalarPiecewiseOp getOperation() const
   {
     return op;
   }

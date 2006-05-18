@@ -2,6 +2,7 @@
 #define DESOLIN_TG_PAIRWISE_HPP
 
 #include <desolin/tg/Desolin_tg_fwd.hpp>
+#include <map>
 
 namespace desolin_internal
 {
@@ -14,14 +15,14 @@ private:
 
 public:  
   TGPairwise(typename TGInternalType<exprType, T_element>::type* internal, 
-		  TGPairwiseOp o,
+		  const TGPairwiseOp o,
 		  TGExprNode<exprType, T_element>& l, 
 		  TGExprNode<exprType, T_element>& r) : TGBinOp<exprType, exprType, exprType, T_element>(internal, l, r), op(o)
   {
   }
 
 
-  void accept(TGExpressionNodeVisitor<T_element>& v)
+  virtual void accept(TGExpressionNodeVisitor<T_element>& v)
   {
     v.visit(*this);
   }
@@ -32,7 +33,7 @@ public:
 	    op == node.op;
   } 
 
-  TGPairwiseOp getOperation() const
+  const TGPairwiseOp getOperation() const
   {
     return op;
   }

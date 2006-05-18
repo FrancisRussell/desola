@@ -12,6 +12,7 @@
 #include <boost/function.hpp>
 #include <desolin/Desolin_fwd.hpp>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
+#include <desolin/profiling/Desolin_profiling_fwd.hpp>
 
 namespace desolin_internal
 {
