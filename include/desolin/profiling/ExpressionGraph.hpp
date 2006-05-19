@@ -58,6 +58,26 @@ public:
     std::for_each(exprVector.begin(), exprVector.end(), ApplyVisitor< PExpressionNodeVisitor<T_element> >(visitor));
   }
 
+  bool operator==(const PExpressionGraph& right) const
+  {
+    if(exprVector.size() != right.exprVector.size())
+    {
+      return false;
+    }
+    else
+    {
+      std::map<const PExpressionNode<T_element>*, const PExpressionNode<T_element>*> mappings;
+      for(std::size_t index = 0; index<exprVector.size(); ++index)
+      {
+        mappings[&exprVector[index]] = &right.exprVector[index];
+      }
+
+      PEqualityCheckingVisitor<T_element> checker(mappings);
+      const_cast<PExpressionGraph<T_element>&>(*this).accept(checker);
+      return checker.isEqual();
+    }
+  }
+
   friend std::size_t hash_value(const PExpressionGraph<T_element>& graph)
   {
     if(!graph.isHashCached)

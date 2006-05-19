@@ -13,6 +13,7 @@
 #include "ExpressionGraph.hpp"
 #include "ExpressionNodeGenerator.hpp"
 #include "HashingVisitor.hpp"
+#include "EqualityCheckingVisitor.hpp"
 
 #endif
 

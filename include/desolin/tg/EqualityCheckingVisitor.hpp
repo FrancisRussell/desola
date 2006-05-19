@@ -17,7 +17,7 @@ private:
   bool equal;
   
   template<typename T_node>
-  inline void checkMatch(const T_node& left)
+  void checkMatch(const T_node& left)
   {
     assert(mappings.find(&left) != mappings.end());
     const TGExpressionNode<T_element>& right = *(mappings.find(&left)->second);
