@@ -6,7 +6,6 @@
 #include <functional>
 #include <cstddef>
 #include <boost/function.hpp>
-#include <vector>
 #include <map>
 #include <TaskGraph>
 #include <desolin/tg/Desolin_tg_fwd.hpp>

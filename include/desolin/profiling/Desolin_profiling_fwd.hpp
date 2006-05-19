@@ -27,6 +27,9 @@ template<ExprType exprType, typename T_element> class PScalarPiecewise;
 template<ExprType exprType, typename T_element> class PLiteral;
 
 template<typename T_element> class PExpressionNodeVisitor;
+template<typename T_element> class PExpressionGraph;
+template<typename T_element> class PExpressionNodeGenerator;
+template<typename T_element> class PHashingVisitor;
 
 }
 

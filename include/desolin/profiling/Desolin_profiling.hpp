@@ -8,7 +8,11 @@
 #include "MatrixVector.hpp"
 #include "Pairwise.hpp"
 #include "ScalarPiecewise.hpp"
+#include "Literal.hpp"
 #include "ExpressionNodeVisitor.hpp"
+#include "ExpressionGraph.hpp"
+#include "ExpressionNodeGenerator.hpp"
+#include "HashingVisitor.hpp"
 
 #endif
 

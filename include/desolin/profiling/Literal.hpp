@@ -4,7 +4,7 @@
 #include "Desolin_profiling_fwd.hpp"
 #include <map>
 
-namespace desolin_interal
+namespace desolin_internal
 {
 
 template<ExprType exprType, typename T_element>

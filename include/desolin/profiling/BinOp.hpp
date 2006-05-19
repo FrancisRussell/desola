@@ -26,7 +26,7 @@ public:
 	   mappings.find(right)->second == node.right;
   }
 
-  PBinOp(PExprNode<leftType, T_element>& l, PExprNode<rightType, T_element>& r) : PExprNode<resultType, T_element>(), left(l), right(r)
+  PBinOp(PExprNode<leftType, T_element>& l, PExprNode<rightType, T_element>& r) : PExprNode<resultType, T_element>(), left(&l), right(&r)
   {
   }
 
@@ -40,12 +40,12 @@ public:
     return *left;
   }
 
-  inline PExprNode<leftType, T_element>& getRight()
+  inline PExprNode<rightType, T_element>& getRight()
   {
     return *right;
   }
 
-  inline const PExprNode<leftType, T_element>& getRight() const
+  inline const PExprNode<rightType, T_element>& getRight() const
   {
     return *right;
   }  

@@ -27,12 +27,12 @@ public:
 	   mappings.find(expr)->second == node.expr;
   }
 
-  inline PExprNode<resultType, T_element>& getOperand()
+  inline PExprNode<exprType, T_element>& getOperand()
   {
     return *expr;
   }
 
-  inline const PExprNode<resultType, T_element>& getOperand() const
+  inline const PExprNode<exprType, T_element>& getOperand() const
   {
     return *expr;
   }

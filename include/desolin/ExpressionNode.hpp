@@ -6,6 +6,7 @@
 #include <map>
 #include <vector>
 #include <algorithm>
+#include <iterator>
 #include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>
 #include <boost/ref.hpp>
@@ -216,6 +217,9 @@ protected:
   {
     std::vector<ExpressionNode*> nodes(getTopologicallySortedNodes());
     ExpressionGraph<T_element> expressionGraph(nodes.begin(), nodes.end());
+
+    PExpressionGraph<T_element> something(expressionGraph);
+
     boost::shared_ptr< EvaluationStrategy<T_element> > strategy = expressionGraph.createEvaluationStrategy();
     TGEvaluatorFactory<T_element> tgEvaluatorFactory;
     strategy->addEvaluator(tgEvaluatorFactory);

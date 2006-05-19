@@ -65,7 +65,7 @@ private:
     std::size_t seed = boost::hash< TGElementIndex<exprType> >()(pair.first);
     const typename std::map<const TGExpressionNode<T_element>*, int>::const_iterator element = nodeNumberings.find(pair.second);
     assert(element != nodeNumberings.end());
-    boost::hash_combine(seed, nodeNumberings.find(pair.second)->second);
+    boost::hash_combine(seed, element->second);
     return seed;
   }
   

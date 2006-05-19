@@ -8,13 +8,13 @@ namespace desolin_internal
 {
 
 template<ExprType exprType, typename T_element>
-class PScalarPiecewise : public PBinOp<exprType, exprType, exprType, T_element>
+class PScalarPiecewise : public PBinOp<exprType, exprType, scalar, T_element>
 {
 private:
   const ScalarPiecewiseOp op;
 
 public:
-  PScalarPiecewise(const ScalarPiecewiseOp o, PExprNode<exprType, T_element>& l, PExprNode<exprType, T_element>& r) : PBinOp<exprType, exprType, exprType, T_element>(l, r), op(o)
+  PScalarPiecewise(const ScalarPiecewiseOp o, PExprNode<exprType, T_element>& l, PExprNode<scalar, T_element>& r) : PBinOp<exprType, exprType, scalar, T_element>(l, r), op(o)
   {
   }
 

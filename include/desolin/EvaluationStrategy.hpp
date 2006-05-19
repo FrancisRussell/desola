@@ -2,6 +2,7 @@
 #define DESOLIN_EVALUATION_STRATEGY_HPP
 
 #include <utility>
+#include <iterator>
 #include <map>
 #include <set>
 #include <vector>
