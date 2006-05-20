@@ -132,15 +132,17 @@ public:
    
     if(!claimed.empty())
     {
-      evaluator->generateEvaluatedNodes();
-      evaluators.push_back(evaluator);
       claimedMap[evaluator.get()] = claimed;
-
+      evaluators.push_back(evaluator);
+      
       // Removes all the claimed nodes from the topologically sorted list of unclaimed nodes
       std::vector<ExpressionNode<T_element>*> newSortedUnclaimed;
       std::back_insert_iterator< std::vector<ExpressionNode<T_element>*> > out(newSortedUnclaimed);
       std::remove_copy_if(sortedUnclaimed.begin(), sortedUnclaimed.end(), out, boost::bind(&std::set<ExpressionNode<T_element>*>::count, &claimed, _1));
       sortedUnclaimed = newSortedUnclaimed;
+
+      // This should come last, so the generatedEvaluatedNodes call can see all the changes already made and nodes claimed
+      evaluator->generateEvaluatedNodes();	    
     }
   }
   
@@ -164,14 +166,20 @@ public:
  
   bool mustEvaluate(Evaluator<T_element>& evaluator, ExpressionNode<T_element>& node) const
   {
+    assert(claimedMap.find(&evaluator) != claimedMap.end());
+
     // It's an output if it has nodes depending on it that are not evaluated by the evaluator
     const std::vector<ExpressionNode<T_element>*> internal_reqBy(node.getInternalRequiredBy());
     const std::set<ExpressionNode<T_element>*>& claimed = claimedMap.find(&evaluator)->second;
+       
     for(typename std::vector<ExpressionNode<T_element>*>::const_iterator iterator=internal_reqBy.begin(); iterator!=internal_reqBy.end(); ++iterator)
     {
       if (claimed.find(*iterator) == claimed.end())
+      {
         return true;
+      }
     }
+	
     return false;
   }
 

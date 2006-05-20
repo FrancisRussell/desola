@@ -39,12 +39,10 @@ public:
   {
     if (liveCount-deadCount>=0 || (liveCount == deadCount && liveCount == 0))
     {
-//      std::cout << "live" << std::endl;
       return EVALUATE;
     }
     else
     {
-//      std::cout << "dead" << std::endl;
       return NO_EVALUATE;
     }
   }
