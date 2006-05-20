@@ -7,6 +7,7 @@
 #include <functional>
 #include <map>
 #include <algorithm>
+#include <cassert>
 
 namespace desolin_internal
 {
@@ -48,9 +49,19 @@ public:
     expressionGraph.accept(generator);
   }
 
+  inline int nodeCount() const
+  {
+    return exprVector.size();
+  }
+
   void addNode(PExpressionNode<T_element>* const node)
   {
     exprVector.push_back(node);
+  }
+
+  PExpressionNode<T_element>& nodeAt(const std::size_t index)
+  {
+    return exprVector[index];
   }
 
   void accept(PExpressionNodeVisitor<T_element>& visitor)

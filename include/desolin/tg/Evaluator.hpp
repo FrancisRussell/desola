@@ -14,6 +14,7 @@
 
 namespace desolin_internal
 {
+
 template<typename T_element>
 class TGEvaluator : public Evaluator<T_element>
 {

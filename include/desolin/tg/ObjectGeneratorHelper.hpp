@@ -79,11 +79,12 @@ public:
   // representation if necessary.
   typename ExprTGTraits<exprType, T_element>::internalRep* createTGRep(ExprNode<exprType, T_element>& e) 
   {
-    const bool external = getStrategy().isExternal(evaluator, e);
-    typename ExprTGTraits<exprType, T_element>::internalRep* const tgInternalRep = createTGInternalRep(external, e);
-    if (external)
+    const bool saveResult = getStrategy().mustEvaluate(evaluator, e) || e.getEvaluationDirective()==EVALUATE;
+    typename ExprTGTraits<exprType, T_element>::internalRep* const tgInternalRep = createTGInternalRep(saveResult, e);
+    if (saveResult)
     {
-      getStrategy().addEvaluatedExprMapping(&e, new Literal<exprType, T_element>(tgInternalRep->createInternalRep()));
+      Literal<exprType, T_element>* const evaluatedExpr = new Literal<exprType, T_element>(tgInternalRep->createInternalRep());
+      getStrategy().addEvaluatedExprMapping(&e, evaluatedExpr);
     }
     return tgInternalRep;			 
   }

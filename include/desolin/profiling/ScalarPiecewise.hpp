@@ -20,7 +20,7 @@ public:
 
   inline bool isEqual(const PScalarPiecewise& node, const std::map<const PExpressionNode<T_element>*, const PExpressionNode<T_element>*>& mappings) const
   {
-    return PBinOp<exprType, exprType, exprType, T_element>::isEqual(node, mappings) &&
+    return PBinOp<exprType, exprType, scalar, T_element>::isEqual(node, mappings) &&
 	   op == node.op;
   }
 

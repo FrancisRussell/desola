@@ -14,6 +14,7 @@
 #include "ExpressionNodeGenerator.hpp"
 #include "HashingVisitor.hpp"
 #include "EqualityCheckingVisitor.hpp"
+#include "Profiler.hpp"
 
 #endif
 

@@ -6,7 +6,13 @@
 namespace desolin_internal
 {
 using namespace desolin;
-	
+
+enum EvaluationDirective
+{
+  EVALUATE,
+  NO_EVALUATE
+};
+
 enum ExprType
 {
   scalar,

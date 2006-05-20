@@ -11,7 +11,7 @@ template<ExprType exprType, typename T_element>
 class PLiteral : public PExprNode<exprType, T_element>
 {
 public:
-  inline bool isEqual(const PLiteral& node, const std::map<const PExpressionNode<T_element>*, const PExpressionNode<T_element>*>& mappings)
+  inline bool isEqual(const PLiteral& node, const std::map<const PExpressionNode<T_element>*, const PExpressionNode<T_element>*>& mappings) const
   {
     return PExprNode<exprType, T_element>::isEqual(node, mappings);
   }

@@ -161,13 +161,9 @@ public:
       expressionGraph.accept(replacer);
     }
   }
-
-  bool isExternal(Evaluator<T_element>& evaluator, ExpressionNode<T_element>& node) const
+ 
+  bool mustEvaluate(Evaluator<T_element>& evaluator, ExpressionNode<T_element>& node) const
   {
-    // It's an output if it has variables depending on it
-    if (!node.getExternalRequiredBy().empty())
-      return true;
-
     // It's an output if it has nodes depending on it that are not evaluated by the evaluator
     const std::vector<ExpressionNode<T_element>*> internal_reqBy(node.getInternalRequiredBy());
     const std::set<ExpressionNode<T_element>*>& claimed = claimedMap.find(&evaluator)->second;

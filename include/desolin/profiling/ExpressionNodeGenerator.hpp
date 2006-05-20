@@ -62,7 +62,7 @@ private:
   std::vector<PExprNode<scalar, T_element>*> getAssignments(ElementSet<exprType, T_element>& expr) const 
   {
     const std::map<ElementIndex<exprType>, ExprNode<scalar, T_element>*> exprAssignments(expr.getAssignments());
-    std::vector<PExprNode<scalar, T_element>*> pAssignments(exprAssignments.size());
+    std::vector<PExprNode<scalar, T_element>*> pAssignments;
 
     typedef typename std::map<ElementIndex<exprType>, ExprNode<scalar, T_element>*>::const_iterator ConstIterator;
     for(ConstIterator exprIterator  = exprAssignments.begin(); exprIterator != exprAssignments.end(); ++exprIterator)

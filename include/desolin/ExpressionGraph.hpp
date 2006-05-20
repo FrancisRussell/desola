@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <vector>
 #include <functional>
+#include <cstddef>
 #include <boost/shared_ptr.hpp>
 #include <desolin/Desolin_fwd.hpp>
 
@@ -53,6 +54,11 @@ public:
   inline int nodeCount() const
   {
     return exprVector.size();
+  }
+
+  ExpressionNode<T_element>& nodeAt(const std::size_t index)
+  {
+    return *exprVector[index];
   }
 
   void accept(ExpressionNodeVisitor<T_element>& visitor)

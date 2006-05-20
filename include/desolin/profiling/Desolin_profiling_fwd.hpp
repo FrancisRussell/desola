@@ -31,6 +31,8 @@ template<typename T_element> class PExpressionGraph;
 template<typename T_element> class PExpressionNodeGenerator;
 template<typename T_element> class PHashingVisitor;
 template<typename T_element> class PEqualityCheckingVisitor;
+template<typename T_element> class Profiler;
+template<typename T_element> class PExpressionNodeRef;
 
 }
 

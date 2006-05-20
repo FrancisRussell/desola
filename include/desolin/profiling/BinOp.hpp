@@ -19,7 +19,7 @@ public:
   inline bool isEqual(const PBinOp& node, const std::map<const PExpressionNode<T_element>*, const PExpressionNode<T_element>*>& mappings) const
   {
     assert(mappings.find(left) != mappings.end());
-    assert(mappings.fine(right) != mappings.end());
+    assert(mappings.find(right) != mappings.end());
 
     return PExprNode<resultType, T_element>::isEqual(node, mappings) &&
 	   mappings.find(left)->second == node.left &&

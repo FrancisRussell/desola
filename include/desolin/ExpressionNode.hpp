@@ -7,6 +7,7 @@
 #include <vector>
 #include <algorithm>
 #include <iterator>
+#include <memory>
 #include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>
 #include <boost/ref.hpp>
@@ -18,12 +19,6 @@
 namespace desolin_internal
 {
 
-enum EvaluationDirective
-{
-  EVALUATE,
-  NO_EVALUATE
-};
-
 template<typename T_element>
 class ExpressionNode
 {
@@ -33,11 +28,22 @@ private:
   ExpressionNode& operator=(const ExpressionNode&);
   
   EvaluationDirective evaluationDirective;
+  std::set< PExpressionNodeRef<T_element> > monitors;
   std::multiset<const Variable<T_element>*> external_reqBy;
   std::vector<ExpressionNode*> internal_reqBy;
   std::vector<ExpressionNode*> deps;
 
 public:
+  static std::vector<ExpressionNode*> getTopologicallySortedNodes(const std::vector<ExpressionNode*>& leaves)
+  { 
+    std::vector<ExpressionNode*> nodes;
+    std::set<ExpressionNode*> visited; 
+    typedef std::back_insert_iterator< std::vector<ExpressionNode*> > OutputIterator;
+    OutputIterator out(nodes);
+    std::for_each(leaves.begin(), leaves.end(), boost::bind(getTopologicallySortedNodesHelper<OutputIterator>, _1, boost::ref(visited), out));
+    return nodes;
+  }
+    
   ExpressionNode()
   {
   }
@@ -78,6 +84,11 @@ public:
   
   inline void evaluate()
   {
+    for(typename std::set< PExpressionNodeRef<T_element> >::iterator monitorIterator = monitors.begin(); monitorIterator!=monitors.end(); ++monitorIterator)
+    {
+      monitorIterator->getPExpressionNode().notifyLive();
+    }
+    monitors.clear();
     internal_evaluate();
   }
     
@@ -86,8 +97,29 @@ public:
   virtual void accept(LiteralVisitor<T_element>& visitor)
   {
   }
-  
-  virtual ~ExpressionNode() {}
+
+  inline void setEvaluationDirective(const EvaluationDirective d)
+  {
+    evaluationDirective = d;
+  }
+
+  inline EvaluationDirective getEvaluationDirective() const
+  {
+    return evaluationDirective;
+  }
+
+  void notifyOfUse(PExpressionNodeRef<T_element>& monitor)
+  {
+    monitors.insert(monitor);
+  }
+
+  virtual ~ExpressionNode() 
+  {
+    for(typename std::set< PExpressionNodeRef<T_element> >::iterator monitorIterator = monitors.begin(); monitorIterator!=monitors.end(); ++monitorIterator)
+    {
+      monitorIterator->getPExpressionNode().notifyDead();
+    }
+  }
 
 protected:
   virtual void update(ExprNode<scalar, T_element>& previous, ExprNode<scalar, T_element>& next) = 0;
@@ -110,7 +142,12 @@ protected:
   void internalReplace(ExprNode<exprType, T_element>& previous, ExprNode<exprType, T_element>& next)
   {
     // This method should only be called by a subclass of ExpressionNode with itself as the "previous" parameter
+    // TODO: Fix this. This is polymorphism for code reuse.
     assert(&previous == this);
+   
+    // Inherit monitoring from node being replaced
+    next.monitors.insert(previous.monitors.begin(), previous.monitors.end());
+    previous.monitors.clear();
     
     // We make copies because this node might be deleted during this method
     const std::multiset<const Variable<T_element>*> localExternalReqBy(external_reqBy);
@@ -201,26 +238,16 @@ protected:
     }
   }
 
-  std::vector<ExpressionNode*> getTopologicallySortedNodes() 
-  {
-    const std::vector<ExpressionNode*> leaves(getLeaves());
-    std::vector<ExpressionNode*> nodes;
-    std::set<ExpressionNode*> visited;
-    typedef std::back_insert_iterator< std::vector<ExpressionNode*> > OutputIterator;
-    OutputIterator out(nodes);
-
-    std::for_each(leaves.begin(), leaves.end(), boost::bind(getTopologicallySortedNodesHelper<OutputIterator>, _1, boost::ref(visited), out));
-    return nodes;
-  }
-
   virtual void internal_evaluate()
   {
-    std::vector<ExpressionNode*> nodes(getTopologicallySortedNodes());
+    const std::vector<ExpressionNode*> leaves(getLeaves());
+    const std::vector<ExpressionNode*> nodes(getTopologicallySortedNodes(leaves));
     ExpressionGraph<T_element> expressionGraph(nodes.begin(), nodes.end());
 
-    PExpressionGraph<T_element> something(expressionGraph);
+    Profiler<T_element>& profiler = Profiler<T_element>::getProfiler();
+    std::auto_ptr< ExpressionGraph<T_element> > profiledGraph = profiler.getAnnotatedExpressionGraph(expressionGraph, *this);
 
-    boost::shared_ptr< EvaluationStrategy<T_element> > strategy = expressionGraph.createEvaluationStrategy();
+    boost::shared_ptr< EvaluationStrategy<T_element> > strategy = profiledGraph->createEvaluationStrategy();
     TGEvaluatorFactory<T_element> tgEvaluatorFactory;
     strategy->addEvaluator(tgEvaluatorFactory);
     strategy->execute();
