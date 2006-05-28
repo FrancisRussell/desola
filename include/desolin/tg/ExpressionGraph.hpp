@@ -83,6 +83,7 @@ public:
   void compile()
   {
     taskGraphObject.applyOptimisation("fusion");
+    taskGraphObject.applyOptimisation("array_contraction");
     taskGraphObject.compile(tg::GCC, true);	
   }
 
