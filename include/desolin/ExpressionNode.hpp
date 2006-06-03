@@ -44,7 +44,7 @@ public:
     return nodes;
   }
     
-  ExpressionNode()
+  ExpressionNode() : evaluationDirective(EVALUATE)
   {
   }
 
@@ -238,16 +238,29 @@ protected:
     }
   }
 
+  std::auto_ptr< ExpressionGraph<T_element> > getExpressionGraph(const std::vector<ExpressionNode*>& nodes)
+  {
+    const bool useProfiler = true;
+
+    std::auto_ptr< ExpressionGraph<T_element> >  expressionGraph(new ExpressionGraph<T_element>(nodes.begin(), nodes.end()));
+    if (useProfiler)
+    {
+      Profiler<T_element>& profiler = Profiler<T_element>::getProfiler();
+      return profiler.getAnnotatedExpressionGraph(*expressionGraph, *this);
+    }
+    else
+    {
+      expressionGraph->setDefaultAnnotations();
+      return expressionGraph;
+    }
+  }
+
   virtual void internal_evaluate()
   {
     const std::vector<ExpressionNode*> leaves(getLeaves());
     const std::vector<ExpressionNode*> nodes(getTopologicallySortedNodes(leaves));
-    ExpressionGraph<T_element> expressionGraph(nodes.begin(), nodes.end());
-
-    Profiler<T_element>& profiler = Profiler<T_element>::getProfiler();
-    std::auto_ptr< ExpressionGraph<T_element> > profiledGraph = profiler.getAnnotatedExpressionGraph(expressionGraph, *this);
-
-    boost::shared_ptr< EvaluationStrategy<T_element> > strategy = profiledGraph->createEvaluationStrategy();
+    std::auto_ptr< ExpressionGraph<T_element> > expressionGraph = getExpressionGraph(nodes);
+    boost::shared_ptr< EvaluationStrategy<T_element> > strategy = expressionGraph->createEvaluationStrategy();
     TGEvaluatorFactory<T_element> tgEvaluatorFactory;
     strategy->addEvaluator(tgEvaluatorFactory);
     strategy->execute();

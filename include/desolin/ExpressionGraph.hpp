@@ -39,6 +39,18 @@ private:
   {
     std::for_each(exprVector.begin(), exprVector.end(), ApplyVisitor<VisitorType>(visitor));
   }
+
+  static void setDefaultAnnotation(ExpressionNode<T_element>* const node)
+  {
+    if (node->getExternalRequiredBy().empty())
+    {
+      node->setEvaluationDirective(NO_EVALUATE);
+    }
+    else
+    {
+      node->setEvaluationDirective(EVALUATE);
+    }
+  }
   
 public:
   template<typename InputIterator>
@@ -74,6 +86,13 @@ public:
   void accept(ExpressionNodeTypeVisitor<T_element>& visitor)
   {
     internalAccept(visitor);
+  }
+
+  // Replicates original behavious before profiling system. Only saves result
+  // of nodes which have an external handle pointing to them.
+  void setDefaultAnnotations()
+  {
+    std::for_each(exprVector.begin(), exprVector.end(), setDefaultAnnotation);
   }
    
   boost::shared_ptr<EvaluationStrategy<T_element> > createEvaluationStrategy()
