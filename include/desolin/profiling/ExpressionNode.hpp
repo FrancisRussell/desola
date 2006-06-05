@@ -13,7 +13,7 @@ class PExpressionNode
 {
 private:
   PExpressionNode(const PExpressionNode&);
-  PExpressionNode operator=(const PExpressionNode&);
+  PExpressionNode& operator=(const PExpressionNode&);
 
   int liveCount;
   int deadCount;
