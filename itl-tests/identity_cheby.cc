@@ -64,6 +64,7 @@
 #include <desolin/Desolin.hpp>
 #include <desolin/itl_interface.hpp>
 #include <itl/krylov/cheby.h>
+#include <boost/timer.hpp>
 
 using namespace itl;
 
@@ -100,6 +101,7 @@ int main (int argc, char* argv[])
   //iteration
   noisy_iteration<Scalar> iter(b, max_iter, 1.0e-6);
   //cheby algorithm
+  boost::timer timer;
   cheby(A, x, b, precond(), iter, eigmin, eigmax);
   //end
 
@@ -108,8 +110,9 @@ int main (int argc, char* argv[])
   itl::mult(A, x, b1);
   itl::add(b1, itl::scaled(b, -1.), b1);
 
-
   cout << "Residual " << itl::two_norm(b1) << endl;
+  cout << "Time per Iteration: " << timer.elapsed()/iter.iterations() << " seconds" << endl;
+  cout << "Total Time: " << timer.elapsed() << " seconds" << endl;  
   return 0;
 }
 

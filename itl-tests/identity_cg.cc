@@ -57,7 +57,8 @@
 //===========================================================================
 #include <desolin/itl_interface.hpp>
 #include <desolin/Desolin.hpp>
-#include "itl/krylov/cg.h"
+#include <itl/krylov/cg.h>
+#include <boost/timer.hpp>
 
 using namespace itl;
 
@@ -91,6 +92,7 @@ int main (int argc, char* argv[])
   //inomplete cholesky preconditioner
   identity_preconditioner precond;
   noisy_iteration<Scalar> iter(b, max_iter, 1e-6);
+  boost::timer timer;
   cg(A, x, b, precond(), iter);
   //end
 
@@ -100,6 +102,8 @@ int main (int argc, char* argv[])
   itl::add(b1, itl::scaled(b, -1.), b1);
 
   cout << "True Residual: " << itl::two_norm(b1) << endl;
+  cout << "Time per Iteration: " << timer.elapsed()/iter.iterations() << " seconds" << endl;
+  cout << "Total Time: " << timer.elapsed() << " seconds" << endl;
   return 0;
 }
 

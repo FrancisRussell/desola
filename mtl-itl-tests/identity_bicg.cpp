@@ -65,6 +65,7 @@
 
 #include <itl/interface/mtl.h>
 #include <itl/krylov/bicg.h>
+#include <boost/timer.hpp>
 
 /*
   In thsi example, we show how to use bicgstab algorithm.
@@ -105,6 +106,7 @@ int main (int argc, char* argv[])
   //SSOR preconditioner
   identity_preconditioner precond;
   //iteration
+  boost::timer timer;
   noisy_iteration<double> iter(b, max_iter, 1e-6);
   //bicgstab algorithm
   bicg(A, x, b, precond(), iter);
@@ -117,6 +119,8 @@ int main (int argc, char* argv[])
 
 
   cout << "Residual " << itl::two_norm(b1) << endl;
+  cout << "Time per Iteration: " << timer.elapsed()/iter.iterations() << " seconds" << endl;
+  cout << "Total Time: " << timer.elapsed() << " seconds" << endl;  
   return 0;
 }
 
