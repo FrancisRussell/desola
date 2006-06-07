@@ -1,11 +1,13 @@
 #ifndef DESOLIN_FWD_HPP
 #define DESOLIN_FWD_HPP
 
-// Enums used for template parameters
+namespace desolin {}
 
 namespace desolin_internal
 {
 using namespace desolin;
+
+// Enums used for template parameters
 
 enum EvaluationDirective
 {
@@ -94,15 +96,17 @@ template<ExprType expressionType, typename T_element> class Var;
 }
 
 namespace desolin
-{	
-// External Interface
-template<typename T_element> class Vector;
-template<typename T_element> class Matrix;
-template<typename T_element> class Scalar;
-template<desolin_internal::ExprType exprType, typename T_element> class ScalarElement;
+{
+  // External Interface
+  template<typename T_element> class Vector;
+  template<typename T_element> class Matrix;
+  template<typename T_element> class Scalar;
+  template<desolin_internal::ExprType exprType, typename T_element> class ScalarElement;
 }
 
-#include <desolin/file-access/mtl_harwell_boeing_stream.hpp>
-#include <desolin/file-access/mtl_matrix_market_stream.hpp>
+#include "Cache.hpp"
+#include "ConfigurationManager.hpp"
+#include "file-access/mtl_harwell_boeing_stream.hpp"
+#include "file-access/mtl_matrix_market_stream.hpp"
 
 #endif

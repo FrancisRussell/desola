@@ -240,7 +240,8 @@ protected:
 
   std::auto_ptr< ExpressionGraph<T_element> > getExpressionGraph(const std::vector<ExpressionNode*>& nodes)
   {
-    const bool useProfiler = true;
+    const ConfigurationManager& configurationManager(ConfigurationManager::getConfigurationManager());
+    const bool useProfiler = configurationManager.livenessAnalysisEnabled();
 
     std::auto_ptr< ExpressionGraph<T_element> >  expressionGraph(new ExpressionGraph<T_element>(nodes.begin(), nodes.end()));
     if (useProfiler)

@@ -13,7 +13,7 @@ namespace desolin_internal
 {
 
 template<typename T_element>
-class Profiler
+class Profiler : public Cache
 {
 private:
   Profiler(const Profiler&);
@@ -94,6 +94,15 @@ public:
 
     const std::vector<ExpressionNode<T_element>*> requiredNodes(getRequiredNodes(graph));
     return std::auto_ptr< ExpressionGraph<T_element> >(new ExpressionGraph<T_element>(requiredNodes.begin(), requiredNodes.end()));
+  }
+
+  virtual void flush()
+  {
+    cachedProfiles.clear();
+  }
+
+  virtual ~Profiler()
+  {
   }
 };
 

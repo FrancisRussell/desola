@@ -80,11 +80,40 @@ public:
     };
   }
 
+  tg::Compilers getTaskCompiler() const
+  {
+    const ConfigurationManager& configurationManager(ConfigurationManager::getConfigurationManager());
+    
+    if (configurationManager.usingGCC())
+    {
+      return tg::GCC;
+    }
+    else if (configurationManager.usingICC())
+    {
+      return tg::ICC;
+    }
+    else
+    {
+      assert(false);
+      return tg::GCC;
+    }
+  }
+
   void compile()
   {
-    taskGraphObject.applyOptimisation("fusion");
-    taskGraphObject.applyOptimisation("array_contraction");
-    taskGraphObject.compile(tg::GCC, true);	
+    const ConfigurationManager& configurationManager(ConfigurationManager::getConfigurationManager());
+
+    if (configurationManager.loopFusionEnabled())
+    {
+      taskGraphObject.applyOptimisation("fusion");
+    }
+
+    if(configurationManager.arrayContractionEnabled())
+    {
+      taskGraphObject.applyOptimisation("array_contraction");
+    }
+
+    taskGraphObject.compile(getTaskCompiler(), true);	
   }
 
   inline void print() const

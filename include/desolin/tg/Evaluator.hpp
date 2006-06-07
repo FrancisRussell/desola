@@ -16,11 +16,30 @@ namespace desolin_internal
 {
 
 template<typename T_element>
+class TGCache : public Cache
+{
+public:
+  typedef std::map<std::size_t, boost::shared_ptr< TGExpressionGraph<T_element> > > T_cachedGraphMap;
+private:
+  T_cachedGraphMap cache;
+  
+public:
+  virtual void flush()
+  {
+    cache.clear();
+  }
+
+  T_cachedGraphMap& getCachedGraphs()
+  {
+    return cache;
+  }
+};
+
+template<typename T_element>
 class TGEvaluator : public Evaluator<T_element>
 {
 private:
-  typedef std::map<std::size_t, boost::shared_ptr< TGExpressionGraph<T_element> > > T_cachedGraphMap;
-  static T_cachedGraphMap cachedGraphs;
+  static TGCache<T_element> graphCache;
 	
   TGEvaluator(const TGEvaluator&);
   TGEvaluator& operator=(const TGEvaluator&);
@@ -74,19 +93,22 @@ public:
     evaluated = true;
 
     const std::size_t hash = boost::hash< TGExpressionGraph<T_element> >()(*graph);
-    const typename T_cachedGraphMap::iterator cachedGraphIterator = cachedGraphs.find(hash);
+    typename TGCache<T_element>::T_cachedGraphMap& cachedGraphMap(graphCache.getCachedGraphs());
+    const typename TGCache<T_element>::T_cachedGraphMap::iterator cachedGraphIterator = cachedGraphMap.find(hash);
 
     ParameterHolder parameterHolder;
+    const ConfigurationManager& configurationManager(ConfigurationManager::getConfigurationManager());	
     objectGenerator.addTaskGraphMappings(parameterHolder);
 	    
-    if (cachedGraphIterator != cachedGraphs.end() && (*graph)==(*cachedGraphIterator->second))
+    if (configurationManager.codeCachingEnabled() && cachedGraphIterator != cachedGraphMap.end() && 
+	(*graph)==(*cachedGraphIterator->second))
     {
       graph = cachedGraphIterator->second;
     }
     else
     {
       graph->compile();
-      cachedGraphs[hash] = graph;
+      cachedGraphMap[hash] = graph;
     }
     
     graph->execute(parameterHolder);
@@ -104,7 +126,7 @@ public:
 };
 
 template<typename T_element>
-std::map<std::size_t, boost::shared_ptr< TGExpressionGraph<T_element> > > TGEvaluator<T_element>::cachedGraphs;
+TGCache<T_element> TGEvaluator<T_element>::graphCache;
 
 }
 #endif
