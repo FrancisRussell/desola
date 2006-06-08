@@ -58,6 +58,8 @@
 //
 //===========================================================================
 
+#include "solver_options.h"
+#include "statistics_generator.hpp"
 #include <desolin/itl_interface.hpp>
 #include <desolin/Desolin.hpp>
 #include <itl/krylov/qmr.h>
@@ -78,16 +80,12 @@ int main(int argc, char* argv[])
   using std::cout;
   using std::endl;
 
-  if ( argc == 1 ) {
-    cout << "Usage: " << argv[0] 
-	 << " <Unsymmetric matrix in Harwell-Boeing format> "
-	 << endl;
-    return 0;
-  }
+  SolverOptions solverOptions("Unsymmetric matrix in Harwell-Boeing format");
+  solverOptions.processOptions(argc, argv);
 
-  desolin::harwell_boeing_stream<Type> hbs(argv[1]);
+  desolin::harwell_boeing_stream<Type> hbs(solverOptions.getFile().c_str());
 
-  int max_iter = 256;
+  const int max_iter = solverOptions.getIterations();
   //begin
   Matrix A(hbs);
   //end
@@ -101,7 +99,7 @@ int main(int argc, char* argv[])
   //iteration
   noisy_iteration<Scalar> iter(b, max_iter, 1e-6);
   //qmr algorithm
-  boost::timer timer;
+  StatisticsGenerator stats;
   qmr(A, x, b, precond.left(), precond.right(), iter);
   //end
 
@@ -111,8 +109,7 @@ int main(int argc, char* argv[])
   itl::add(b1, itl::scaled(b, -1.), b1);
   
   cout << "Residual " << itl::two_norm(b1) << endl;
-  cout << "Time per Iteration: " << timer.elapsed()/iter.iterations() << " seconds" << endl;
-  cout << "Total Time: " << timer.elapsed() << " seconds" << endl;
+  stats.printResults(solverOptions.getFile(), iter, !solverOptions.singleLineResult());
   return 0;
 }
 

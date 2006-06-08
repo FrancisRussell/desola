@@ -17,6 +17,8 @@ private:
   bool useCodeCaching;
   bool useLoopFusion;
   bool useArrayContraction;
+  bool useSingleLineResult;
+  int iterations;
   
 public:
   SolverOptions(const std::string fileDesc) : description("Allowed Options")
@@ -25,10 +27,12 @@ public:
       ("help", "produce help message")
       ("enable-gcc", "use GNU C Compiler")
       ("enable-icc", "use Intel C Compiler")
+      ("iterations", po::value<int>(&iterations)->default_value(256), "number of iterations to perform")
       ("liveness-analysis", po::value<bool>(&useLivenessAnalysis)->default_value(true), "enable runtime liveness analysis")
       ("code-caching", po::value<bool>(&useCodeCaching)->default_value(true), "enable code caching and resue")
       ("loop-fusion", po::value<bool>(&useLoopFusion)->default_value(true), "enable loop fusion of runtime generated code")
       ("array-contraction", po::value<bool>(&useArrayContraction)->default_value(true), "enable array contraction on runtime generated code")
+      ("single-line-result", "print statistics on single line")
       ("input-file", po::value<std::string>(), fileDesc.c_str());
 
     positional_description.add("input-file", -1);
@@ -106,6 +110,16 @@ public:
   std::string getFile() const
   {
     return vm["input-file"].as<std::string>();
+  }
+
+  bool singleLineResult() const
+  {
+    return vm.count("single-line-result") > 0;
+  }
+
+  int getIterations() const
+  {
+    return iterations;
   }
 };
 
