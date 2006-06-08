@@ -58,7 +58,7 @@
 //
 //===========================================================================
 
-#include "solver_options.h"
+#include "solver_options.hpp"
 #include "statistics_generator.hpp"
 #include <desolin/Desolin.hpp>
 #include <desolin/itl_interface.hpp>
@@ -107,7 +107,7 @@ int main (int argc, char* argv[])
 
 
   cout << "Residual " << itl::two_norm(b1) << endl;
-  stats.printResults(solverOptions.getFile(), iter, !solverOptions.singleLineResult());
+  stats.printResults(hbs, iter, !solverOptions.singleLineResult());
   return 0;
 }
 

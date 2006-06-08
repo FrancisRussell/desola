@@ -19,13 +19,14 @@ public:
   {
   }
   
-  template<typename IterationType>
-  void printLongResults(const std::string& matrixName, IterationType& iter)
+  template<typename MatrixStreamType, typename IterationType>
+  void printLongResults(const MatrixStreamType& matrixStream, IterationType& iter)
   {
     std::cout.precision(5);
     std::cout.setf(std::ios::fixed);
     std::cout << "Library: desolin" << std::endl;
-    std::cout << "Matrix: " << getLeaf(matrixName) << std::endl;
+    std::cout << "Matrix: " << getLeaf(matrixStream.get_filename()) << std::endl;
+    std::cout << "Matrix Size: " << matrixStream.ncols() << std::endl;
     std::cout << "Compiler: " << getCompiler() << std::endl;
     std::cout << "Code Caching: " << getStatus(configManager.codeCachingEnabled()) << std::endl;
     std::cout << "Loop Fusion: " << getStatus(configManager.loopFusionEnabled()) << std::endl;
@@ -35,13 +36,14 @@ public:
     std::cout << "Total Time: " << timer.elapsed() << " seconds" << std::endl;
   }
 
-  template<typename IterationType>
-  void printShortResults(const std::string& matrixName, IterationType& iter)
+  template<typename MatrixStreamType, typename IterationType>
+  void printShortResults(const MatrixStreamType& matrixStream, IterationType& iter)
   {
     std::cout.precision(5);
     std::cout.setf(std::ios::fixed);
     std::cout << "Library: desolin\t";
-    std::cout << "Matrix: " << getLeaf(matrixName) << "\t";
+    std::cout << "Matrix: " << getLeaf(matrixStream.get_filename()) << "\t";
+    std::cout << "Matrix Size: " << matrixStream.ncols() << "\t";
     std::cout << "Compiler: " << getCompiler() << "\t";
     std::cout << "Code_cache: " << getStatus(configManager.codeCachingEnabled()) << "\t";
     std::cout << "Fusion: " << getStatus(configManager.loopFusionEnabled()) << "\t";
@@ -51,16 +53,16 @@ public:
     std::cout << "Total_time: " << timer.elapsed() << std::endl;
   }
 
-  template<typename IterationType>
-  void printResults(const std::string& matrixName, IterationType& iter, const bool multiLine)
+  template<typename MatrixStreamType, typename IterationType>
+  void printResults(const MatrixStreamType& matrixStream, IterationType& iter, const bool multiLine)
   {
     if(multiLine)
     {
-      printLongResults(matrixName, iter);
+      printLongResults(matrixStream, iter);
     }
     else
     {
-      printShortResults(matrixName, iter);
+      printShortResults(matrixStream, iter);
     }
   }
 

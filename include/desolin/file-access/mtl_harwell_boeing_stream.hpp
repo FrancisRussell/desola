@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <cassert>
 #include <iostream>
+#include <string>
 #include "mtl_complex.hpp"
 #include "iohb.h"
 #include "mtl_entry.hpp"
@@ -47,12 +48,12 @@ template <class T>
 class harwell_boeing_stream {
 public:
   //: Construct from file name
-  harwell_boeing_stream(const char* filename) {
+  harwell_boeing_stream(const char* fn) : filename(fn) {
     int Nrhs;
     char* Type;
     Type = new char[4];
     isComplex = false;
-    readHB_info(filename, &M, &N, &nonzeros, &Type, &Nrhs);
+    readHB_info(filename.c_str(), &M, &N, &nonzeros, &Type, &Nrhs);
     colptr = (int *)malloc((N+1)*sizeof(int));
     if ( colptr == NULL ) IOHBTerminate("Insufficient memory for colptr.\n");
     rowind = (int *)malloc(nonzeros*sizeof(int));
@@ -70,7 +71,7 @@ public:
       }
     }
 
-    readHB_mat_double(filename, colptr, rowind, val);
+    readHB_mat_double(filename.c_str(), colptr, rowind, val);
 
     cnt = 0;
     col = 0;
@@ -92,10 +93,14 @@ public:
   inline int nnz() const { return nonzeros; }
 
   //: At the end of the file?
-  inline bool eof() { return cnt == nonzeros; }
+  inline bool eof() const { return cnt == nonzeros; }
 
-  inline bool is_complex() { return isComplex; }
+  inline bool is_complex() const { return isComplex; }
 
+  inline std::string get_filename() const
+  {
+    return filename;
+  }
 
   /* JGS SGI Compiler Doesn't like this
   template <class Type, class PR_>
@@ -119,7 +124,7 @@ public:
   int nonzeros;
   int* rowind;
   double* val;
-
+  const std::string filename;
 };
 
 template <class T, class PR_>

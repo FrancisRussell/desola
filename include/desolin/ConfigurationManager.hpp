@@ -23,6 +23,8 @@ private:
 
   void flushCaches();
 
+  ConfigurationManager(const ConfigurationManager&);
+  ConfigurationManager& operator=(const ConfigurationManager&);
   ConfigurationManager();
 
 public:
