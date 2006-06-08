@@ -14,7 +14,7 @@ identity_cgs_LDFLAGS = -lboost_program_options -lboost_filesystem
 identity_bicg_SOURCES = identity_bicg.cpp
 identity_bicg_LDFLAGS = -lboost_program_options -lboost_filesystem
 
-identity_bicgstab_SOURCES = identity_bicgstab.cc
+identity_bicgstab_SOURCES = identity_bicgstab.cpp
 identity_bicgstab_LDFLAGS = -lboost_program_options -lboost_filesystem
 
 identity_tfqmr_SOURCES = identity_tfqmr.cpp
