@@ -55,6 +55,7 @@
 //
 //                                                                           
 //===========================================================================
+#include "program_options.h"
 #include <desolin/itl_interface.hpp>
 #include <desolin/Desolin.hpp>
 #include <itl/krylov/cg.h>
@@ -72,15 +73,11 @@ int main (int argc, char* argv[])
   using std::cout;
   using std::endl;
 
-  if ( argc == 1 ) {
-    cout << "Usage: " << argv[0] 
-	 << " <Symmetric Positive Definite matrix in Harwell-Boeing format> "
-	 << endl;
-    return 0;
-  }
-
+  SolverOptions solverOptions("Symmetric Positive Definite matrix in Harwell-Boeing format");
+  solverOptions.processOptions(argc, argv);
+  
   int max_iter = 256;
-  desolin::harwell_boeing_stream<Type> hbs(argv[1]);
+  desolin::harwell_boeing_stream<Type> hbs(solverOptions.getFile().c_str());
   //begin
   Matrix A(hbs);
   //end

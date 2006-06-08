@@ -47,7 +47,7 @@ template <class T>
 class harwell_boeing_stream {
 public:
   //: Construct from file name
-  harwell_boeing_stream(char* filename) {
+  harwell_boeing_stream(const char* filename) {
     int Nrhs;
     char* Type;
     Type = new char[4];
