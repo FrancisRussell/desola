@@ -17,7 +17,6 @@
 
 #include <stdio.h>
 #include <cassert>
-#include <string>
 
 #include "mtl_complex.hpp"
 #include "mtl_entry.hpp"
@@ -48,8 +47,8 @@ template <class T>
 class matrix_market_stream {
 public:
   //: Construct from filename
-  inline matrix_market_stream(const char* fn) : filename(fn) {
-    fin = fopen(filename.c_str(), "r");
+  inline matrix_market_stream(const char* filename) {
+    fin = fopen(filename, "r");
     if (fin==0) {
       std::cerr << "Sorry, we can not open " << filename << std::endl;
       assert(0);
@@ -126,10 +125,7 @@ public:
 
   inline bool is_hermitian() const { return isHermitian; }
 
-  inline std::string get_filename() const
-  {
-    return filename;
-  }
+
 
   /* private: JGS friends not working for some compilers */
 
@@ -140,7 +136,6 @@ public:
   bool isComplex;
   bool isSymmetric;
   bool isHermitian;
-  const std::string filename;
 };
 
 

@@ -61,6 +61,9 @@
 //
 //===========================================================================
 
+
+#include "solver_options.hpp"
+#include "statistics_generator.hpp"
 #include <mtl/matrix.h>
 #include <mtl/mtl.h>
 #include <mtl/utils.h>
@@ -89,16 +92,12 @@ int main (int argc, char* argv[])
   using std::cout;
   using std::endl;
 
-  if ( argc == 1 ) {
-    cout << "Usage: " << argv[0] 
-	 << " <Unsymmetric matrix in Harwell-Boeing format> "
-	 << endl;
-    return 0;
-  }
-
-  harwell_boeing_stream<Type> hbs(argv[1]);
-
-  int max_iter = 50;
+  SolverOptions solverOptions("Unsymmetric matrix in Harwell-Boeing format");
+  solverOptions.processOptions(argc, argv);
+      
+  harwell_boeing_stream<Type> hbs(solverOptions.getFile().c_str());
+  const int max_iter = solverOptions.getIterations();
+	
   //begin
   Matrix A(hbs);
 
@@ -111,7 +110,7 @@ int main (int argc, char* argv[])
   //iteration
   noisy_iteration<double> iter(b, max_iter, 1.0e-6);
   //richardson algorithm
-  boost::timer timer;
+  StatisticsGenerator stats;
   richardson(A, x, b, precond(), iter);
   //end
 
@@ -121,8 +120,7 @@ int main (int argc, char* argv[])
   itl::add(b1, itl::scaled(b, -1.), b1);
 
   cout << "Residual " << itl::two_norm(b1) << endl;
-  cout << "Time per Iteration: " << timer.elapsed()/iter.iterations() << " seconds" << endl;
-  cout << "Total Time: " << timer.elapsed() << " seconds" << endl;  
+  stats.printResults(solverOptions.getFile(), hbs, iter, !solverOptions.singleLineResult());
   return 0;
 }
 

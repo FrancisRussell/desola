@@ -20,12 +20,12 @@ public:
   }
   
   template<typename MatrixStreamType, typename IterationType>
-  void printLongResults(const MatrixStreamType& matrixStream, IterationType& iter)
+  void printLongResults(const std::string& matrixPath, const MatrixStreamType& matrixStream, IterationType& iter)
   {
     std::cout.precision(5);
     std::cout.setf(std::ios::fixed);
     std::cout << "Library: desolin" << std::endl;
-    std::cout << "Matrix: " << getLeaf(matrixStream.get_filename()) << std::endl;
+    std::cout << "Matrix: " << getLeaf(matrixPath) << std::endl;
     std::cout << "Matrix Size: " << matrixStream.ncols() << std::endl;
     std::cout << "Compiler: " << getCompiler() << std::endl;
     std::cout << "Code Caching: " << getStatus(configManager.codeCachingEnabled()) << std::endl;
@@ -37,12 +37,12 @@ public:
   }
 
   template<typename MatrixStreamType, typename IterationType>
-  void printShortResults(const MatrixStreamType& matrixStream, IterationType& iter)
+  void printShortResults(const std::string& matrixPath, const MatrixStreamType& matrixStream, IterationType& iter)
   {
     std::cout.precision(5);
     std::cout.setf(std::ios::fixed);
     std::cout << "Library: desolin\t";
-    std::cout << "Matrix: " << getLeaf(matrixStream.get_filename()) << "\t";
+    std::cout << "Matrix: " << getLeaf(matrixPath) << "\t";
     std::cout << "Matrix Size: " << matrixStream.ncols() << "\t";
     std::cout << "Compiler: " << getCompiler() << "\t";
     std::cout << "Code_cache: " << getStatus(configManager.codeCachingEnabled()) << "\t";
@@ -54,15 +54,15 @@ public:
   }
 
   template<typename MatrixStreamType, typename IterationType>
-  void printResults(const MatrixStreamType& matrixStream, IterationType& iter, const bool multiLine)
+  void printResults(const std::string& matrixPath, const MatrixStreamType& matrixStream, IterationType& iter, const bool multiLine)
   {
     if(multiLine)
     {
-      printLongResults(matrixStream, iter);
+      printLongResults(matrixPath, matrixStream, iter);
     }
     else
     {
-      printShortResults(matrixStream, iter);
+      printShortResults(matrixPath, matrixStream, iter);
     }
   }
 

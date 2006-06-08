@@ -17,39 +17,39 @@ public:
   }
   
   template<typename MatrixStreamType, typename IterationType>
-  void printLongResults(const MatrixStreamType& matrixStream, IterationType& iter)
+  void printLongResults(const std::string& matrixPath, const MatrixStreamType& matrixStream, IterationType& iter)
   {
     std::cout.precision(5);
     std::cout.setf(std::ios::fixed);
     std::cout << "Library: MTL" << std::endl;
-    std::cout << "Matrix: " << getLeaf(matrixStream.get_filename()) << std::endl;
+    std::cout << "Matrix: " << getLeaf(matrixPath) << std::endl;
     std::cout << "Matrix Size: " << matrixStream.ncols() << std::endl;
     std::cout << "Time per Iteration: " << timer.elapsed() / iter.iterations() << " seconds" << std::endl;
     std::cout << "Total Time: " << timer.elapsed() << " seconds" << std::endl;
   }
 
   template<typename MatrixStreamType, typename IterationType>
-  void printShortResults(const MatrixStreamType& matrixStream, IterationType& iter)
+  void printShortResults(const std::string& matrixPath, const MatrixStreamType& matrixStream, IterationType& iter)
   {
     std::cout.precision(5);
     std::cout.setf(std::ios::fixed);
-    std::cout << "Library: desolin\t";
-    std::cout << "Matrix: " << getLeaf(matrixStream.get_filename()) << "\t";
+    std::cout << "Library: MTL\t";
+    std::cout << "Matrix: " << getLeaf(matrixPath) << "\t";
     std::cout << "Matrix Size: " << matrixStream.ncols() << "\t";
     std::cout << "Iter_time: " << timer.elapsed() / iter.iterations() << "\t";
     std::cout << "Total_time: " << timer.elapsed() << std::endl;
   }
 
   template<typename MatrixStreamType, typename IterationType>
-  void printResults(const MatrixStreamType& matrixStream, IterationType& iter, const bool multiLine)
+  void printResults(const std::string& matrixPath, const MatrixStreamType& matrixStream, IterationType& iter, const bool multiLine)
   {
     if(multiLine)
     {
-      printLongResults(matrixStream, iter);
+      printLongResults(matrixPath, matrixStream, iter);
     }
     else
     {
-      printShortResults(matrixStream, iter);
+      printShortResults(matrixPath, matrixStream, iter);
     }
   }
 

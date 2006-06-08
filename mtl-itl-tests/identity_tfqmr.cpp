@@ -58,11 +58,12 @@
 //
 //===========================================================================
 
+#include "solver_options.hpp"
+#include "statistics_generator.hpp"
 #include "mtl/matrix.h"
 #include "mtl/mtl.h"
 #include "mtl/utils.h"
 #include "mtl/harwell_boeing_stream.h"
-
 #include <itl/interface/mtl.h>
 #include <itl/krylov/tfqmr.h>
 #include <boost/timer.hpp>
@@ -84,21 +85,13 @@ int main(int argc, char* argv[])
   using std::cout;
   using std::endl;
 
-  if ( argc == 1 ) {
-    cout << "Usage: " << argv[0] 
-	 << " <Unsymmetric matrix in Harwell-Boeing format> "
-	 << endl;
-    return 0;
-  }
-
-  harwell_boeing_stream<Type> hbs(argv[1]);
-
-  int max_iter = 256;
-  //begin
+  SolverOptions solverOptions("Unsymmetric matrix in Harwell-Boeing format");
+  solverOptions.processOptions(argc, argv);
+      
+  harwell_boeing_stream<Type> hbs(solverOptions.getFile().c_str());
+  const int max_iter = solverOptions.getIterations();
+	
   Matrix A(hbs);
-  //end
-
-  //begin
   dense1D<Type> x(A.nrows(), Type(0));
   dense1D<Type> b(A.ncols());
   for (dense1D<Type>::iterator i=b.begin(); i!=b.end(); i++)
@@ -109,7 +102,7 @@ int main(int argc, char* argv[])
   //iteration
   noisy_iteration<double> iter(b, max_iter, 1e-6);
   //qmr algorithm
-  boost::timer timer;
+  StatisticsGenerator stats;
   tfqmr(A, x, b, precond.left(), precond.right(), iter);
   //end
 
@@ -119,8 +112,7 @@ int main(int argc, char* argv[])
   itl::add(b1, itl::scaled(b, -1.), b1);
 
   cout << "Residual " << itl::two_norm(b1) << endl;
-  cout << "Time per Iteration: " << timer.elapsed()/iter.iterations() << " seconds" << endl;
-  cout << "Total Time: " << timer.elapsed() << " seconds" << endl; 
+  stats.printResults(solverOptions.getFile(), hbs, iter, !solverOptions.singleLineResult());
   return 0;
 }
 

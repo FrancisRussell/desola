@@ -84,8 +84,8 @@ int main (int argc, char* argv[])
   solverOptions.processOptions(argc, argv);
 
   desolin::harwell_boeing_stream<Type> hbs(solverOptions.getFile().c_str());
-      
   const int max_iter = solverOptions.getIterations();
+  
   //begin
   Matrix A(hbs);
 
@@ -106,9 +106,8 @@ int main (int argc, char* argv[])
   itl::mult(A, x, b1);
   itl::add(b1, itl::scaled(b, -1.), b1);
 
-
   cout << "Residual " << itl::two_norm(b1) << endl;
-  stats.printResults(hbs, iter, !solverOptions.singleLineResult());
+  stats.printResults(solverOptions.getFile(), hbs, iter, !solverOptions.singleLineResult());
   return 0;
 }
 
