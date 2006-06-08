@@ -24,6 +24,7 @@ public:
     std::cout << "Library: MTL" << std::endl;
     std::cout << "Matrix: " << getLeaf(matrixPath) << std::endl;
     std::cout << "Matrix Size: " << matrixStream.ncols() << std::endl;
+    std::cout << "Iterations: " << iter.iterations() << std::endl;
     std::cout << "Time per Iteration: " << timer.elapsed() / iter.iterations() << " seconds" << std::endl;
     std::cout << "Total Time: " << timer.elapsed() << " seconds" << std::endl;
   }
@@ -36,6 +37,7 @@ public:
     std::cout << "Library: MTL\t";
     std::cout << "Matrix: " << getLeaf(matrixPath) << "\t";
     std::cout << "Matrix Size: " << matrixStream.ncols() << "\t";
+    std::cout << "Iterations: " << iter.iterations() << "\t";
     std::cout << "Iter_time: " << timer.elapsed() / iter.iterations() << "\t";
     std::cout << "Total_time: " << timer.elapsed() << std::endl;
   }

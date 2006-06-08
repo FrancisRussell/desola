@@ -31,6 +31,7 @@ public:
     std::cout << "Code Caching: " << getStatus(configManager.codeCachingEnabled()) << std::endl;
     std::cout << "Loop Fusion: " << getStatus(configManager.loopFusionEnabled()) << std::endl;
     std::cout << "Array Contraction: " << getStatus(configManager.arrayContractionEnabled()) << std::endl;
+    std::cout << "Iterations: " << iter.iterations() << std::endl;
     std::cout << "Liveness Analysis: " << getStatus(configManager.livenessAnalysisEnabled()) << std::endl;
     std::cout << "Time per Iteration: " << timer.elapsed() / iter.iterations() << " seconds" << std::endl;
     std::cout << "Total Time: " << timer.elapsed() << " seconds" << std::endl;
@@ -49,6 +50,7 @@ public:
     std::cout << "Fusion: " << getStatus(configManager.loopFusionEnabled()) << "\t";
     std::cout << "Contraction: " << getStatus(configManager.arrayContractionEnabled()) << "\t";
     std::cout << "Liveness: " << getStatus(configManager.livenessAnalysisEnabled()) << "\t";
+    std::cout << "Iterations: " << iter.iterations() << "\t";
     std::cout << "Iter_time: " << timer.elapsed() / iter.iterations() << "\t";
     std::cout << "Total_time: " << timer.elapsed() << std::endl;
   }
