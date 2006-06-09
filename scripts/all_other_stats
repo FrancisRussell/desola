@@ -5,8 +5,8 @@ MATRIX_PATH="../test-matrices"
 
 for compiler in "--enable-icc"; do
 for options in "--code-caching true --loop-fusion false --array-contraction false --liveness-analysis false" \
-               "--code-caching true --loop-fusion true --array-contraction false --liveness-analysis false"
-	       "--code-caching true --loop-fusion true --array-contraction true --liveness-analysis false"
+               "--code-caching true --loop-fusion true --array-contraction false --liveness-analysis false" \
+	       "--code-caching true --loop-fusion true --array-contraction true --liveness-analysis false" \
 	       "--code-caching true --loop-fusion true --array-contraction true --liveness-analysis true"; do
 for solver in identity_bicg identity_bicgstab identity_cgs identity_qmr identity_tfqmr; do
 for matrix in bcsstk14.rsa sherman5.rua bcsstk15.rsa sherman3.rua; do
