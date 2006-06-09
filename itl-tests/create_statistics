@@ -9,7 +9,7 @@ for options in "--code-caching false --loop-fusion false --array-contraction fal
 for solver in identity_bicg identity_bicgstab identity_cgs identity_qmr identity_tfqmr; do
 for matrix in "../test-matrices/sherman5.rua" "../test-matrices/bcsstk14.rsa" ; do
   echo -n -e "Solver: $solver\t"
-  ./$solver $compiler $options --iterations 3 --single-line $matrix | grep "^Library:";
+  ./$solver $compiler $options --iterations 256 --single-line $matrix | grep "^Library:";
 done;
 done;
 done;

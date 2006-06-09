@@ -4,24 +4,24 @@
 #include <desolin/ConfigurationManager.hpp>
 #include <iostream>
 #include <string>
-#include <ctime>
-#include <boost/timer.hpp>
+#include <sys/time.h>
 #include <boost/filesystem/path.hpp>
 
 class StatisticsGenerator
 {
 private:
-  boost::timer timer;
+  double startTime;
   const desolin::ConfigurationManager& configManager;
   
 public:
-  StatisticsGenerator() : configManager(desolin::ConfigurationManager::getConfigurationManager())
+  StatisticsGenerator() : startTime(getTime()), configManager(desolin::ConfigurationManager::getConfigurationManager())
   {
   }
   
   template<typename MatrixStreamType, typename IterationType>
   void printLongResults(const std::string& matrixPath, const MatrixStreamType& matrixStream, IterationType& iter)
   {
+    const double elapsed = getTime() - startTime;
     std::cout.precision(5);
     std::cout.setf(std::ios::fixed);
     std::cout << "Library: desolin" << std::endl;
@@ -33,13 +33,14 @@ public:
     std::cout << "Array Contraction: " << getStatus(configManager.arrayContractionEnabled()) << std::endl;
     std::cout << "Iterations: " << iter.iterations() << std::endl;
     std::cout << "Liveness Analysis: " << getStatus(configManager.livenessAnalysisEnabled()) << std::endl;
-    std::cout << "Time per Iteration: " << timer.elapsed() / iter.iterations() << " seconds" << std::endl;
-    std::cout << "Total Time: " << timer.elapsed() << " seconds" << std::endl;
+    std::cout << "Time per Iteration: " << elapsed / iter.iterations() << " seconds" << std::endl;
+    std::cout << "Total Time: " << elapsed << " seconds" << std::endl;
   }
 
   template<typename MatrixStreamType, typename IterationType>
   void printShortResults(const std::string& matrixPath, const MatrixStreamType& matrixStream, IterationType& iter)
   {
+    const double elapsed = getTime() - startTime;
     std::cout.precision(5);
     std::cout.setf(std::ios::fixed);
     std::cout << "Library: desolin\t";
@@ -51,8 +52,8 @@ public:
     std::cout << "Contraction: " << getStatus(configManager.arrayContractionEnabled()) << "\t";
     std::cout << "Liveness: " << getStatus(configManager.livenessAnalysisEnabled()) << "\t";
     std::cout << "Iterations: " << iter.iterations() << "\t";
-    std::cout << "Iter_time: " << timer.elapsed() / iter.iterations() << "\t";
-    std::cout << "Total_time: " << timer.elapsed() << std::endl;
+    std::cout << "Iter_time: " << elapsed / iter.iterations() << "\t";
+    std::cout << "Total_time: " << elapsed << std::endl;
   }
 
   template<typename MatrixStreamType, typename IterationType>
@@ -100,6 +101,13 @@ public:
   {
     boost::filesystem::path path(pathString);
     return path.leaf();
+  }
+
+  static double getTime()
+  {
+   timeval time;
+   gettimeofday(&time, NULL);
+   return time.tv_sec + time.tv_usec/1000000.0;
   }
 };
 
