@@ -2,6 +2,7 @@
 #define DESOLIN_STATISTICS_GENERATOR_HPP
 
 #include <desolin/ConfigurationManager.hpp>
+#include <desolin/StatisticsCollector.hpp>
 #include <iostream>
 #include <string>
 #include <sys/time.h>
@@ -12,9 +13,10 @@ class StatisticsGenerator
 private:
   double startTime;
   const desolin::ConfigurationManager& configManager;
+  const desolin::StatisticsCollector& statsCollector;
   
 public:
-  StatisticsGenerator() : startTime(getTime()), configManager(desolin::ConfigurationManager::getConfigurationManager())
+  StatisticsGenerator() : startTime(getTime()), configManager(desolin::ConfigurationManager::getConfigurationManager()), statsCollector(desolin::StatisticsCollector::getStatisticsCollector())
   {
   }
   
@@ -34,6 +36,8 @@ public:
     std::cout << "Iterations: " << iter.iterations() << std::endl;
     std::cout << "Liveness Analysis: " << getStatus(configManager.livenessAnalysisEnabled()) << std::endl;
     std::cout << "Time per Iteration: " << elapsed / iter.iterations() << " seconds" << std::endl;
+    std::cout << "Compile Time: " << statsCollector.getCompileTime() << " seconds" << std::endl;
+    std::cout << "Compile Count: " << statsCollector.getCompileCount() << std::endl;
     std::cout << "Total Time: " << elapsed << " seconds" << std::endl;
   }
 
@@ -53,6 +57,8 @@ public:
     std::cout << "Liveness: " << getStatus(configManager.livenessAnalysisEnabled()) << "\t";
     std::cout << "Iterations: " << iter.iterations() << "\t";
     std::cout << "Iter_time: " << elapsed / iter.iterations() << "\t";
+    std::cout << "Compile_time: " << statsCollector.getCompileTime() << "\t";
+    std::cout << "Compile_count: " << statsCollector.getCompileCount() << "\t";
     std::cout << "Total_time: " << elapsed << std::endl;
   }
 

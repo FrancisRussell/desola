@@ -106,6 +106,7 @@ namespace desolin
 
 #include "Cache.hpp"
 #include "ConfigurationManager.hpp"
+#include "StatisticsCollector.hpp"
 #include "file-access/mtl_harwell_boeing_stream.hpp"
 #include "file-access/mtl_matrix_market_stream.hpp"
 

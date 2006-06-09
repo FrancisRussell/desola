@@ -9,6 +9,7 @@
 #include <map>
 #include <TaskGraph>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
+#include <sys/time.h>
 
 namespace desolin_internal
 {
@@ -54,7 +55,7 @@ public:
   TGExpressionGraph() : isHashCached(false)
   {
   }
-  
+
   inline void add(TGExpressionNode<T_element>* value)
   {
     assert(!isHashCached);
@@ -101,6 +102,10 @@ public:
 
   void compile()
   {
+    timeval time;
+    gettimeofday(&time, NULL);
+    const double startTime = time.tv_sec + time.tv_usec/1000000.0;
+    
     const ConfigurationManager& configurationManager(ConfigurationManager::getConfigurationManager());
 
     if (configurationManager.loopFusionEnabled())
@@ -114,6 +119,12 @@ public:
     }
 
     taskGraphObject.compile(getTaskCompiler(), true);	
+
+    gettimeofday(&time, NULL);
+    const double duration = (time.tv_sec + time.tv_usec/1000000.0) - startTime;
+    StatisticsCollector& statsCollector = StatisticsCollector::getStatisticsCollector();
+    statsCollector.addCompileTime(duration);
+    statsCollector.incrementCompileCount();
   }
 
   inline void print() const
@@ -171,6 +182,11 @@ public:
     return graph.cachedHash;
   }
 };
+
+namespace
+{
+  double compileTime;
+}
 
 }
 #endif
