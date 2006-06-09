@@ -7,7 +7,7 @@ for compiler in "--enable-icc"; do
 for solver in identity_bicg identity_bicgstab identity_cgs identity_qmr identity_tfqmr; do
 for matrix in bcsstk14.rsa; do
   echo -n -e "Solver: $solver\t"
-  $ITL_TEST_PATH/$solver $compiler "--code-caching false --loop-fusion false --array-contraction false --liveness-analysis false" --iterations 256 --single-line $MATRIX_PATH/$matrix | grep "^Library:";
+  $ITL_TEST_PATH/$solver $compiler --code-caching false --loop-fusion false --array-contraction false --liveness-analysis false --iterations 256 --single-line $MATRIX_PATH/$matrix | grep "^Library:";
 done;
 done;
 done;

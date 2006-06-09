@@ -1,0 +1,6 @@
+#!/bin/sh
+
+./cached_stats | tee cached_stats.txt &&
+./fused_stats | tee fused_stats.txt &&
+./contraction_stats | tee contraction_stats.txt &&
+./liveness_stats | tee liveness_stats.txt
