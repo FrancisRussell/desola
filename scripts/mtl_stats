@@ -1,5 +1,6 @@
 #!/bin/sh
 
+LD_LIBRARY_PATH=$LD_LIBRARY_PATH:../lib/.libs
 MTL_ITL_TEST_PATH="../mtl-itl-tests"
 MATRIX_PATH="../test-matrices"
 
