@@ -5,7 +5,7 @@ MTL_ITL_TEST_PATH="../mtl-itl-tests"
 MATRIX_PATH="../test-matrices"
 
 for solver in identity_bicg identity_bicgstab identity_cgs identity_qmr identity_tfqmr; do
-for matrix in bcsstk14.rsa sherman5.rua bcsstk15.rsa sherman3.rua; do
+for matrix in bcsstk27.rsa bcsstk14.rsa sherman5.rua bcsstk15.rsa sherman3.rua; do
   echo -n -e "Solver: $solver\t"
   $MTL_ITL_TEST_PATH/$solver --iterations 256 --single-line $MATRIX_PATH/$matrix | grep "^Library:";
 done;
