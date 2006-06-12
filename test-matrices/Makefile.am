@@ -1,3 +1,3 @@
-matrices = bcsstk14.rsa bcsstk15.rsa fidap037.rua gr_30_30.rsa jpwh_991.rua sherman5.rua sherman3.rua
+matrices = bcsstk14.rsa bcsstk15.rsa fidap037.rua gr_30_30.rsa jpwh_991.rua sherman5.rua sherman3.rua cavity14.rua cavity18.rua
 
 EXTRA_DIST = $(matrices)
