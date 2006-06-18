@@ -27,6 +27,7 @@
 #define BOOST_ARRAY_HPP
 
 #include <cstddef>
+#include <cassert>
 #include <stdexcept>
 
 // Handles broken standard libraries better than <iterator>
