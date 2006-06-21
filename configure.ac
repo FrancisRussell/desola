@@ -3,7 +3,7 @@
 
 AC_PREREQ(2.59)
 AC_INIT([Desolin], [0.1], [fpr02@doc.ic.ac.uk])
-AC_CONFIG_SRCDIR([lib/Exceptions.cc])
+AC_CONFIG_SRCDIR([lib/Exceptions.cpp])
 AC_LANG_CPLUSPLUS
 AM_INIT_AUTOMAKE([subdir-objects])
 AM_PROG_CC_C_O
