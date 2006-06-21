@@ -1,0 +1,12 @@
+This is the source for the prototype numerical library
+developed as part of my (Francis Russell) final year
+project at Imperial College London.
+
+In order to compile, it requires:
+
+- Boost
+- The modified TaskGraph distribution distributed with this project.
+- The Matrix Template Library (optional)
+
+Headers for the ITL set of iterative solvers are already included in the
+package.
