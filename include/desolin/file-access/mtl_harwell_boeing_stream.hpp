@@ -1,15 +1,11 @@
-// -*- c++ -*-
+// This is a modified file from the Matrix Template Library. See LICENSE for details.
+// Modified 2006, Francis Russell
 //
-// Software License for MTL
-// 
 // Copyright (c) 2001-2005 The Trustees of Indiana University. All rights reserved.
 // Copyright (c) 1998-2001 University of Notre Dame. All rights reserved.
 // Authors: Andrew Lumsdaine, Jeremy G. Siek, Lie-Quan Lee
-// 
-// This file is part of the Matrix Template Library
-// 
-// See also license.mtl.txt in the distribution.
-//===========================================================================
+
+
 #ifndef DESOLIN_HARWELL_BOEING_STREAM_H
 #define DESOLIN_HARWELL_BOEING_STREAM_H
 

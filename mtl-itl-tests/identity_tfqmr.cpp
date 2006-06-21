@@ -1,16 +1,4 @@
-//===========================================================================
-//  CVS Information:                                                         
-//                                                                           
-//     $RCSfile: ilu_tfqmr.cpp,v $  $Revision: 1.3 $  $State: Exp $ 
-//     $Author: llee $  $Date: 2001/10/18 14:08:33 $ 
-//     $Locker:  $ 
-//---------------------------------------------------------------------------
-//                                                                           
-// DESCRIPTION                                                               
-//                                                                           
-//---------------------------------------------------------------------------
-//                                                                           
-// LICENSE AGREEMENT                                                         
+// Modified 2005-2006 by Francis Russell to work with desolin library and allow benchmarking.
 // Copyright 1997, University of Notre Dame.
 // Authors: Andrew Lumsdaine, Lie-Quan Lee
 //
@@ -33,30 +21,6 @@
 // PARTICULAR PURPOSE OR THAT THE USE OF THE LICENSED SOFTWARE COMPONENTS
 // OR DOCUMENTATION WILL NOT INFRINGE ANY PATENTS, COPYRIGHTS, TRADEMARKS
 // OR OTHER RIGHTS.
-//---------------------------------------------------------------------------
-//                                                                           
-// REVISION HISTORY:                                                         
-//                                                                           
-// $Log: ilu_tfqmr.cpp,v $
-// Revision 1.3  2001/10/18 14:08:33  llee
-// re-organize the directory structures
-//
-// Revision 1.2  2000/07/27 04:39:21  llee1
-// *** empty log message ***
-//
-// Revision 1.1  2000/07/26 21:50:10  llee1
-// change file extension from .cc to .cpp
-//
-// Revision 1.1  2000/07/18 16:41:01  llee1
-// add Harwell-Boeing matrix test
-//
-// Revision 1.2  2000/07/17 15:44:04  llee1
-// *** empty log message ***
-//
-// Revision 1.1  1999/11/21 20:47:07  lums
-// *** empty log message ***
-//
-//===========================================================================
 
 #include "solver_options.hpp"
 #include "statistics_generator.hpp"
@@ -66,10 +30,9 @@
 #include "mtl/harwell_boeing_stream.h"
 #include <itl/interface/mtl.h>
 #include <itl/krylov/tfqmr.h>
-#include <boost/timer.hpp>
 
 /*
-  In thsi example, we show how to use QMR algorithm
+  In this example, we show how to use TFQMR algorithm
 */
 using namespace mtl;
 using namespace itl;
@@ -101,7 +64,7 @@ int main(int argc, char* argv[])
   identity_preconditioner precond;
   //iteration
   noisy_iteration<double> iter(b, max_iter, 1e-6);
-  //qmr algorithm
+  //tfqmr algorithm
   StatisticsGenerator stats;
   tfqmr(A, x, b, precond.left(), precond.right(), iter);
   //end

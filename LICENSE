@@ -1,0 +1,5 @@
+This library contains modified source for solvers from the Iterative Template Library. It also
+includes a copy of the ITL headers with portability fixes. Please see the file LICENSE.itl.
+
+This library contains modified files from the Matrix Template Library used for reading
+Matrix Market and Harwell-Boeing files. Please see the file LICENSE.mtl.
