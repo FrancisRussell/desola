@@ -1,0 +1,21 @@
+This product includes software developed at the University of Notre Dame and
+the Pervasive Technology Labs at Indiana University. For technical information
+contact Andrew Lumsdaine at the Pervasive Technology Labs at Indiana University.
+For administrative and license questions contact the  Advanced Research and
+Technology Institute at 1100 Waterway  Blvd. Indianapolis, Indiana 46202,
+phone 317-274-5905, fax 317-274-5902.
+
+
+This project also includes software for performing Harwell-Boeing IO in C
+which requires the following notice:
+
+Permission to use, copy, modify, and distribute this software and
+its documentation for any purpose and without fee is hereby granted
+provided that the above copyright notice appear in all copies and
+that both the copyright notice and this permission notice appear in
+supporting documentation.
+
+Neither the Author nor the Institution (National Institute of Standards
+and Technology) make any representations about the suitability of this 
+software for any purpose. This software is provided "as is" without 
+expressed or implied warranty.

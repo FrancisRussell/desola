@@ -4,5 +4,5 @@ endif
 
 SUBDIRS = include lib example itl-tests test-matrices $(OPTIONAL_MTL_DIR)
 
-EXTRA_DIST = LICENSE LICENSE.itl LICENSE.mtl
+EXTRA_DIST = NOTICE LICENSE LICENSE.itl LICENSE.mtl
 
