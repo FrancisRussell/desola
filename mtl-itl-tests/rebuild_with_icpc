@@ -1,6 +1,6 @@
 #!/bin/sh
 
 for solver in `ls *.cpp | sed s/\.cpp$//`; do
-  icpc -O3 -restrict -ansi-alias -xW $solver.cpp -o $solver -I ../include/ -I../../local/include/ -L ../lib/.libs/ -ldesolin -lboost_program_options -lboost_filesystem
+  icpc -O3 -restrict -ansi-alias -xW $solver.cpp -o $solver -I../include/ -I../../local/include/ -L../lib/.libs/ -Wl,-R../lib/.libs/ -ldesolin -lboost_program_options -lboost_filesystem
 done
 
