@@ -75,5 +75,6 @@ AC_CONFIG_FILES([Makefile
 		 example/Makefile
 		 itl-tests/Makefile
 		 mtl-itl-tests/Makefile
-		 test-matrices/Makefile])
+		 test-matrices/Makefile
+		 scripts/Makefile])
 AC_OUTPUT

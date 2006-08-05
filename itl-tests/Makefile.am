@@ -1,5 +1,6 @@
 include $(top_srcdir)/binaries_common.mk
 
+noinst_HEADERS = solver_options.hpp  statistics_generator.hpp
 
 bin_PROGRAMS = identity_cg identity_qmr identity_cgs identity_bicg identity_bicgstab identity_tfqmr identity_cheby identity_richardson
 
