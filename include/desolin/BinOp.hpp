@@ -23,7 +23,10 @@
 #include <boost/cast.hpp>
 #include <cassert>
 
-namespace desolin_internal
+namespace desolin
+{
+
+namespace detail
 {
 
 template<ExprType resultType, ExprType leftType, ExprType rightType, typename T_element>
@@ -92,6 +95,8 @@ public:
     updateImpl(previous, next);
   }
 };
+
+}
 
 }
 #endif

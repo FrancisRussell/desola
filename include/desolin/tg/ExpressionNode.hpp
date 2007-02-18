@@ -27,7 +27,10 @@
 #include <boost/functional/hash.hpp>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 
-namespace desolin_internal
+namespace desolin
+{
+
+namespace detail
 {
 
 template<TGExprType exprType>
@@ -183,6 +186,8 @@ public:
     return internal->isParameter();
   }
 };
+
+}
 
 }
 #endif

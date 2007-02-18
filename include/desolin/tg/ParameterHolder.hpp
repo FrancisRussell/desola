@@ -23,7 +23,10 @@
 #include <map>
 #include <TaskGraph>
 
-namespace desolin_internal
+namespace desolin
+{
+
+namespace detail
 {
 
 class ParameterHolder
@@ -40,6 +43,8 @@ public:
   void addParameter(const std::string& name, void* value);
   void setParameters(tg::tuTaskGraph& taskGraphObject) const;
 };
+
+}
 
 }
 #endif

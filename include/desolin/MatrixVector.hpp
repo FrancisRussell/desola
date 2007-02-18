@@ -21,7 +21,10 @@
 #include <boost/array.hpp>
 #include <desolin/Desolin_fwd.hpp>
 
-namespace desolin_internal
+namespace desolin
+{
+
+namespace detail
 {
 
 template<typename T_element>
@@ -51,7 +54,7 @@ class MatrixVectorMult : public BinOp<vector, matrix, vector, T_element>
 private:
   inline static const boost::array<int, 1> getDims(const ExprNode<matrix, T_element>& l, const ExprNode<vector, T_element>& r)
   {
-    boost::array<int, 1> dimensions = {l.getRowCount()};
+    boost::array<int, 1> dimensions = {{l.getRowCount()}};
     return dimensions;
   }
   
@@ -161,6 +164,8 @@ public:
     v.visit(*this);
   }
 };
+
+}
 
 }
 #endif

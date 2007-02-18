@@ -20,7 +20,10 @@
 
 #include "ConfigurationManager.hpp"
 
-namespace desolin_internal
+namespace desolin
+{
+
+namespace detail
 {
 	
 class Cache
@@ -38,6 +41,8 @@ public:
     ConfigurationManager::getConfigurationManager().unregisterCache(*this);
   }
 };
+
+}
 
 }
 #endif

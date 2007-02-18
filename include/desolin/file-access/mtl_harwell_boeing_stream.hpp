@@ -19,7 +19,7 @@
 namespace desolin {
 
 using std::complex;
-using desolin_internal::entry2;
+using detail::entry2;
 
 //: A Matrix File Input Stream for Harwell-Boeing Matrix Files
 //  

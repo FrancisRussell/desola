@@ -24,20 +24,20 @@
 namespace desolin
 {
 
-class DesoLinLogicError : public std::logic_error
+class DesolinLogicError : public std::logic_error
 {
 public:
-  DesoLinLogicError(const std::string& message);
+  DesolinLogicError(const std::string& message);
 };
 
 
-class DesoLinRuntimeError : public std::runtime_error
+class DesolinRuntimeError : public std::runtime_error
 {
 public:
-  DesoLinRuntimeError(const std::string& message); 
+  DesolinRuntimeError(const std::string& message); 
 };
 
-class NullSizeError : public DesoLinLogicError
+class NullSizeError : public DesolinLogicError
 {
 public:
   NullSizeError(const std::string& message); 

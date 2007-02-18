@@ -25,29 +25,29 @@ namespace desolin
 {
 
 template<typename T_element>
-class Scalar : public desolin_internal::Var<desolin_internal::scalar, T_element>
+class Scalar : public detail::Var<detail::scalar, T_element>
 {
 public:
   friend class Matrix<T_element>;
   friend class Vector<T_element>;
 
-  static const desolin_internal::ExprType expressionType = desolin_internal::scalar;
+  static const detail::ExprType expressionType = detail::scalar;
   
   Scalar()
   {
   }
 
-  Scalar(const T_element initialValue) : desolin_internal::Var<desolin_internal::scalar, T_element>(*new desolin_internal::Literal<desolin_internal::scalar, T_element>(new desolin_internal::ConventionalScalar<T_element>(initialValue)))
+  Scalar(const T_element initialValue) : detail::Var<detail::scalar, T_element>(*new detail::Literal<detail::scalar, T_element>(new detail::ConventionalScalar<T_element>(initialValue)))
   {
   }
 
-  Scalar(const Scalar& s) : desolin_internal::Var<desolin_internal::scalar, T_element>(s.getExpr())
+  Scalar(const Scalar& s) : detail::Var<detail::scalar, T_element>(s.getExpr())
   {
   }
 
   Scalar& operator=(const Scalar& right)
   {
-    using namespace desolin_internal;
+    using namespace detail;
     if(this != &right)
     {
       this->setExpr(right.getExpr());
@@ -57,55 +57,55 @@ public:
 
   const Scalar operator-() const
   {
-    using namespace desolin_internal;
+    using namespace detail;
     return Scalar(*new Negate<scalar, T_element>(this->getExpr()));
   }
 
   const Scalar abs() const
   {
-    using namespace desolin_internal;
+    using namespace detail;
     return Scalar(*new Absolute<T_element>(this->getExpr()));
   }
       
   const Scalar sqrt() const
   { 
-    using namespace desolin_internal;
+    using namespace detail;
     return Scalar(*new SquareRoot<T_element>(this->getExpr()));
   }     
 
   friend const Scalar operator+(const Scalar& left, const Scalar& right)
   {
-    using namespace desolin_internal;
+    using namespace detail;
     return Scalar(*new Pairwise<scalar, T_element>(pair_add, left.getExpr(), right.getExpr()));
   }
 
   friend const Scalar operator-(const Scalar& left, const Scalar& right)
   {
-    using namespace desolin_internal;
+    using namespace detail;
     return Scalar(*new Pairwise<scalar, T_element>(pair_sub, left.getExpr(), right.getExpr()));
   }
 
   friend const Scalar operator*(const Scalar& left, const Scalar& right)
   {
-    using namespace desolin_internal;
+    using namespace detail;
     return Scalar(*new ScalarPiecewise<scalar, T_element>(multiply, left.getExpr(), right.getExpr()));
   }
 
   const Vector<T_element> operator*(const Vector<T_element>& right) const
   {
-    using namespace desolin_internal;
+    using namespace detail;
     return Vector<T_element>(*new ScalarPiecewise<vector, T_element>(multiply, this->getExpr(), right.getExpr()));
   }
 
   const Matrix<T_element> operator*(const Matrix<T_element>& right) const
   {
-    using namespace desolin_internal;
+    using namespace detail;
     return Matrix<T_element>(*new ScalarPiecewise<matrix, T_element>(multiply, this->getExpr(), right.getExpr()));
   }
 
   friend const Scalar operator/(const Scalar& left, const Scalar& right)
   {
-    using namespace desolin_internal;
+    using namespace detail;
     return Scalar(*new ScalarPiecewise<scalar, T_element>(divide, left.getExpr(), right.getExpr()));
   }
 
@@ -146,53 +146,53 @@ public:
   }
     
 protected:
-  Scalar(desolin_internal::ExprNode<desolin_internal::scalar, T_element>& expr) : desolin_internal::Var<desolin_internal::scalar, T_element>(expr)
+  Scalar(detail::ExprNode<detail::scalar, T_element>& expr) : detail::Var<detail::scalar, T_element>(expr)
   {
   }
 
-  virtual desolin_internal::ExprNode<desolin_internal::scalar, T_element>* createDefault() const
+  virtual detail::ExprNode<detail::scalar, T_element>* createDefault() const
   {
-    using namespace desolin_internal;
+    using namespace detail;
     InternalScalar<T_element>* internal = new ConventionalScalar<T_element>(0);
     internal->allocate();
     return new Literal<scalar, T_element>(internal);
   }
 
-  virtual void internal_update(desolin_internal::ExprNode<desolin_internal::scalar, T_element>& previous, desolin_internal::ExprNode<desolin_internal::scalar, T_element>& next) const
+  virtual void internal_update(detail::ExprNode<detail::scalar, T_element>& previous, detail::ExprNode<detail::scalar, T_element>& next) const
   {
-    using namespace desolin_internal;
+    using namespace detail;
     if (&this->getExpr() == &previous)
     {
       this->setExpr(next);
     }
   }
   
-  virtual void internal_update(desolin_internal::ExprNode<desolin_internal::vector, T_element>& previous, desolin_internal::ExprNode<desolin_internal::vector, T_element>& next) const {}
-  virtual void internal_update(desolin_internal::ExprNode<desolin_internal::matrix, T_element>& previous, desolin_internal::ExprNode<desolin_internal::matrix, T_element>& next) const {}
+  virtual void internal_update(detail::ExprNode<detail::vector, T_element>& previous, detail::ExprNode<detail::vector, T_element>& next) const {}
+  virtual void internal_update(detail::ExprNode<detail::matrix, T_element>& previous, detail::ExprNode<detail::matrix, T_element>& next) const {}
 };
 
-template<desolin_internal::ExprType exprType, typename T_element>
+template<detail::ExprType exprType, typename T_element>
 class ScalarElement : public Scalar<T_element>
 {
 private:
-  const desolin_internal::Var<exprType, T_element>& node;
-  const desolin_internal::ElementIndex<exprType> index;
+  const detail::Var<exprType, T_element>& node;
+  const detail::ElementIndex<exprType> index;
 
 public:
   ScalarElement(const ScalarElement& n) : Scalar<T_element>(n.getExpr()), node(n.node), index(n.index)
   {
   }
 
-  ScalarElement(const desolin_internal::Var<exprType, T_element>& n, const desolin_internal::ElementIndex<exprType>& i) :  Scalar<T_element>(*new desolin_internal::ElementGet<exprType, T_element>(n.getExpr(), i)), node(n), index(i)
+  ScalarElement(const detail::Var<exprType, T_element>& n, const detail::ElementIndex<exprType>& i) :  Scalar<T_element>(*new detail::ElementGet<exprType, T_element>(n.getExpr(), i)), node(n), index(i)
   {
   }
   
   const ScalarElement& operator=(const Scalar<T_element>& right)
   {
-    using namespace desolin_internal;
+    using namespace detail;
     if(this != &right)
     {
-      std::map<desolin_internal::ElementIndex<exprType>, desolin_internal::ExprNode<desolin_internal::scalar, T_element>*> mappings;
+      std::map<detail::ElementIndex<exprType>, detail::ExprNode<detail::scalar, T_element>*> mappings;
       mappings[index] = &right.getExpr();
       node.setExpr(*new ElementSet<exprType, T_element>(node.getExpr(), mappings));
     }

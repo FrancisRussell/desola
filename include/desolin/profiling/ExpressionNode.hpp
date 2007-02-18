@@ -22,7 +22,10 @@
 #include <boost/shared_ptr.hpp>
 #include <map>
 
-namespace desolin_internal
+namespace desolin
+{
+
+namespace detail
 {
 
 template<typename T_element>
@@ -122,6 +125,8 @@ public:
     return node < ref.node;
   }
 };
+
+}
 
 }
 

@@ -33,7 +33,10 @@
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 #include <desolin/profiling/Desolin_profiling_fwd.hpp>
 
-namespace desolin_internal
+namespace desolin
+{
+
+namespace detail
 {
 
 template<typename T_element>
@@ -284,6 +287,8 @@ protected:
     strategy->execute();
   }
 };
+
+}
 
 }
 #endif

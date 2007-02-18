@@ -10,7 +10,11 @@
 
 #include <iosfwd>
 
-namespace desolin_internal {
+namespace desolin
+{
+
+namespace detail
+{
 
   //:
   // Definintion for entries in sparse matrices
@@ -329,8 +333,9 @@ struct entry2 {
     return row == e.row && col == e.col; }
 };
 
-} /* namespace mtl */
+}
 
+}
 
 #endif
 

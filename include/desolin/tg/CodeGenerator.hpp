@@ -31,7 +31,10 @@
 //      setExpression is used before calling addExpression on any result
 //      element.
 
-namespace desolin_internal
+namespace desolin
+{
+
+namespace detail
 {
 
 template<typename T_element>
@@ -461,6 +464,8 @@ private:
     }
   }
 };
+
+}
 
 }
 #endif

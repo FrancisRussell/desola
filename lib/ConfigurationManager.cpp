@@ -15,7 +15,8 @@
 /*                                                                          */
 /****************************************************************************/
 
-#include <desolin/Desolin_fwd.hpp>
+#include <desolin/ConfigurationManager.hpp>
+#include <desolin/Cache.hpp>
 #include <algorithm>
 #include <boost/functional.hpp>
 
@@ -35,16 +36,16 @@ ConfigurationManager& ConfigurationManager::getConfigurationManager()
 
 void ConfigurationManager::flushCaches()
 {
-  std::for_each(caches.begin(), caches.end(), boost::mem_fun(&desolin_internal::Cache::flush)); 
+  std::for_each(caches.begin(), caches.end(), boost::mem_fun(&detail::Cache::flush)); 
 }
 
 
-void ConfigurationManager::registerCache(desolin_internal::Cache& cache)
+void ConfigurationManager::registerCache(detail::Cache& cache)
 {
   caches.insert(&cache);
 }
 
-void ConfigurationManager::unregisterCache(desolin_internal::Cache& cache)
+void ConfigurationManager::unregisterCache(detail::Cache& cache)
 {
   caches.erase(&cache);
 }

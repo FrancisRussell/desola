@@ -23,7 +23,10 @@
 #include <boost/shared_ptr.hpp>
 #include <desolin/Desolin_fwd.hpp>
 
-namespace desolin_internal
+namespace desolin
+{
+
+namespace detail
 {
 
 template<typename T_element>
@@ -101,6 +104,8 @@ class NullEvaluatorFactory : public EvaluatorFactory<T_element>
     return boost::shared_ptr< NullEvaluator<T_element> >(new NullEvaluator<T_element>(strategy));
   }
 };
+
+}
 
 }
 #endif

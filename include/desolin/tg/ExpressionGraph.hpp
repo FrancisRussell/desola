@@ -28,7 +28,10 @@
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 #include <sys/time.h>
 
-namespace desolin_internal
+namespace desolin
+{
+
+namespace detail
 {
 
 template<typename T_element>
@@ -203,6 +206,8 @@ public:
 namespace
 {
   double compileTime;
+}
+
 }
 
 }

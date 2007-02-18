@@ -22,7 +22,10 @@
 #include <string>
 #include <map>
 
-namespace desolin_internal
+namespace desolin
+{
+
+namespace detail
 {
 
 class NameGenerator
@@ -35,6 +38,8 @@ public:
   NameGenerator(); 
   std::string getName(const std::string& prefix);
 };
+
+}
 
 }
 #endif

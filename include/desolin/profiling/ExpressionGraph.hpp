@@ -26,7 +26,10 @@
 #include <algorithm>
 #include <cassert>
 
-namespace desolin_internal
+namespace desolin
+{
+
+namespace detail
 {
 
 template<typename T_element>
@@ -125,6 +128,8 @@ public:
     return graph.cachedHash;
   }
 };
+
+}
 
 }
 

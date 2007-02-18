@@ -26,7 +26,10 @@
 #include <utility>
 #include <algorithm>
 
-namespace desolin_internal
+namespace desolin
+{
+
+namespace detail
 {
 
 template<typename T_element>
@@ -219,6 +222,8 @@ public:
     handleNode(e, new PSquareRoot<T_element>(getScalar(e.getOperand())));
   }
 };
+
+}
 
 }
 

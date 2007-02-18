@@ -25,7 +25,10 @@
 #include <boost/shared_ptr.hpp>
 #include <desolin/Desolin_fwd.hpp>
 
-namespace desolin_internal
+namespace desolin
+{
+
+namespace detail
 {
 
 template<typename T_element>
@@ -117,6 +120,8 @@ public:
     return boost::shared_ptr<EvaluationStrategy<T_element> >(new EvaluationStrategy<T_element>(*this));
   }
 };
+
+}
 
 }
 #endif

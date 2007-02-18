@@ -18,11 +18,16 @@
 #include <desolin/tg/Exceptions.hpp>
 #include <string>
 
-namespace desolin_internal
+namespace desolin
 {
 
-TGInvalidOperationError::TGInvalidOperationError(const std::string& error) : DesoLinRuntimeError(error)
+namespace detail
 {
+
+TGInvalidOperationError::TGInvalidOperationError(const std::string& error) : DesolinRuntimeError(error)
+{
+}
+
 }
 
 }

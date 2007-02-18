@@ -58,7 +58,7 @@ void StatisticsCollector::incrementCompileCount()
 
 void StatisticsCollector::resetCompileCount()
 {
-	  compileCount=0;
+  compileCount=0;
 }
 
 }

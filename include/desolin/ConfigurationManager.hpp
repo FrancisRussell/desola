@@ -20,17 +20,18 @@
 
 #include <set>
 
-namespace desolin_internal
+namespace desolin
+{
+
+namespace detail
 {
   class Cache;
 }
 
-namespace desolin
-{
 class ConfigurationManager
 {
 private:
-  std::set<desolin_internal::Cache*> caches;
+  std::set<detail::Cache*> caches;
   bool gcc;
   bool doFusion;
   bool doLiveness;
@@ -47,8 +48,8 @@ private:
 public:
   static ConfigurationManager& getConfigurationManager();
 
-  void registerCache(desolin_internal::Cache& cache);
-  void unregisterCache(desolin_internal::Cache& cache);
+  void registerCache(detail::Cache& cache);
+  void unregisterCache(detail::Cache& cache);
 	  
   void useGCC();
   void useICC();

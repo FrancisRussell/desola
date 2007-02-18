@@ -29,7 +29,10 @@
 #include <TaskGraph>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 
-namespace desolin_internal
+namespace desolin
+{
+
+namespace detail
 {
 
 template<typename T_element>
@@ -144,6 +147,8 @@ public:
 
 template<typename T_element>
 TGCache<T_element> TGEvaluator<T_element>::graphCache;
+
+}
 
 }
 #endif

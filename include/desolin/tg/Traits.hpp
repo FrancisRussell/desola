@@ -20,7 +20,10 @@
 
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 
-namespace desolin_internal
+namespace desolin
+{
+
+namespace detail
 {
 
 template<ExprType exprType, typename T_element>
@@ -81,6 +84,8 @@ class TGInternalType<tg_matrix, T_elementType>
 public:
   typedef TGMatrix<T_elementType> type;
 };
+
+}
 
 }
 #endif

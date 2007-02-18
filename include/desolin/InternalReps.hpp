@@ -20,8 +20,12 @@
 
 #include <cassert>
 #include <desolin/Desolin_fwd.hpp>
+#include <desolin/file-access/mtl_entry.hpp>
 
-namespace desolin_internal
+namespace desolin
+{
+
+namespace detail
 {
 
 template<typename T_element>
@@ -262,6 +266,8 @@ public:
   virtual void visit(ConventionalMatrix<T_elementType>& value) = 0;
   virtual ~InternalMatrixVisitor() {}
 };
+
+}
 
 }
 #endif

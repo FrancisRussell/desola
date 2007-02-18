@@ -22,7 +22,10 @@
 #include <map>
 #include <vector>
 
-namespace desolin_internal
+namespace desolin
+{
+
+namespace detail
 {
 
 template<ExprType exprType, typename T_element>
@@ -89,6 +92,8 @@ public:
     return std::vector<const PExprNode<scalar, T_element>*>(assignments.begin(), assignments.end());
   }
 };
+
+}
 
 }
 

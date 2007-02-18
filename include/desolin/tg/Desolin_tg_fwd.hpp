@@ -18,9 +18,10 @@
 #ifndef DESOLIN_TG_FWD_HPP
 #define DESOLIN_TG_FWD_HPP
 
-#include <desolin/Desolin_fwd.hpp>
+namespace desolin
+{
 
-namespace desolin_internal
+namespace detail
 {
 // Enums used for template parameters
 enum TGExprType
@@ -46,6 +47,10 @@ enum TGScalarPiecewiseOp
 };
 
 // Common
+class NameGenerator;
+class ParameterHolder;
+class TGInvalidOperationError;
+
 template<ExprType exprType, typename T_element> struct ExprTGTraits;
 template<TGExprType exprType, typename T_elementType> class TGInternalType;
 template<TGExprType exprType> class TGElementIndex;
@@ -96,8 +101,6 @@ template<typename T_elementType> class TGVectorGen;
 template<typename T_elementType> class TGMatrixGen;
 }
 
-#include <desolin/tg/NameGenerator.hpp>
-#include <desolin/tg/ParameterHolder.hpp>
-#include <desolin/tg/Exceptions.hpp>
+}
 
 #endif

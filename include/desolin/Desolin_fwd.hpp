@@ -18,11 +18,11 @@
 #ifndef DESOLIN_FWD_HPP
 #define DESOLIN_FWD_HPP
 
-namespace desolin {}
-
-namespace desolin_internal
+namespace desolin
 {
-using namespace desolin;
+
+namespace detail
+{
 
 // Enums used for template parameters
 
@@ -110,21 +110,34 @@ template<typename T_element> class NullEvaluatorFactory;
 // External Interface
 template<typename T_element> class Variable;
 template<ExprType expressionType, typename T_element> class Var;
+
+// Caching
+class Cache;
+
+// Matrix IO
+template <class T> struct entry1;
+template <class T> struct entry2;
 }
 
-namespace desolin
-{
-  // External Interface
-  template<typename T_element> class Vector;
-  template<typename T_element> class Matrix;
-  template<typename T_element> class Scalar;
-  template<desolin_internal::ExprType exprType, typename T_element> class ScalarElement;
-}
+// Configuration and Statistics
+class ConfigurationManager;
+class StatisticsCollector;
 
-#include "Cache.hpp"
-#include "ConfigurationManager.hpp"
-#include "StatisticsCollector.hpp"
-#include "file-access/mtl_harwell_boeing_stream.hpp"
-#include "file-access/mtl_matrix_market_stream.hpp"
+// Matrix IO
+template <class T> class harwell_boeing_stream;
+template <class T> class matrix_market_stream;
+
+// External Interface
+template<typename T_element> class Vector;
+template<typename T_element> class Matrix;
+template<typename T_element> class Scalar;
+template<detail::ExprType exprType, typename T_element> class ScalarElement;
+
+
+//Exceptions
+class DesolinLogicError;
+class DesolinRuntimeError;
+class NullSizeError;
+}
 
 #endif

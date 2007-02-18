@@ -18,6 +18,8 @@
 #ifndef DESOLIN_TG_HPP
 #define DESOLIN_TG_HPP
 
+#include "NameGenerator.hpp"
+#include "ParameterHolder.hpp"
 #include "Exceptions.hpp"
 #include "Traits.hpp"
 #include "ExpressionNode.hpp"

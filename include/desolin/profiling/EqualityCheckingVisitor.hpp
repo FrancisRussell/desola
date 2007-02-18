@@ -23,7 +23,10 @@
 #include <cassert>
 #include <typeinfo>
 
-namespace desolin_internal
+namespace desolin
+{
+
+namespace detail
 {
 
 template<typename T_element>
@@ -185,6 +188,8 @@ public:
     checkMatch(e);
   }
 };
+
+}
 
 }
 

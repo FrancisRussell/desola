@@ -20,7 +20,10 @@
 
 #include <desolin/Desolin_fwd.hpp>
 
-namespace desolin_internal
+namespace desolin
+{
+
+namespace detail
 {
 
 template<ExprType exprType, typename T_element>
@@ -45,6 +48,8 @@ struct ExprTraits<matrix, T_element>
 {
   typedef InternalMatrix<T_element> internalRep;
 };
+
+}
 
 }
 #endif

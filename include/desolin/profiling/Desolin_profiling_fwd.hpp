@@ -18,9 +18,10 @@
 #ifndef DESOLIN_PROFILING_FWD_HPP
 #define DESOLIN_PROFILING_FWD_HPP
 
-#include <desolin/Desolin_fwd.hpp>
+namespace desolin
+{
 
-namespace desolin_internal
+namespace detail
 {
 
 template<typename T_element> class PExpressionNode;
@@ -53,4 +54,5 @@ template<typename T_element> class PExpressionNodeRef;
 
 }
 
+}
 #endif

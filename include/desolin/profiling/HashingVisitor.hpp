@@ -27,7 +27,10 @@
 #include <cassert>
 #include <boost/functional/hash.hpp>
 
-namespace desolin_internal
+namespace desolin
+{
+
+namespace detail
 {
 
 template<typename T_element>
@@ -234,6 +237,8 @@ public:
     boost::hash_combine(hash, hashUnOp(e));
   }
 };
+
+}
 
 }
 

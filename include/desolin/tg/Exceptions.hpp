@@ -21,15 +21,18 @@
 #include <desolin/Exceptions.hpp>
 #include <string>
 
-namespace desolin_internal
+namespace desolin
 {
-using desolin::DesoLinRuntimeError;
-	
-class TGInvalidOperationError : public DesoLinRuntimeError
+
+namespace detail
+{
+class TGInvalidOperationError : public DesolinRuntimeError
 {
 public:
   TGInvalidOperationError(const std::string& error); 
 };
+
+}
 
 }
 #endif

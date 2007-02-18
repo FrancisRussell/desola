@@ -27,7 +27,10 @@
 #include <boost/ref.hpp>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 
-namespace desolin_internal
+namespace desolin
+{
+
+namespace detail
 {
 
 template<TGExprType exprType, typename T_element>
@@ -120,6 +123,8 @@ public:
     v.visit(*this);
   }
 };
+
+}
 
 }
 #endif

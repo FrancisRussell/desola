@@ -25,7 +25,10 @@
 #include <boost/ref.hpp>
 #include <TaskGraph>
 
-namespace desolin_internal
+namespace desolin
+{
+
+namespace detail
 {
 
 ParameterHolder::ParameterHolder()
@@ -47,6 +50,8 @@ void ParameterHolder::setParameter(tg::tuTaskGraph& taskGraphObject, const std::
 void ParameterHolder::setParameters(tg::tuTaskGraph& taskGraphObject) const
 {
   std::for_each(parameters.begin(), parameters.end(), boost::bind(setParameter, boost::ref(taskGraphObject), _1));
+}
+
 }
 
 }

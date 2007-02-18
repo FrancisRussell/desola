@@ -22,7 +22,10 @@
 #include <map>
 #include <cassert>
 
-namespace desolin_internal
+namespace desolin
+{
+
+namespace detail
 {
 
 template<ExprType resultType, ExprType exprType, typename T_element>
@@ -111,6 +114,8 @@ public:
     visitor.visit(*this);
   }
 };
+
+}
 
 }
 

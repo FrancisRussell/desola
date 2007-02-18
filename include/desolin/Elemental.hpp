@@ -26,7 +26,10 @@
 #include <boost/ref.hpp>
 #include <desolin/Desolin_fwd.hpp>
 
-namespace desolin_internal
+namespace desolin
+{
+
+namespace detail
 {
 
 template<ExprType exprType, typename T_element>
@@ -114,6 +117,8 @@ public:
   }
   
 };
+
+}
 
 }
 #endif

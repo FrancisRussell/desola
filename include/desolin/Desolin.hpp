@@ -25,6 +25,9 @@
 // See http://www.josuttis.com/cppcode
 #include "boost_array.hpp"
 
+#include "Cache.hpp"
+#include "ConfigurationManager.hpp"
+#include "StatisticsCollector.hpp"
 #include "Exceptions.hpp"
 #include "Traits.hpp"
 #include "ExpressionNode.hpp"
@@ -51,6 +54,7 @@
 #include "tg/Desolin_tg.hpp"
 #include "profiling/Desolin_profiling.hpp"
 
+#include "file-access/mtl_entry.hpp"
 #include "file-access/mtl_harwell_boeing_stream.hpp"
 #include "file-access/mtl_matrix_market_stream.hpp"
 

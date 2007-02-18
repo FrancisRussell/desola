@@ -26,7 +26,10 @@
 #include <map>
 #include <cstddef>
 
-namespace desolin_internal
+namespace desolin
+{
+
+namespace detail
 {
 
 template<typename T_element>
@@ -124,6 +127,8 @@ public:
 };
 
 template<typename T_element> Profiler<T_element> Profiler<T_element>::profiler;
+
 }
 
+}
 #endif
