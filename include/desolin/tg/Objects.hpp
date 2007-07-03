@@ -151,12 +151,12 @@ private:
   {
     if (param)
     {
-      tParameter(tVarNamedTemplateType(T_element, val, name.c_str()));
+      tParameter(tVarTemplateTypeNamed(T_element, val, name.c_str()));
       return val;
     }
     else
     {
-      tVarNamedTemplateType(T_element, val, name.c_str());
+      tVarTemplateTypeNamed(T_element, val, name.c_str());
       return val;
     }
   }

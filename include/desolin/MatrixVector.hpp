@@ -33,7 +33,7 @@ class MatrixMult : public BinOp<matrix, matrix, matrix, T_element>
 private:
   inline static const boost::array<int, 2> getDims(const ExprNode<matrix, T_element>& l, const ExprNode<matrix, T_element>& r)
   {
-    boost::array<int, 2> dimensions = {l.getRowCount(), r.getColCount()};
+    boost::array<int, 2> dimensions = { {l.getRowCount(), r.getColCount()} };
     return dimensions;
   }
   
@@ -54,7 +54,7 @@ class MatrixVectorMult : public BinOp<vector, matrix, vector, T_element>
 private:
   inline static const boost::array<int, 1> getDims(const ExprNode<matrix, T_element>& l, const ExprNode<vector, T_element>& r)
   {
-    boost::array<int, 1> dimensions = {{l.getRowCount()}};
+    boost::array<int, 1> dimensions = { {l.getRowCount()} };
     return dimensions;
   }
   
@@ -75,7 +75,7 @@ class TransposeMatrixVectorMult : public BinOp<vector, matrix, vector, T_element
 private:
   inline static const boost::array<int, 1> getDims(const ExprNode<matrix, T_element>& l, const ExprNode<vector, T_element>& r)
   {
-    boost::array<int, 1> dimensions = {l.getColCount()};
+    boost::array<int, 1> dimensions = { {l.getColCount()} };
     return dimensions;
   }
 
@@ -151,7 +151,7 @@ class MatrixTranspose : public UnOp<matrix, matrix, T_element>
 private:
   inline static const boost::array<int, 2> getDims(const ExprNode<matrix, T_element>& m)
   {
-    boost::array<int, 2> dimensions = {m.getColCount(), m.getRowCount()};
+    boost::array<int, 2> dimensions = { {m.getColCount(), m.getRowCount()} };
     return dimensions;
   }
 public:

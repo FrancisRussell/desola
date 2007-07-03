@@ -90,7 +90,7 @@ protected:
 
   inline static const boost::array<int, 1> getDimensions(const InternalVector<T_element>& internal)
   {
-    const boost::array<int, 1> dims = {internal.getRowCount()};
+    const boost::array<int, 1> dims = { {internal.getRowCount()} };
     return dims;
   }
   
@@ -138,7 +138,7 @@ protected:
 
   inline static const boost::array<int, 2> getDimensions(const InternalMatrix<T_element>& internal)
   {
-    const boost::array<int, 2> dims = {internal.getRowCount(), internal.getColCount()};
+    const boost::array<int, 2> dims = { {internal.getRowCount(), internal.getColCount()} };
     return dims;
   }
   
