@@ -1,5 +1,5 @@
 #! /bin/sh
 
 aclocal \
-&& automake-1.9 --foreign --add-missing --copy \
+&& automake --foreign --add-missing --copy \
 && autoconf

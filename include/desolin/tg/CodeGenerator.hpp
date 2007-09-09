@@ -48,9 +48,10 @@ private:
     return std::string("index");
   }
 
-  inline const char* getIndexName()
+  inline std::string getIndexName()
   {
-    return generator.getName(getPrefix()).c_str();
+    const std::string result = generator.getName(getPrefix()).c_str();
+    return result;
   }
 	
 public:
@@ -65,7 +66,7 @@ public:
     TGVector<T_element>&  newVector(e.getInternal());
     TGVector<T_element>&  vector(e.getOperand().getInternal());
 
-    tVarNamed(int, i, getIndexName());
+    tVarNamed(int, i, getIndexName().c_str());
     tFor(i, 0, vector.getRows()-1)
     {
       newVector.setExpression(i, vector.getExpression(i));
@@ -87,8 +88,8 @@ public:
     TGMatrix<T_element>& newMatrix(e.getInternal());
     TGMatrix<T_element>& matrix(e.getOperand().getInternal());
 
-    tVarNamed(int, i, getIndexName());
-    tVarNamed(int, j, getIndexName());
+    tVarNamed(int, i, getIndexName().c_str());
+    tVarNamed(int, j, getIndexName().c_str());
     tFor(i, 0, matrix.getRows()-1)
     {
       tFor(j, 0, matrix.getCols()-1)
@@ -151,9 +152,9 @@ public:
     TGMatrix<T_element>& left(e.getLeft().getInternal());
     TGMatrix<T_element>& right(e.getRight().getInternal());
 
-    tVarNamed(int, i, getIndexName());
-    tVarNamed(int, j, getIndexName());
-    tVarNamed(int, k, getIndexName());
+    tVarNamed(int, i, getIndexName().c_str());
+    tVarNamed(int, j, getIndexName().c_str());
+    tVarNamed(int, k, getIndexName().c_str());
 
     tFor(i, 0, result.getRows()-1)
     {
@@ -183,8 +184,8 @@ public:
     TGMatrix<T_element>& matrix(e.getLeft().getInternal());
     TGVector<T_element>& vector(e.getRight().getInternal());
 
-    tVarNamed(int, i, getIndexName());
-    tVarNamed(int, j, getIndexName());
+    tVarNamed(int, i, getIndexName().c_str());
+    tVarNamed(int, j, getIndexName().c_str());
     
     tFor(i, 0, matrix.getRows()-1)
     {
@@ -204,8 +205,8 @@ public:
     TGMatrix<T_element>& matrix(e.getLeft().getInternal());
     TGVector<T_element>& vector(e.getRight().getInternal());
 
-    tVarNamed(int, i, getIndexName());
-    tVarNamed(int, j, getIndexName());
+    tVarNamed(int, i, getIndexName().c_str());
+    tVarNamed(int, j, getIndexName().c_str());
 
     tFor(j, 0, matrix.getRows()-1)
     {
@@ -229,7 +230,7 @@ public:
     TGVector<T_element>& left(e.getLeft().getInternal());
     TGVector<T_element>& right(e.getRight().getInternal());
 
-    tVarNamed(int, i, getIndexName());
+    tVarNamed(int, i, getIndexName().c_str());
 
     result.setExpression(TGScalarExpr<T_element>());
     tFor(i, 0, left.getRows()-1)
@@ -258,7 +259,7 @@ public:
     TGScalar<T_element>& result(e.getInternal());
     TGVector<T_element>& vector(e.getOperand().getInternal());
    
-    tVarNamed(int, i, getIndexName());
+    tVarNamed(int, i, getIndexName().c_str());
 
     result.setExpression(TGScalarExpr<T_element>());
     tFor(i, 0, vector.getRows()-1)
@@ -275,8 +276,8 @@ public:
     TGMatrix<T_element>& result(e.getInternal());
     TGMatrix<T_element>& matrix(e.getOperand().getInternal());
 
-    tVarNamed(int, i, getIndexName());
-    tVarNamed(int, j, getIndexName());
+    tVarNamed(int, i, getIndexName().c_str());
+    tVarNamed(int, j, getIndexName().c_str());
 
     tFor(i, 0, matrix.getRows()-1)
     {
@@ -306,7 +307,7 @@ public:
      TGVector<T_element>& left(e.getLeft().getInternal());
      TGVector<T_element>& right(e.getRight().getInternal());
 
-     tVarNamed(int, i, getIndexName());
+     tVarNamed(int, i, getIndexName().c_str());
      tFor(i, 0, result.getRows()-1)
      {
        result.setExpression(i, performOp(e.getOperation(), left.getExpression(i), right.getExpression(i)));
@@ -322,8 +323,8 @@ public:
     TGMatrix<T_element>& right(e.getRight().getInternal());
    
       
-    tVarNamed(int, i, getIndexName());
-    tVarNamed(int, j, getIndexName());
+    tVarNamed(int, i, getIndexName().c_str());
+    tVarNamed(int, j, getIndexName().c_str());
     tFor(i, 0, result.getRows()-1)
     {
       tFor(j, 0, result.getCols()-1)
@@ -352,7 +353,7 @@ public:
      TGVector<T_element>& left(e.getLeft().getInternal());
      TGScalar<T_element>& right(e.getRight().getInternal());
 
-     tVarNamed(int, i, getIndexName());
+     tVarNamed(int, i, getIndexName().c_str());
      tFor(i, 0, result.getRows()-1)
      {
        result.setExpression(i, performOp(e.getOperation(), left.getExpression(i), right.getExpression()));
@@ -367,8 +368,8 @@ public:
     TGMatrix<T_element>& left(e.getLeft().getInternal());
     TGScalar<T_element>& right(e.getRight().getInternal());
 
-    tVarNamed(int, i, getIndexName());
-    tVarNamed(int, j, getIndexName());
+    tVarNamed(int, i, getIndexName().c_str());
+    tVarNamed(int, j, getIndexName().c_str());
     tFor(i, 0, result.getRows()-1)
     {
       tFor(j, 0, result.getCols()-1)
@@ -395,7 +396,7 @@ public:
     TGVector<T_element>& result(e.getInternal());
     TGVector<T_element>& operand(e.getOperand().getInternal());
 
-    tVarNamed(int, i, getIndexName());
+    tVarNamed(int, i, getIndexName().c_str());
     tFor(i, 0, result.getRows()-1)
     {
       result.setExpression(i, operand.getExpression(i).negate());
@@ -409,8 +410,8 @@ public:
     TGMatrix<T_element>& result(e.getInternal());
     TGMatrix<T_element>& operand(e.getOperand().getInternal());
 
-    tVarNamed(int, i, getIndexName());
-    tVarNamed(int, j, getIndexName());
+    tVarNamed(int, i, getIndexName().c_str());
+    tVarNamed(int, j, getIndexName().c_str());
     tFor(i, 0, result.getRows()-1)
     {
       tFor(j, 0, result.getCols()-1)
