@@ -20,7 +20,7 @@ AC_ARG_WITH([taskgraph-prefix],
             AC_HELP_STRING([--with-taskgraph-prefix=PFX], [Use the TaskGraph installation in PFX]),
             [
               if test -f "$withval/include/TaskGraph"; then
-                CPPFLAGS="$CPPFLAGS -I$withval/include"
+                CXXFLAGS="$CPPFLAGS -I$withval/include"
                 LDFLAGS="$LDFLAGS -R$withval/lib -L$withval/lib"
               else
                 AC_MSG_ERROR("$withval does not appear to be a prefix for a TaskGraph installation")
@@ -32,7 +32,7 @@ AC_ARG_WITH([boost-prefix],
            AC_HELP_STRING([--with-boost-prefix=PFX], [Use the Boost installation in PFX]),
            [
              if test -f "$withval/include/boost/version.hpp"; then
-               CPPFLAGS="$CPPFLAGS -I$withval/include"
+               CXXFLAGS="$CPPFLAGS -I$withval/include"
                LDFLAGS="$LDFLAGS -R$withval/lib -L$withval/lib"
              else
                AC_MSG_ERROR("$withval does not appear to be a prefix for a Boost installation")
@@ -44,7 +44,7 @@ AC_ARG_WITH([mtl-prefix],
           AC_HELP_STRING([--with-mtl-prefix=PFX], [Use the MTL installation in PFX]),
 	  [
 	    if test -f "$withval/include/mtl/mtl.h"; then
-              CPPFLAGS="$CPPFLAGS -I$withval/include"
+              CXXFLAGS="$CPPFLAGS -I$withval/include"
 	    else
 	      AC_MSG_ERROR("$withval does not appear to be a prefix for a MTL installation")
              fi
