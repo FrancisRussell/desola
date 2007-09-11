@@ -14,13 +14,13 @@ AC_PROG_LIBTOOL
 
 # Checks for libraries.
 CXXFLAGS="-O3 -Wall -pedantic -pipe"
-AX_GCC_ARCHFLAG([no], [CXXFLAGS="$CXXFLAGS $ax_cv_gcc_archflag" CCFLAGS="$CCFLAGS $ax_cv_gcc_archflag"])
+AX_GCC_ARCHFLAG([no], [CXXFLAGS="$CXXFLAGS $ax_cv_gcc_archflag" CCFLAGS="$CCFLAGS $ax_cv_gcc_archflag"], [])
 
-AC_ARG_WITH([taskgraph-prefix],
-            AC_HELP_STRING([--with-taskgraph-prefix=PFX], [Use the TaskGraph installation in PFX]),
+AC_ARG_WITH([taskgraph],
+            AC_HELP_STRING([--with-taskgraph=PFX], [Use the TaskGraph installation in PFX]),
             [
               if test -f "$withval/include/TaskGraph"; then
-                CXXFLAGS="$CPPFLAGS -I$withval/include"
+                CXXFLAGS="$CXXFLAGS -I$withval/include"
                 LDFLAGS="$LDFLAGS -R$withval/lib -L$withval/lib"
               else
                 AC_MSG_ERROR("$withval does not appear to be a prefix for a TaskGraph installation")
@@ -28,31 +28,26 @@ AC_ARG_WITH([taskgraph-prefix],
             ]
             )
 
-AC_ARG_WITH([boost-prefix],
-           AC_HELP_STRING([--with-boost-prefix=PFX], [Use the Boost installation in PFX]),
-           [
-             if test -f "$withval/include/boost/version.hpp"; then
-               CXXFLAGS="$CPPFLAGS -I$withval/include"
-               LDFLAGS="$LDFLAGS -R$withval/lib -L$withval/lib"
-             else
-               AC_MSG_ERROR("$withval does not appear to be a prefix for a Boost installation")
-             fi
-           ]
-           )
-
-AC_ARG_WITH([mtl-prefix],
-          AC_HELP_STRING([--with-mtl-prefix=PFX], [Use the MTL installation in PFX]),
+AC_ARG_WITH([mtl],
+          AC_HELP_STRING([--with-mtl=PFX], [Use the MTL installation in PFX]),
 	  [
 	    if test -f "$withval/include/mtl/mtl.h"; then
-              CXXFLAGS="$CPPFLAGS -I$withval/include"
+              CXXFLAGS="$CXXFLAGS -I$withval/include"
 	    else
 	      AC_MSG_ERROR("$withval does not appear to be a prefix for a MTL installation")
              fi
           ]
           )
 
+AX_BOOST_BASE([1.33])
+AX_BOOST_PROGRAM_OPTIONS
+
+if test "$want_boost" = no; then
+  AC_MSG_FAILURE([Boost is a required dependency and cannot be disabled.])
+fi
+
+
 AC_TRY_COMPILE([@%:@include <TaskGraph>], [], AC_MSG_NOTICE([Found TaskGraph]), AC_MSG_FAILURE([Failed to find TaskGraph]))
-AC_TRY_COMPILE([@%:@include <boost/version.hpp>], [], AC_MSG_NOTICE([Found Boost]), AC_MSG_FAILURE([Failed to find Boost]))
 AC_TRY_COMPILE([@%:@include <mtl/mtl.h>], [], [AC_MSG_NOTICE([Found MTL. Building MTL examples.]); using_mtl=yes], [AC_MSG_NOTICE([Failed to find MTL. Not building MTL examples.]); using_mtl=no])
 
 AM_CONDITIONAL([build_mtl_examples], [test "$using_mtl" = yes])
