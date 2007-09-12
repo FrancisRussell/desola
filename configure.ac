@@ -41,6 +41,7 @@ AC_ARG_WITH([mtl],
 
 AX_BOOST_BASE([1.33])
 AX_BOOST_PROGRAM_OPTIONS
+AX_BOOST_FILESYSTEM
 
 if test "$want_boost" = no; then
   AC_MSG_FAILURE([Boost is a required dependency and cannot be disabled.])
