@@ -203,11 +203,6 @@ public:
   }
 };
 
-namespace
-{
-  double compileTime;
-}
-
 }
 
 }
