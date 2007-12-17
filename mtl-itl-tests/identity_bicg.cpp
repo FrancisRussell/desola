@@ -54,7 +54,7 @@ int main (int argc, char* argv[])
   SolverOptions solverOptions("Unsymmetric matrix in Harwell-Boeing format");
   solverOptions.processOptions(argc, argv);
 
-  harwell_boeing_stream<Type> hbs(solverOptions.getFile().c_str());
+  harwell_boeing_stream<Type> hbs(const_cast<char*>(solverOptions.getFile().c_str()));
   const int max_iter = solverOptions.getIterations();
   //begin
   Matrix A(hbs);

@@ -52,7 +52,7 @@ int main (int argc, char* argv[])
   solverOptions.processOptions(argc, argv);
 
   const int max_iter = solverOptions.getIterations();
-  harwell_boeing_stream<Type> hbs(solverOptions.getFile().c_str());	
+  harwell_boeing_stream<Type> hbs(const_cast<char*>(solverOptions.getFile().c_str()));	
   //begin
   Matrix A(hbs);
   //end
