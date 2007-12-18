@@ -76,7 +76,7 @@
   Preconditioners: all preconditioners in itl/preconditioners
  */
 
-//#include <itl/itl_config.h>
+#include <itl/itl_config.h>
 #include <mtl/dense1D.h>
 #include "mtl/matrix.h"
 #include "mtl/mtl.h"
