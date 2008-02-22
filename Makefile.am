@@ -2,7 +2,11 @@ if build_mtl_examples
   OPTIONAL_MTL_DIR = mtl-itl-tests
 endif
 
-SUBDIRS = include lib example itl-tests test-matrices scripts $(OPTIONAL_MTL_DIR)
+if build_blas_examples
+  OPTIONAL_BLAS_DIR = blas-itl-tests
+endif
+
+SUBDIRS = include lib example itl-tests test-matrices scripts $(OPTIONAL_MTL_DIR) $(OPTIONAL_BLAS_DIR)
 
 EXTRA_DIST = NOTICE LICENSE LICENSE.itl LICENSE.mtl
 

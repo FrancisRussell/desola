@@ -50,8 +50,10 @@ fi
 
 AC_TRY_COMPILE([@%:@include <TaskGraph>], [], AC_MSG_NOTICE([Found TaskGraph]), AC_MSG_FAILURE([Failed to find TaskGraph]))
 AC_TRY_COMPILE([@%:@include <mtl/mtl.h>], [], [AC_MSG_NOTICE([Found MTL. Building MTL examples.]); using_mtl=yes], [AC_MSG_NOTICE([Failed to find MTL. Not building MTL examples.]); using_mtl=no])
+ACX_BLAS([AC_MSG_NOTICE([Found BLAS. Building BLAS examples.]); using_blas=yes], [AC_MSG_NOTICE([Failed to find BLAS. Not building BLAS examples]); using_blas=no])
 
 AM_CONDITIONAL([build_mtl_examples], [test "$using_mtl" = yes])
+AM_CONDITIONAL([build_blas_examples], [test "$using_blas" = yes])
 
 
 # Checks for header files.
@@ -71,6 +73,7 @@ AC_CONFIG_FILES([Makefile
 		 example/Makefile
 		 itl-tests/Makefile
 		 mtl-itl-tests/Makefile
+                 blas-itl-tests/Makefile
 		 test-matrices/Makefile
 		 scripts/Makefile])
 AC_OUTPUT
