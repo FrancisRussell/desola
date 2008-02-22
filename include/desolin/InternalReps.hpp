@@ -212,7 +212,7 @@ public:
     {
         entry2<double> entry;
         stream >> entry;
-	value[this->getRowCount()*entry.row + entry.col] = entry.value;
+	value[this->getColCount()*entry.row + entry.col] = entry.value;
     }
   }
   
