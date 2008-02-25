@@ -1,8 +1,10 @@
 include $(top_srcdir)/binaries_common.mk
 
 noinst_HEADERS = solver_options.hpp  statistics_generator.hpp
-
 noinst_PROGRAMS = identity_cg identity_qmr identity_cgs identity_bicg identity_bicgstab identity_tfqmr identity_cheby identity_richardson
+
+%.cpp:: ../benchmarks-common/%.cpp
+	cp ../benchmarks-common/$@ .
 
 identity_cg_SOURCES = identity_cg.cpp solver_options.cpp
 identity_cg_LDFLAGS = ${BOOST_PROGRAM_OPTIONS_LIB} ${BOOST_FILESYSTEM_LIB}

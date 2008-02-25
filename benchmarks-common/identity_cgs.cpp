@@ -22,25 +22,14 @@
 // OR DOCUMENTATION WILL NOT INFRINGE ANY PATENTS, COPYRIGHTS, TRADEMARKS
 // OR OTHER RIGHTS.
 
-#include "solver_options.hpp"
-#include "statistics_generator.hpp"
-#include "mtl/harwell_boeing_stream.h"
-#include "blas_wrappers.hpp"
-#include "blas_itl_interface.hpp"
+#include <iostream>
+#include "library_specific.hpp"
 #include <itl/krylov/cgs.h>
 
 /*
   In this example, we show how to use bicgstab algorithm.
 */
-using namespace desolin_blas_wrappers;
 using namespace itl;
-
-typedef  double Type;
-
-//begin
-typedef BLASGeneralMatrix<Type> Matrix;
-typedef BLASVector<Type> Vector;
-//end
 
 int main (int argc, char* argv[]) 
 {
@@ -50,24 +39,24 @@ int main (int argc, char* argv[])
   SolverOptions solverOptions("Unsymmetric matrix in Harwell-Boeing format");
   solverOptions.processOptions(argc, argv);
       
-  mtl::harwell_boeing_stream<Type> hbs(const_cast<char*>(solverOptions.getFile().c_str()));
+  harwell_boeing_stream<Type> hbs(const_cast<char*>(solverOptions.getFile().c_str()));
   const int max_iter = solverOptions.getIterations();	
   //begin
   Matrix A(hbs);
 
-  Vector x(A.nrows(), Type(0));
-  Vector b(A.ncols(), Type(1));
+  Vector x(num_rows(A), Type(0));
+  Vector b(num_cols(A), Type(1));
 
   identity_preconditioner precond;
   //iteration
-  noisy_iteration<double> iter(b, max_iter, 1e-6);
+  noisy_iteration<Scalar> iter(b, max_iter, 1e-6);
   //bicgstab algorithm
   StatisticsGenerator stats;
   cgs(A, x, b, precond(), iter);
   //end
 
   //verify the result
-  Vector b1(A.ncols());
+  Vector b1(num_cols(A));
   itl::mult(A, x, b1);
   itl::add(b1, itl::scaled(b, -1.), b1);
 

@@ -22,27 +22,14 @@
 // OR DOCUMENTATION WILL NOT INFRINGE ANY PATENTS, COPYRIGHTS, TRADEMARKS
 // OR OTHER RIGHTS.
 
-#include "solver_options.hpp"
-#include "statistics_generator.hpp"
-#include "mtl/matrix.h"
-#include "mtl/mtl.h"
-#include "mtl/utils.h"
-#include "mtl/harwell_boeing_stream.h"
-
-#include <itl/interface/mtl.h>
-#include <itl/krylov/qmr.h>
+#include <iostream>
+#include "library_specific.hpp"
+#include <itl/krylov/tfqmr.h>
 
 /*
-  In this example, we show how to use QMR algorithm
+  In this example, we show how to use TFQMR algorithm
 */
-using namespace mtl;
 using namespace itl;
-
-typedef  double Type;
-
-typedef matrix< Type, rectangle<>, 
-	        array< dense<> >, 
-                row_major >::type Matrix;
 
 int main(int argc, char* argv[])
 {
@@ -55,30 +42,24 @@ int main(int argc, char* argv[])
   harwell_boeing_stream<Type> hbs(const_cast<char*>(solverOptions.getFile().c_str()));
   const int max_iter = solverOptions.getIterations();
 	
-  //begin
   Matrix A(hbs);
-  //end
-
-  //begin
-  dense1D<Type> x(A.nrows(), Type(0));
-  dense1D<Type> b(A.ncols());
-  for (dense1D<Type>::iterator i=b.begin(); i!=b.end(); i++)
-    *i = 1.;
+  Vector x(num_rows(A), Type(0));
+  Vector b(num_cols(A), Type(1));
 
   //ILU preconditioner
   identity_preconditioner precond;
   //iteration
-  noisy_iteration<double> iter(b, max_iter, 1e-6);
-  //qmr algorithm
+  noisy_iteration<Scalar> iter(b, max_iter, 1e-6);
+  //tfqmr algorithm
   StatisticsGenerator stats;
-  qmr(A, x, b, precond.left(), precond.right(), iter);
+  tfqmr(A, x, b, precond.left(), precond.right(), iter);
   //end
 
   //verify the result
-  dense1D<Type> b1(A.ncols());
+  Vector b1(num_cols(A));
   itl::mult(A, x, b1);
   itl::add(b1, itl::scaled(b, -1.), b1);
-  
+
   cout << "Residual " << itl::two_norm(b1) << endl;
   stats.printResults(solverOptions.getFile(), hbs, iter, !solverOptions.singleLineResult());
   return 0;

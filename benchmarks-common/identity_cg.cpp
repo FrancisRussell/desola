@@ -1,6 +1,6 @@
 // Modified 2005-2006 by Francis Russell to work with desolin library and allow benchmarking.
 // Copyright 1997, University of Notre Dame.
-// Authors: Andrew Lumsdaine, Lie-Quan Lee
+// Authors: Andrew Lumsdaine, Lie-Quan Lee, and Lie-Quan Lee
 //
 // This file is part of the Iterative Template Library
 //
@@ -22,59 +22,42 @@
 // OR DOCUMENTATION WILL NOT INFRINGE ANY PATENTS, COPYRIGHTS, TRADEMARKS
 // OR OTHER RIGHTS.
 
-#include "solver_options.hpp"
-#include "statistics_generator.hpp"
-#include "mtl/matrix.h"
-#include "mtl/mtl.h"
-#include "mtl/utils.h"
-#include "mtl/harwell_boeing_stream.h"
-#include <itl/interface/mtl.h>
-#include <itl/krylov/tfqmr.h>
+#include <iostream>
+#include "library_specific.hpp"
+#include "itl/krylov/cg.h"
 
-/*
-  In this example, we show how to use TFQMR algorithm
-*/
-using namespace mtl;
 using namespace itl;
 
-typedef  double Type;
-
-typedef matrix< Type, rectangle<>, 
-	        array< dense<> >, 
-                row_major >::type Matrix;
-
-int main(int argc, char* argv[])
+int main (int argc, char* argv[]) 
 {
   using std::cout;
   using std::endl;
 
-  SolverOptions solverOptions("Unsymmetric matrix in Harwell-Boeing format");
+  SolverOptions solverOptions("Symmetric Positive Definite matrix in Harwell-Boeing format");
   solverOptions.processOptions(argc, argv);
-      
-  harwell_boeing_stream<Type> hbs(const_cast<char*>(solverOptions.getFile().c_str()));
-  const int max_iter = solverOptions.getIterations();
-	
-  Matrix A(hbs);
-  dense1D<Type> x(A.nrows(), Type(0));
-  dense1D<Type> b(A.ncols());
-  for (dense1D<Type>::iterator i=b.begin(); i!=b.end(); i++)
-    *i = 1.;
 
-  //ILU preconditioner
+  const int max_iter = solverOptions.getIterations();
+  harwell_boeing_stream<Type> hbs(const_cast<char*>(solverOptions.getFile().c_str()));	
+  //begin
+  Matrix A(hbs);
+  //end
+
+  //begin
+  Vector x(num_rows(A), Type(0));
+  Vector b(num_cols(A), Type(1));
+  //Incomplete cholesky preconditioner
   identity_preconditioner precond;
-  //iteration
-  noisy_iteration<double> iter(b, max_iter, 1e-6);
-  //tfqmr algorithm
+  noisy_iteration<Scalar> iter(b, max_iter, 1e-6);
   StatisticsGenerator stats;
-  tfqmr(A, x, b, precond.left(), precond.right(), iter);
+  cg(A, x, b, precond(), iter);
   //end
 
   //verify the result
-  dense1D<Type> b1(A.ncols());
+  Vector b1(num_cols(A));
   itl::mult(A, x, b1);
   itl::add(b1, itl::scaled(b, -1.), b1);
 
-  cout << "Residual " << itl::two_norm(b1) << endl;
+  cout << "True Residual: " << itl::two_norm(b1) << endl;
   stats.printResults(solverOptions.getFile(), hbs, iter, !solverOptions.singleLineResult());
   return 0;
 }

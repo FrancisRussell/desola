@@ -22,18 +22,13 @@
 // OR DOCUMENTATION WILL NOT INFRINGE ANY PATENTS, COPYRIGHTS, TRADEMARKS
 // OR OTHER RIGHTS.
 
-#include "solver_options.hpp"
-#include "statistics_generator.hpp"
-#include <desolin/Desolin.hpp>
-#include <desolin/itl_interface.hpp>
-#include <itl/krylov/cheby.h>
+#include "library_specific.hpp"
+#include <itl/krylov/bicgstab.h>
 
+/*
+  In thsi example, we show how to use bicgstab algorithm.
+*/
 using namespace itl;
-
-typedef double Type;
-typedef desolin::Matrix<Type> Matrix;
-typedef desolin::Vector<Type> Vector;
-typedef desolin::Scalar<Type> Scalar;
 
 int main (int argc, char* argv[]) 
 {
@@ -42,33 +37,29 @@ int main (int argc, char* argv[])
 
   SolverOptions solverOptions("Unsymmetric matrix in Harwell-Boeing format");
   solverOptions.processOptions(argc, argv);
-    
-  desolin::harwell_boeing_stream<Type> hbs(solverOptions.getFile().c_str());
-  const int max_iter = solverOptions.getIterations();
-  
-  Scalar eigmin(0.01);
-  Scalar eigmax(10.0);
+          
+  harwell_boeing_stream<Type> hbs(const_cast<char*>(solverOptions.getFile().c_str()));
+  const int max_iter = solverOptions.getIterations();	
   //begin
   Matrix A(hbs);
 
-  Vector x(A.numRows(), Type(0));
-  Vector b(A.numCols(), Type(1));
-  
+  Vector x(num_rows(A), Type(0));
+  Vector b(num_rows(A), Type(1));
+  //SSOR preconditioner
   identity_preconditioner precond;
-  
   //iteration
-  noisy_iteration<Scalar> iter(b, max_iter, 1.0e-6);
-  //cheby algorithm
+  noisy_iteration<Scalar> iter(b, max_iter, 1e-6);
+  //bicgstab algorithm
   StatisticsGenerator stats;
-  cheby(A, x, b, precond(), iter, eigmin, eigmax);
+  bicgstab(A, x, b, precond(), iter);
   //end
 
   //verify the result
-  Vector b1(A.numCols());
+  Vector b1(num_cols(A));
   itl::mult(A, x, b1);
   itl::add(b1, itl::scaled(b, -1.), b1);
 
-  cout << "Residual " << itl::two_norm(b1) << endl;
+  std::cout << "Residual " << itl::two_norm(b1) << endl;
   stats.printResults(solverOptions.getFile(), hbs, iter, !solverOptions.singleLineResult());
   return 0;
 }

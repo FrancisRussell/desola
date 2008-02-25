@@ -22,59 +22,44 @@
 // OR DOCUMENTATION WILL NOT INFRINGE ANY PATENTS, COPYRIGHTS, TRADEMARKS
 // OR OTHER RIGHTS.
 
-#include "solver_options.hpp"
-#include "statistics_generator.hpp"
-#include <mtl/matrix.h>
-#include <mtl/mtl.h>
-#include <mtl/utils.h>
-#include "mtl/harwell_boeing_stream.h"
-
-#include <itl/interface/mtl.h>
-#include <itl/krylov/richardson.h>
+#include <iostream>
+#include "library_specific.hpp"
+#include <itl/krylov/cheby.h>
 
 /*
   In this example, we show how to use bicgstab algorithm.
 */
-using namespace mtl;
 using namespace itl;
-
-typedef  double Type;
-
-//begin
-typedef matrix< Type, rectangle<>, 
-	        array< dense<> >, 
-                row_major >::type Matrix;
-//end
 
 int main (int argc, char* argv[]) 
 {
   using std::cout;
   using std::endl;
-
+  
   SolverOptions solverOptions("Unsymmetric matrix in Harwell-Boeing format");
   solverOptions.processOptions(argc, argv);
-      
-  harwell_boeing_stream<Type> hbs(const_cast<char*>(solverOptions.getFile().c_str()));
+        
+  harwell_boeing_stream<Type> hbs(const_cast<char*>(solverOptions.getFile().c_str()));      
   const int max_iter = solverOptions.getIterations();
-	
+  
+  Type eigmin = 0.01;
+  Type eigmax = 10.0;
   //begin
   Matrix A(hbs);
 
-  dense1D<Type> x(A.nrows(), Type(0));
-  dense1D<Type> b(A.ncols());
-  for (dense1D<Type>::iterator i=b.begin(); i!=b.end(); i++)
-    *i = 1.;
-
+  Vector x(num_rows(A), Type(0));
+  Vector b(num_cols(A), Type(1));
+  //SSOR preconditioner
   identity_preconditioner precond;
   //iteration
-  noisy_iteration<double> iter(b, max_iter, 1.0e-6);
-  //richardson algorithm
+  noisy_iteration<Scalar> iter(b, max_iter, 1e-6);
+  //cheby algorithm
   StatisticsGenerator stats;
-  richardson(A, x, b, precond(), iter);
+  cheby(A, x, b, precond(), iter, eigmin, eigmax);
   //end
 
   //verify the result
-  dense1D<Type> b1(A.ncols());
+  Vector b1(num_cols(A));
   itl::mult(A, x, b1);
   itl::add(b1, itl::scaled(b, -1.), b1);
 

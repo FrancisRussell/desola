@@ -22,29 +22,14 @@
 // OR DOCUMENTATION WILL NOT INFRINGE ANY PATENTS, COPYRIGHTS, TRADEMARKS
 // OR OTHER RIGHTS.
 
-#include "solver_options.hpp"
-#include "statistics_generator.hpp"
-#include <mtl/matrix.h>
-#include <mtl/mtl.h>
-#include <mtl/utils.h>
-#include "mtl/harwell_boeing_stream.h"
-
-#include <itl/interface/mtl.h>
+#include "library_specific.hpp"
 #include <itl/krylov/bicg.h>
+
+using namespace itl;
 
 /*
   In this example, we show how to use bicgstab algorithm.
 */
-using namespace mtl;
-using namespace itl;
-
-typedef  double Type;
-
-//begin
-typedef matrix< Type, rectangle<>, 
-	        array< dense<> >, 
-                row_major >::type Matrix;
-//end
 
 int main (int argc, char* argv[]) 
 {
@@ -59,24 +44,21 @@ int main (int argc, char* argv[])
   //begin
   Matrix A(hbs);
 
-  dense1D<Type> x(A.nrows(), Type(0));
-  dense1D<Type> b(A.ncols());
-  for (dense1D<Type>::iterator i=b.begin(); i!=b.end(); i++)
-    *i = 1.;
+  Vector x(num_rows(A), Type(0));
+  Vector b(num_cols(A), Type(1));
   //SSOR preconditioner
   identity_preconditioner precond;
   //iteration
-  noisy_iteration<double> iter(b, max_iter, 1e-6);
+  noisy_iteration<Scalar> iter(b, max_iter, 1e-6);
   //bicgstab algorithm
   StatisticsGenerator stats;
   bicg(A, x, b, precond(), iter);
   //end
 
   //verify the result
-  dense1D<Type> b1(A.ncols());
+  Vector b1(num_cols(A));
   itl::mult(A, x, b1);
   itl::add(b1, itl::scaled(b, -1.), b1);
-
 
   cout << "Residual " << itl::two_norm(b1) << endl;
   stats.printResults(solverOptions.getFile(), hbs, iter, !solverOptions.singleLineResult());
