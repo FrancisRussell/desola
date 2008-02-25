@@ -71,6 +71,7 @@ AC_CONFIG_FILES([Makefile
                  include/Makefile
 		 lib/Makefile
 		 example/Makefile
+                 benchmarks-common/Makefile
 		 itl-tests/Makefile
 		 mtl-itl-tests/Makefile
                  blas-itl-tests/Makefile
