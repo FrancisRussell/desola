@@ -20,7 +20,6 @@
 
 #include <cassert>
 #include <complex>
-#include <cblas.h>
 #include <itl/itl_tags.h>
 #include <itl/number_traits.h>
 
