@@ -107,5 +107,6 @@ AC_CONFIG_FILES([Makefile
                  blas-itl-tests/Makefile
                  imkl-itl-tests/Makefile
 		 test-matrices/Makefile
+                 matrix-generator/Makefile
 		 scripts/Makefile])
 AC_OUTPUT
