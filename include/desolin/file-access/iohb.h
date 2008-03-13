@@ -53,9 +53,9 @@ int writeHB_mat_char(const char* filename, int M, int N,
                         char* Ptrfmt, char* Indfmt, char* Valfmt, char* Rhsfmt,
                         const char* Rhstype);
 
-int ParseIfmt(char* fmt, int* perline, int* width);
+int ParseIfmt(const char* fmt, int* perline, int* width);
 
-int ParseRfmt(char* fmt, int* perline, int* width, int* prec, int* flag);
+int ParseRfmt(const char* fmt, int* perline, int* width, int* prec, int* flag);
 
 void IOHBTerminate(const char* message);
 #ifdef __cplusplus

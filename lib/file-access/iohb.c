@@ -1486,26 +1486,30 @@ int writeHB_mat_char(const char* filename, int M, int N,
     
 }
 
-int ParseIfmt(char* fmt, int* perline, int* width)
+int ParseIfmt(const char* fmtIn, int* perline, int* width)
 {
 /*************************************************/
 /*  Parse an *integer* format field to determine */
 /*  width and number of elements per line.       */
 /*************************************************/
     char *tmp;
-    if (fmt == NULL ) {
+    if (fmtIn == NULL ) {
       *perline = 0; *width = 0; return 0;
     }
+
+    char* const fmt = malloc(strlen(fmtIn)+1);
+    strcpy(fmt, fmtIn);
     upcase(fmt);
     tmp = strchr(fmt,'(');
     tmp = substr(fmt,tmp - fmt + 1, strchr(fmt,'I') - tmp - 1);
     *perline = atoi(tmp);
     tmp = strchr(fmt,'I');
     tmp = substr(fmt,tmp - fmt + 1, strchr(fmt,')') - tmp - 1);
+    free(fmt);
     return *width = atoi(tmp);
 }
 
-int ParseRfmt(char* fmt, int* perline, int* width, int* prec, int* flag)
+int ParseRfmt(const char* fmtIn, int* perline, int* width, int* prec, int* flag)
 {
 /*************************************************/
 /*  Parse a *real* format field to determine     */
@@ -1518,13 +1522,16 @@ int ParseRfmt(char* fmt, int* perline, int* width, int* prec, int* flag)
     char* tmp3;
     int len;
 
-    if (fmt == NULL ) {
+    if (fmtIn == NULL ) {
       *perline = 0; 
       *width = 0; 
       flag = NULL;  
       return 0;
     }
 
+    char* const mutableFmt = malloc(strlen(fmtIn)+1);
+    char* fmt = mutableFmt;
+    strcpy(fmt, fmtIn);
     upcase(fmt);
     if (strchr(fmt,'(') != NULL)  fmt = strchr(fmt,'(');
     if (strchr(fmt,')') != NULL)  {
@@ -1557,6 +1564,7 @@ int ParseRfmt(char* fmt, int* perline, int* width, int* prec, int* flag)
        *flag = 'F';
     } else {
       fprintf(stderr,"Real format %s in H/B file not supported.\n",fmt);
+      free(mutableFmt);
       return 0;
     }
     tmp = strchr(fmt,'(');
@@ -1569,6 +1577,7 @@ int ParseRfmt(char* fmt, int* perline, int* width, int* prec, int* flag)
     } else {
       tmp = substr(fmt,tmp - fmt + 1, strchr(fmt,')') - tmp - 1);
     }
+    free(mutableFmt);
     return *width = atoi(tmp);
 }
 
