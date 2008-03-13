@@ -31,9 +31,25 @@ AC_ARG_WITH([taskgraph],
 AC_ARG_WITH([imkl],
            AC_HELP_STRING([--with-imkl=PFX], [Use the Intel MKL installation in PFX]),
            [
+             if test "$HOSTTYPE" = "i586"; then
+               IMKL_ARCH="32"
+             fi
+
+             if test "$HOSTTYPE" = "i486"; then
+                 IMKL_ARCH="32"
+             fi
+
+             if test "$HOSTTYPE" = "x86_64"; then
+               IMKL_ARCH="em64t"
+             fi
+
+             if test "${IMKL_ARCH}" = ""; then
+               AC_MSG_ERROR("Unable to determine which Intel MKL architecture to use.")
+             fi
+
              if test -f "$withval/include/mkl_cblas.h"; then
                CXXFLAGS="$CXXFLAGS -I$withval/include"
-               LDFLAGS="$LDFLAGS -R$withval/lib/32 -L$withval/lib/32"
+               LDFLAGS="$LDFLAGS -R$withval/lib/${IMKL_ARCH} -L$withval/lib/${IMKL_ARCH}"
              else
                AC_MSG_ERROR("$withval does not appear to be a prefix for an Intel MKL installation")
              fi
