@@ -33,6 +33,8 @@ using namespace itl;
 
 int main (int argc, char* argv[]) 
 {
+  library_init();
+
   using std::cout;
   using std::endl;
 

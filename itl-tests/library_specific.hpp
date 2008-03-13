@@ -24,4 +24,8 @@ inline std::size_t num_cols(const Matrix& m)
   return m.numCols();
 }
 
+void library_init()
+{
+}
+
 #endif

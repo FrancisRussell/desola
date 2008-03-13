@@ -6,6 +6,8 @@ noinst_PROGRAMS = identity_cg identity_qmr identity_cgs identity_bicg identity_b
 %.cpp:: ../benchmarks-common/%.cpp
 	cp ../benchmarks-common/$@ .
 
+AM_CPPFLAGS+=-fpermissive
+
 nodist_identity_cg_SOURCES = identity_cg.cpp
 identity_cg_SOURCES = solver_options.cpp
 identity_cg_CXXFLAGS = -I${top_srcdir}/blas-common

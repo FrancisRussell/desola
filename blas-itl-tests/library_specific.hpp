@@ -23,6 +23,10 @@ inline std::size_t num_cols(const Matrix& m)
   return m.ncols();
 }
 
+void library_init()
+{
+}
+
 using mtl::harwell_boeing_stream;
 
 #endif

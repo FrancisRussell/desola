@@ -4,6 +4,7 @@
 #include "solver_options.hpp"
 #include "statistics_generator.hpp"
 #include "mtl/harwell_boeing_stream.h"
+#include "mkl.h"
 #include "mkl_cblas.h"
 #include "blas_wrappers.hpp"
 #include "blas_itl_interface.hpp"
@@ -21,6 +22,11 @@ inline std::size_t num_rows(const Matrix& m)
 inline std::size_t num_cols(const Matrix& m)
 {
   return m.ncols();
+}
+
+void library_init()
+{
+  mkl_set_num_threads(1);
 }
 
 using mtl::harwell_boeing_stream;
