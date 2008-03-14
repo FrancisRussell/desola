@@ -1,5 +1,5 @@
-#ifndef DESOLIN_MATRIX_GENERATORS_MATRIX_HPP
-#define DESOLIN_MATRIX_GENERATORS_MATRIX_HPP
+#ifndef DESOLIN_MATRIX_GENERATOR_MATRIX_HPP
+#define DESOLIN_MATRIX_GENERATOR_MATRIX_HPP
 
 #include<desolin/file-access/iohb.h>
 #include<boost/numeric/ublas/matrix.hpp>
@@ -26,7 +26,7 @@ public:
   template<typename UblasSparseMatrix>
   CCSMatrix(UblasSparseMatrix& matrix) : rows(matrix.size1()), cols(matrix.size2())
   {
-    for(int col=0; col<cols; ++col)
+    for(unsigned col=0; col<cols; ++col)
     {
       col_ptr.push_back(val.size() + 1);
       typedef boost::numeric::ublas::matrix_column<UblasSparseMatrix> column_t;

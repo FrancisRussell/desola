@@ -1,4 +1,5 @@
 #include "matrix.hpp"
+#include "generator_options.hpp"
 #include <ctime>
 #include <cstdlib>
 #include <cassert>
@@ -45,15 +46,20 @@ void populate(MatrixType& matrix, const int bandwidth, const double density, con
 
 int main(int argc, char* argv[])
 {
+  GeneratorOptions options;
+  options.processOptions(argc, argv);
   srand48(time(NULL));
 
-  const unsigned size = 500;
+  const unsigned size = options.getSize();
+  const bool symmetric = options.getSymmetric();
+
   boost::numeric::ublas::mapped_matrix<double> matrix(size, size);
 
-  populate(matrix, size/4, 4.0/size, true);
+  populate(matrix, size/4, 4.0/size, symmetric);
   
   CCSMatrix<double> csrMatrix(matrix);
-  std::cout << "Number of non-zeros: " << csrMatrix.nnz() << std::endl;
+  std::cout << "Generating " << (symmetric ? "a symmetric" : "an unsymmetric") << " matrix of size " << size << "." << std::endl;
+  std::cout << "Number of non-zeros in generated matrix: " << csrMatrix.nnz() << "." << std::endl;
 
-  csrMatrix.writeToFile("/tmp/matrix.rua");
+  csrMatrix.writeToFile(options.getOutputFile());
 }
