@@ -1,0 +1,38 @@
+#! /bin/bash
+
+iterationspec="Iterations:[^0-9]256"
+for solver in identity_bicg identity_bicgstab identity_cgs identity_qmr identity_tfqmr; do
+echo "#Solver: $solver"
+for matsize in 1224 1806 2597 3312 3948 4562 5005; do
+
+#Size
+echo -n "$matsize "
+#Desolin Timing Columns
+for linespec in "Solver:.*$solver.*Matrix Size:[^0-9]$matsize.*Code_cache:[^a-zA-Z]On.*Fusion:[^a-zA-Z]Off.*Contraction:[^a-zA-Z]Off.*Liveness:[^a-zA-Z]Off" \
+                "Solver:.*$solver.*Matrix Size:[^0-9]$matsize.*Code_cache:[^a-zA-Z]On.*Fusion:[^a-zA-Z]On.*Contraction:[^a-zA-Z]Off.*Liveness:[^a-zA-Z]Off" \
+		"Solver:.*$solver.*Matrix Size:[^0-9]$matsize.*Code_cache:[^a-zA-Z]On.*Fusion:[^a-zA-Z]On.*Contraction:[^a-zA-Z]On.*Liveness:[^a-zA-Z]Off" \
+		"Solver:.*$solver.*Matrix Size:[^0-9]$matsize.*Code_cache:[^a-zA-Z]On.*Fusion:[^a-zA-Z]On.*Contraction:[^a-zA-Z]On.*Liveness:[^a-zA-Z]On"; do
+# Average Evaluation Time
+grep -E "$iterationspec" "$1" | grep -E "$linespec" | clm 29 | average | tr "\n" " "
+# Average Compile Time
+grep -E "$iterationspec" "$1" | grep -E "$linespec" | clm 25 | average | tr "\n" " "
+done;
+
+#MTL Timing Column
+grep -E "$iterationspec" "$1" | grep -E "Solver:[^a-zA-Z]$solver.*Library:[^a-zA-Z]MTL.*Matrix Size:[^0-9]$matsize" | clm 15 | average | tr "\n" " "
+
+#BLAS Timing Column
+grep -E "$iterationspec" "$1" | grep -E "Solver:[^a-zA-Z]$solver.*Library:[^a-zA-Z]BLAS.*Matrix Size:[^0-9]$matsize" | clm 15 | average | tr "\n" " "
+
+#IMKL Timing Column
+grep -E "$iterationspec" "$1" | grep -E "Solver:[^a-zA-Z]$solver.*Library:[^a-zA-Z]IMKL.*Matrix Size:[^0-9]$matsize" | clm 15 | average | tr "\n" " "
+
+# End of column newline
+echo 
+done;
+
+#End of Solver
+echo
+echo
+
+done;
