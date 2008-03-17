@@ -4,8 +4,13 @@
 #include "solver_options.hpp"
 #include "statistics_generator.hpp"
 #include "mtl/harwell_boeing_stream.h"
+
+extern "C" 
+{
 #include "mkl.h"
 #include "mkl_cblas.h"
+}
+
 #include "blas_wrappers.hpp"
 #include "blas_itl_interface.hpp"
 

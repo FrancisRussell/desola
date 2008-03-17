@@ -56,14 +56,14 @@ AC_ARG_WITH([imkl],
            ]
            )
 
-AC_ARG_WITH([blas],
-           AC_HELP_STRING([--with-blas=PFX], [Use the generic BLAS installation in PFX]),
+AC_ARG_WITH([atlas],
+           AC_HELP_STRING([--with-atlas=PFX], [Use the ATLAS installation in PFX]),
            [
              if test -f "$withval/include/cblas.h"; then
                CXXFLAGS="$CXXFLAGS -I$withval/include"
                LDFLAGS="$LDFLAGS -R$withval/lib -L$withval/lib/"
              else
-               AC_MSG_ERROR("$withval does not appear to be a prefix for a BLAS installation")
+               AC_MSG_ERROR("$withval does not appear to be a prefix for an ATLAS installation")
              fi
            ]
            )
@@ -90,16 +90,15 @@ fi
 
 AC_TRY_COMPILE([@%:@include <TaskGraph>], [], AC_MSG_NOTICE([Found TaskGraph]), AC_MSG_FAILURE([Failed to find TaskGraph]))
 AC_TRY_COMPILE([@%:@include <mtl/mtl.h>], [], [AC_MSG_NOTICE([Found MTL. Building MTL examples.]); using_mtl=yes], [AC_MSG_NOTICE([Failed to find MTL. Not building MTL examples.]); using_mtl=no])
-AC_TRY_COMPILE([@%:@include <cblas.h>], [], [AC_MSG_NOTICE([Found generic BLAS]); BLAS_LIBS="-lblas"; using_blas=yes], [AC_MSG_NOTICE([Failed to find generic BLAS. Not building BLAS examples.]); using blas=no])
+AC_TRY_COMPILE([@%:@include <cblas.h>], [], [AC_MSG_NOTICE([Found ATLAS]); BLAS_LIBS="-latlas -lcblas"; using_atlas=yes], [AC_MSG_NOTICE([Failed to find ATLAS. Not building ATLAS examples.]); using atlas=no])
 AC_TRY_COMPILE([@%:@include <mkl_cblas.h>], [], [AC_MSG_NOTICE([Found Intel MKL]); IMKL_LIBS="-lmkl -lguide -liomp5 -lpthread"; using_imkl=yes], [AC_MSG_NOTICE([Failed to find Intel MKL. Not building MKL examples.]); using_imkl=no])
 
 AC_SUBST(BLAS_LIBS)
 AC_SUBST(IMKL_LIBS)
 
 AM_CONDITIONAL([build_mtl_examples], [test "$using_mtl" = yes])
-AM_CONDITIONAL([build_blas_examples], [test "$using_blas" = yes])
+AM_CONDITIONAL([build_atlas_examples], [test "$using_atlas" = yes])
 AM_CONDITIONAL([build_imkl_examples], [test "$using_imkl" = yes])
-
 
 # Checks for header files.
 
@@ -120,7 +119,7 @@ AC_CONFIG_FILES([Makefile
                  blas-common/Makefile
 		 itl-tests/Makefile
 		 mtl-itl-tests/Makefile
-                 blas-itl-tests/Makefile
+                 atlas-itl-tests/Makefile
                  imkl-itl-tests/Makefile
 		 test-matrices/Makefile
                  matrix-generator/Makefile

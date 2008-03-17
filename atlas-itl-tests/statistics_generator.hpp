@@ -39,7 +39,7 @@ public:
     const double elapsed = getTime() - startTime;
     std::cout.precision(5);
     std::cout.setf(std::ios::fixed);
-    std::cout << "Library: BLAS" << std::endl;
+    std::cout << "Library: ATLAS" << std::endl;
     std::cout << "Matrix: " << getLeaf(matrixPath) << std::endl;
     std::cout << "Matrix Size: " << matrixStream.ncols() << std::endl;
     std::cout << "Iterations: " << iter.iterations() << std::endl;
@@ -53,7 +53,7 @@ public:
     const double elapsed = getTime() - startTime;
     std::cout.precision(5);
     std::cout.setf(std::ios::fixed);
-    std::cout << "Library: BLAS\t";
+    std::cout << "Library: ATLAS\t";
     std::cout << "Matrix: " << getLeaf(matrixPath) << "\t";
     std::cout << "Matrix Size: " << matrixStream.ncols() << "\t";
     std::cout << "Iterations: " << iter.iterations() << "\t";
