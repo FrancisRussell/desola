@@ -56,14 +56,13 @@ AC_ARG_WITH([imkl],
            ]
            )
 
-AC_ARG_WITH([atlas],
-           AC_HELP_STRING([--with-atlas=PFX], [Use the ATLAS installation in PFX]),
+AC_ARG_WITH([atlas-libs],
+           AC_HELP_STRING([--with-atlas-libs=PFX], [Use the ATLAS libraries in PFX]),
            [
-             if test -f "$withval/include/cblas.h"; then
-               CXXFLAGS="$CXXFLAGS -I$withval/include"
-               LDFLAGS="$LDFLAGS -R$withval/lib -L$withval/lib/"
+             if test -f "$withval/libatlas.so"; then
+               LDFLAGS="$LDFLAGS -R$withval -L$withval"
              else
-               AC_MSG_ERROR("$withval does not appear to be a prefix for an ATLAS installation")
+               AC_MSG_ERROR("$withval does not appear to contain ATLAS libraries")
              fi
            ]
            )
@@ -90,7 +89,7 @@ fi
 
 AC_TRY_COMPILE([@%:@include <TaskGraph>], [], AC_MSG_NOTICE([Found TaskGraph]), AC_MSG_FAILURE([Failed to find TaskGraph]))
 AC_TRY_COMPILE([@%:@include <mtl/mtl.h>], [], [AC_MSG_NOTICE([Found MTL. Building MTL examples.]); using_mtl=yes], [AC_MSG_NOTICE([Failed to find MTL. Not building MTL examples.]); using_mtl=no])
-AC_TRY_COMPILE([@%:@include <cblas.h>], [], [AC_MSG_NOTICE([Found ATLAS]); BLAS_LIBS="-latlas -lcblas"; using_atlas=yes], [AC_MSG_NOTICE([Failed to find ATLAS. Not building ATLAS examples.]); using atlas=no])
+AC_CHECK_LIB(atlas, ATL_xerbla, [AC_MSG_NOTICE([Found ATLAS]); BLAS_LIBS="-latlas -lcblas"; using_atlas=yes], [AC_MSG_NOTICE([Failed to find ATLAS. Not building ATLAS examples.]); using_atlas=no])
 AC_TRY_COMPILE([@%:@include <mkl_cblas.h>], [], [AC_MSG_NOTICE([Found Intel MKL]); IMKL_LIBS="-lmkl -lguide -liomp5 -lpthread"; using_imkl=yes], [AC_MSG_NOTICE([Failed to find Intel MKL. Not building MKL examples.]); using_imkl=no])
 
 AC_SUBST(BLAS_LIBS)
