@@ -1,0 +1,26 @@
+#!/bin/bash
+
+if [ -f ./generate_benchmark_matrices ]; then
+
+mkdir -p "../benchmark-matrices"
+
+for size in 500 1000 1500 2000 2500 3000 3500 4000 4500 5000; do
+for symmetric in true false; do
+  if $symmetric; then
+     extension="rsa";
+     symmetric_flag="--symmetric"
+  else
+     extension="rua";
+     unset symmetric_flag
+  fi
+    command="../matrix-generator/generator --size $size $symmetric_flag --output-file ../benchmark-matrices/$size.$extension"
+    echo "Running ${command}"
+    $command
+    echo
+done
+done
+
+else
+  echo "Please run from inside the scripts folder"
+  exit 1;
+fi

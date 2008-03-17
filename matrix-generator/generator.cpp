@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
 
   populate(matrix, size/4, 4.0/size, symmetric);
   
-  CCSMatrix<double> csrMatrix(matrix);
+  CCSMatrix<double> csrMatrix(matrix, symmetric);
   std::cout << "Generating " << (symmetric ? "a symmetric" : "an unsymmetric") << " matrix of size " << size << "." << std::endl;
   std::cout << "Number of non-zeros in generated matrix: " << csrMatrix.nnz() << "." << std::endl;
 

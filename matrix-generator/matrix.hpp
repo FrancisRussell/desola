@@ -18,13 +18,14 @@ public:
 private:
   const unsigned rows;
   const unsigned cols;
+  const bool symmetric;
   std::vector<int> col_ptr;
   std::vector<int> row_ind;
   std::vector<value_type> val;
 
 public:
   template<typename UblasSparseMatrix>
-  CCSMatrix(UblasSparseMatrix& matrix) : rows(matrix.size1()), cols(matrix.size2())
+  CCSMatrix(UblasSparseMatrix& matrix, const bool s) : rows(matrix.size1()), cols(matrix.size2()), symmetric(s)
   {
     for(unsigned col=0; col<cols; ++col)
     {
@@ -48,10 +49,11 @@ public:
 
   void writeToFile(const std::string& fileName) const
   {
+   assert(rows == cols);
    const char* title = "Test title";
    const char* key = "Test key";
    const double *rhs = NULL, *guess=NULL, *exact=NULL;
-   const char* type = "RUA";
+   const char* type = (symmetric ? "RSA" : "RUA");
    char *Ptrfmt=NULL, *Indfmt=NULL, *Valfmt=NULL, *Rhsfmt=NULL;
    const char* Rhstype=NULL;
 
