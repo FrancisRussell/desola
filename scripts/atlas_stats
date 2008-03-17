@@ -1,11 +1,11 @@
 #!/bin/sh
 
-BLAS_ITL_TEST_PATH="../blas-itl-tests"
+ATLAS_ITL_TEST_PATH="../atlas-itl-tests"
 MATRIX_PATH="../test-matrices"
 
 for solver in identity_bicg identity_bicgstab identity_cgs identity_qmr identity_tfqmr; do
 for matrix in bcsstk27.rsa bcsstk14.rsa sherman5.rua bcsstk15.rsa sherman3.rua cavity14.rua cavity18.rua; do
   echo -n -e "Solver: $solver\t"
-  $BLAS_ITL_TEST_PATH/$solver --iterations 256 --single-line $MATRIX_PATH/$matrix | grep "^Library:";
+  $ATLAS_ITL_TEST_PATH/$solver --iterations 256 --single-line $MATRIX_PATH/$matrix | grep "^Library:";
 done;
 done;

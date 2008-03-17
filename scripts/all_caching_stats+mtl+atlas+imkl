@@ -5,5 +5,5 @@
 ./contraction_stats | tee -a contraction_stats.txt &&
 ./liveness_stats | tee -a liveness_stats.txt &&
 ./mtl_stats | tee -a mtl_stats.txt &&
-./blas_stats | tee -a blas_stats.txt &&
+./atlas_stats | tee -a atlas_stats.txt &&
 ./imkl_stats | tee -a imkl_stats.txt

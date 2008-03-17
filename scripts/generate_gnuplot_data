@@ -21,8 +21,8 @@ done;
 #MTL Timing Column
 grep -E "$iterationspec" "$1" | grep -E "Solver:[^a-zA-Z]$solver.*Library:[^a-zA-Z]MTL.*Matrix Size:[^0-9]$matsize" | clm 15 | average | tr "\n" " "
 
-#BLAS Timing Column
-grep -E "$iterationspec" "$1" | grep -E "Solver:[^a-zA-Z]$solver.*Library:[^a-zA-Z]BLAS.*Matrix Size:[^0-9]$matsize" | clm 15 | average | tr "\n" " "
+#ATLAS Timing Column
+grep -E "$iterationspec" "$1" | grep -E "Solver:[^a-zA-Z]$solver.*Library:[^a-zA-Z]ATLAS.*Matrix Size:[^0-9]$matsize" | clm 15 | average | tr "\n" " "
 
 #IMKL Timing Column
 grep -E "$iterationspec" "$1" | grep -E "Solver:[^a-zA-Z]$solver.*Library:[^a-zA-Z]IMKL.*Matrix Size:[^0-9]$matsize" | clm 15 | average | tr "\n" " "
