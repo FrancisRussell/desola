@@ -49,7 +49,7 @@ int main (int argc, char* argv[])
   Vector b(num_cols(A), Type(1));
   //Incomplete cholesky preconditioner
   identity_preconditioner precond;
-  noisy_iteration<Scalar> iter(b, max_iter, 1e-6);
+  noisy_iteration<Scalar> iter(b, max_iter, 1e-9);
   StatisticsGenerator stats;
   cg(A, x, b, precond(), iter);
   //end

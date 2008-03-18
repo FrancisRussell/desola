@@ -52,7 +52,7 @@ int main (int argc, char* argv[])
 
   identity_preconditioner precond;
   //iteration
-  noisy_iteration<Scalar> iter(b, max_iter, 1.0e-6);
+  noisy_iteration<Scalar> iter(b, max_iter, 1e-9);
   //richardson algorithm
   StatisticsGenerator stats;
   richardson(A, x, b, precond(), iter);

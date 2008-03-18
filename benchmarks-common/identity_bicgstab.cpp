@@ -50,7 +50,7 @@ int main (int argc, char* argv[])
   //SSOR preconditioner
   identity_preconditioner precond;
   //iteration
-  noisy_iteration<Scalar> iter(b, max_iter, 1e-6);
+  noisy_iteration<Scalar> iter(b, max_iter, 1e-9);
   //bicgstab algorithm
   StatisticsGenerator stats;
   bicgstab(A, x, b, precond(), iter);
