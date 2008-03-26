@@ -53,7 +53,7 @@ namespace itl {
   
   inline double two_norm(const BLASVector<double>& v)
   {
-    return std::sqrt(itl::dot_conj(v, v));
+    return cblas_dnrm2(v.nrows(), v.data(), 1);
   }
  
   inline void add(const BLASVector<double>& x, BLASVector<double>& y)
@@ -81,8 +81,8 @@ namespace itl {
 
   inline void mult(const BLASGeneralMatrix<double>& A, const BLASVector<double>& x, const BLASVector<double>& y, BLASVector<double>& z)
   {
-    itl::mult(A, x, z);
-    itl::add(y, z);
+    itl::copy(y, z);
+    cblas_dgemv(CblasRowMajor, CblasNoTrans, A.nrows(), A.ncols(), 1.0, A.data(), A.ncols(), x.data(), 1, 1.0, z.data(), 1);
   }
 
   inline void scale(BLASVector<double>& s, const itl_traits< BLASVector<double> >::value_type& alpha)
