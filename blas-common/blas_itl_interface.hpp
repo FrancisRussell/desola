@@ -36,11 +36,63 @@ namespace itl {
     typedef typename Vec::size_type size_type;
   };
  
+  template <class Vec>
+  struct Scaled {
+    typedef typename Vec::value_type T;
+    inline Scaled(const Vec& v, const T& alpha) : _alpha(alpha), _v(v) { }
+    inline T alpha() const { return _alpha; }
+    inline const Vec& vec() const { return _v; }
+    inline int nrows() const { return _v.nrows(); }
+
+  protected:
+    T _alpha;  
+    const Vec _v;
+  };
+
+  // Getting the scaling factor for scaled and unscaled vectors
+  template<typename Vec>
+  inline typename Vec::value_type scale_factor(const Vec& v)
+  {
+    return static_cast<typename Vec::value_type>(1.0);
+  }
+  
+  template<typename Vec>
+  inline typename Vec::value_type scale_factor(const Scaled<Vec>& s)
+  {
+    return s.alpha();
+  }
+
+  // Getting the data for scaled and unscaled vectors
+  template<typename Vec>
+  inline typename Vec::value_type* get_data(Vec& v)
+  {
+    return v.data();
+  }
+
+  template<typename Vec>
+  inline const typename Vec::value_type* get_data(const Vec& v)
+  {
+    return v.data();
+  }
+
+  template<typename Vec>
+  inline const typename Vec::value_type* get_data(const Scaled<Vec>& s)
+  {
+    return s.vec().data();
+  }
+
+  // ITL interface implementation
   inline void copy(const BLASVector<double>& a, BLASVector<double>& b)
   {
     cblas_dcopy(a.nrows(), a.data(), 1, b.data(), 1);
   }
-  
+ 
+  inline void copy(const Scaled< BLASVector<double> >& a, BLASVector<double>& b)
+  {
+    cblas_dcopy(a.nrows(), a.vec().data(), 1, b.data(), 1);
+    cblas_dscal(b.nrows(), a.alpha(), b.data(), 1);  
+  }
+ 
   inline double dot(const BLASVector<double>& a, const BLASVector<double>& b)
   {
     return cblas_ddot(a.nrows(), a.data(), 1, b.data(), 1);
@@ -56,33 +108,38 @@ namespace itl {
     return cblas_dnrm2(v.nrows(), v.data(), 1);
   }
  
-  inline void add(const BLASVector<double>& x, BLASVector<double>& y)
+  template<typename VecX>
+  inline void add(const VecX& x, BLASVector<double>& y)
   {
-    cblas_daxpy(x.nrows(), 1.0, x.data(), 1, y.data(), 1);
+    cblas_daxpy(x.nrows(), scale_factor(x), get_data(x), 1, y.data(), 1);
   }
 
-  inline void add(const BLASVector<double>& x, const BLASVector<double>& y, BLASVector<double>& z) 
+  template<typename VecX, typename VecY>
+  inline void add(const VecX& x, const VecY& y, BLASVector<double>& z) 
   {
     itl::copy(x, z);
     itl::add(y, z);
   }
 
-  inline void add(const BLASVector<double>& x, const BLASVector<double>& y, const BLASVector<double>& z, BLASVector<double>& r) 
+  template<typename VecX, typename VecY, typename VecZ>
+  inline void add(const VecX& x, const VecY& y, const VecZ& z, BLASVector<double>& r) 
   {
     itl::copy(x, r);
     itl::add(y, r);
     itl::add(z, r);
   }
 
-  inline void mult(const BLASGeneralMatrix<double>& A, const BLASVector<double>& x, BLASVector<double>& y) 
+  template<typename VecX>
+  inline void mult(const BLASGeneralMatrix<double>& A, const VecX& x, BLASVector<double>& y) 
   {
-    cblas_dgemv(CblasRowMajor, CblasNoTrans, A.nrows(), A.ncols(), 1.0, A.data(), A.ncols(), x.data(), 1, 0.0, y.data(), 1);
+    cblas_dgemv(CblasRowMajor, CblasNoTrans, A.nrows(), A.ncols(), scale_factor(x), A.data(), A.ncols(), get_data(x), 1, 0.0, y.data(), 1);
   }
 
-  inline void mult(const BLASGeneralMatrix<double>& A, const BLASVector<double>& x, const BLASVector<double>& y, BLASVector<double>& z)
+  template<typename VecX, typename VecY>
+  inline void mult(const BLASGeneralMatrix<double>& A, const VecX& x, const VecY& y, BLASVector<double>& z)
   {
-    itl::copy(y, z);
-    cblas_dgemv(CblasRowMajor, CblasNoTrans, A.nrows(), A.ncols(), 1.0, A.data(), A.ncols(), x.data(), 1, 1.0, z.data(), 1);
+    cblas_dcopy(y.nrows(), y.data(), 1, z.data(), 1);
+    cblas_dgemv(CblasRowMajor, CblasNoTrans, A.nrows(), A.ncols(), scale_factor(x), A.data(), A.ncols(), get_data(x), 1, scale_factor(y), z.data(), 1);
   }
 
   inline void scale(BLASVector<double>& s, const itl_traits< BLASVector<double> >::value_type& alpha)
@@ -90,12 +147,9 @@ namespace itl {
     cblas_dscal(s.nrows(), alpha, s.data(), 1);
   }
 
-  inline BLASVector<double> scaled(const BLASVector<double>& s, const itl_traits< BLASVector<double> >::value_type& alpha) 
+  inline Scaled< BLASVector<double> > scaled(const BLASVector<double>& s, const itl_traits< BLASVector<double> >::value_type& alpha) 
   {
-    BLASVector<double> result(s.nrows());
-    itl::copy(s, result);
-    itl::scale(result, alpha);
-    return result;
+    return Scaled< BLASVector<double> >(s, alpha);
   }
 
   template<typename T>
