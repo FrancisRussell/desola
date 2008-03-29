@@ -19,14 +19,15 @@
 #define DESOLIN_TG_EXPRESSION_GRAPH_HPP
 
 #include <algorithm>
-#include <boost/ptr_container/ptr_vector.hpp>
 #include <functional>
 #include <cstddef>
-#include <boost/function.hpp>
+#include <cassert>
 #include <map>
+#include <sys/time.h>
 #include <TaskGraph>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
-#include <sys/time.h>
+#include <boost/ptr_container/ptr_vector.hpp>
+#include <boost/scoped_ptr.hpp>
 
 namespace desolin
 {
@@ -42,18 +43,12 @@ private:
   TGExpressionGraph& operator=(const TGExpressionGraph&);
   
   boost::ptr_vector< TGExpressionNode<T_element> >  exprVector;
-  tg::tuTaskGraph taskGraphObject;
+  boost::scoped_ptr<tg::tuTaskGraph> taskGraphObject;
   NameGenerator generator;
 
   mutable bool isHashCached;
   mutable std::size_t cachedHash;
   
-  void generateCode()
-  {
-    TGCodeGenerator<T_element> codeGenerator(*this);
-    accept(codeGenerator);
-  }
-
   template<typename VisitorType>
   class ApplyVisitor : public std::unary_function< void, TGExpressionNode<T_element> >
   {
@@ -72,7 +67,7 @@ private:
   };
 
 public:
-  TGExpressionGraph() : isHashCached(false)
+  TGExpressionGraph() : taskGraphObject(NULL), isHashCached(false)
   {
   }
 
@@ -92,13 +87,22 @@ public:
     return exprVector.size();
   }
 
-  void generateCode(boost::function<void ()>& generateNodes)
+  void generateCode()
   {
-    tu_taskgraph(taskGraphObject)
+    // FIXME: We only create the TaskGraph object here because if we don't do any code generation, the TaskGraph segfaults 
+    // on destruction.
+    assert(taskGraphObject.get() == NULL);
+    boost::scoped_ptr<tg::tuTaskGraph> newTaskGraph(new tg::tuTaskGraph());
+    taskGraphObject.swap(newTaskGraph);
+
+    tu_taskgraph(*taskGraphObject)
     {
-      generateNodes();
-      generateCode(); 
-    };
+      for(typename boost::ptr_vector< TGExpressionNode<T_element> >::iterator exprVectorIter(exprVector.begin()); exprVectorIter!=exprVector.end(); ++exprVectorIter)
+        exprVectorIter->createTaskGraphVariable();
+
+      TGCodeGenerator<T_element> codeGenerator(*this);
+      accept(codeGenerator);
+    }
   }
 
   tg::Compilers getTaskCompiler() const
@@ -130,15 +134,15 @@ public:
 
     if (configurationManager.loopFusionEnabled())
     {
-      taskGraphObject.applyOptimisation("fusion");
+      taskGraphObject->applyOptimisation("fusion");
     }
 
     if(configurationManager.arrayContractionEnabled())
     {
-      taskGraphObject.applyOptimisation("array_contraction");
+      taskGraphObject->applyOptimisation("array_contraction");
     }
 
-    taskGraphObject.compile(getTaskCompiler(), true);	
+    taskGraphObject->compile(getTaskCompiler(), true);	
 
     gettimeofday(&time, NULL);
     const double duration = (time.tv_sec + time.tv_usec/1000000.0) - startTime;
@@ -149,13 +153,13 @@ public:
 
   inline void print() const
   {
-    const_cast<tg::tuTaskGraph&>(taskGraphObject).print();
+    const_cast<tg::tuTaskGraph&>(*taskGraphObject).print();
   }
 
   void execute(const ParameterHolder& parameterHolder)
   {
-    parameterHolder.setParameters(taskGraphObject);
-    taskGraphObject.execute();
+    parameterHolder.setParameters(*taskGraphObject);
+    taskGraphObject->execute();
   }
 
   void accept(TGExpressionNodeVisitor<T_element>& visitor)

@@ -18,7 +18,6 @@
 #ifndef DESOLIN_TG_OBJECTS_HPP
 #define DESOLIN_TG_OBJECTS_HPP
 
-#include <boost/functional/hash.hpp>
 #include <typeinfo>
 #include <cassert>
 #include <cstddef>
@@ -26,7 +25,9 @@
 #include <map>
 #include <boost/format.hpp>
 #include <TaskGraph>
-#include <desolin/tg/Desolin_tg_fwd.hpp>
+#include <boost/functional/hash.hpp>
+#include "Desolin_tg_fwd.hpp"
+#include "TaskGraphWrappers.hpp"
 
 namespace desolin
 {
@@ -46,6 +47,7 @@ public:
   virtual void addParameterMappings(InternalScalar<T_element>& internal, ParameterHolder& params) const = 0;
   virtual std::size_t hashValue() const = 0;
   virtual bool matches(const TGScalar& s) const = 0;
+  virtual void createTaskGraphVariable() = 0;
   virtual ~TGScalar() {}
 };
 
@@ -62,6 +64,7 @@ public:
   virtual void addParameterMappings(InternalVector<T_element>& internal, ParameterHolder& params) const = 0;
   virtual std::size_t hashValue() const = 0;
   virtual bool matches(const TGVector& v) const = 0;
+  virtual void createTaskGraphVariable() = 0;
   virtual ~TGVector() {}
 };
 
@@ -79,6 +82,7 @@ public:
   virtual void addParameterMappings(InternalMatrix<T_element>& internal, ParameterHolder& params) const = 0;
   virtual std::size_t hashValue() const = 0;
   virtual bool matches(const TGMatrix& m) const = 0;
+  virtual void createTaskGraphVariable() = 0;
   virtual ~TGMatrix() {}
 };
 
@@ -145,21 +149,7 @@ class TGConventionalScalar : public TGScalar<T_element>
 private:
   const bool parameter;
   const std::string name;
-  tg::TaskScalarVariable value;
-
-  static tg::TaskScalarVariable createValue(bool param, const std::string& name)
-  {
-    if (param)
-    {
-      tParameter(tVarTemplateTypeNamed(T_element, val, name.c_str()));
-      return val;
-    }
-    else
-    {
-      tVarTemplateTypeNamed(T_element, val, name.c_str());
-      return val;
-    }
-  }
+  TaskScalarVariableWrapper<T_element> value;
 
   static inline const std::string getPrefix()
   {
@@ -167,29 +157,28 @@ private:
   }
   
 public:
-  TGConventionalScalar(NameGenerator& generator, const ConventionalScalar<T_element>& internal) : parameter(true), name(generator.getName(getPrefix())), value(createValue(true, name))
+  TGConventionalScalar(NameGenerator& generator, const ConventionalScalar<T_element>& internal) : parameter(true), name(generator.getName(getPrefix())), value(true, name)
   {
   }
 
-  TGConventionalScalar(bool param, NameGenerator& generator, const ExprNode<scalar, T_element>& s) : parameter(param), name(generator.getName(getPrefix())), value(createValue(param, name))
+  TGConventionalScalar(bool param, NameGenerator& generator, const ExprNode<scalar, T_element>& s) : parameter(param), name(generator.getName(getPrefix())), value(param, name)
   {
   }
 
   const TGScalarExpr<T_element> getExpression() const
   {
-    return TGScalarExpr<T_element>(value);
+    return TGScalarExpr<T_element>(*value);
   }
 
   void setExpression(const TGScalarExpr<T_element>& e)
   {
-    value = e.getExpression();
+    *value = e.getExpression();
   }
 
   void addExpression(const TGScalarExpr<T_element>& e)
   {
-    value += e.getExpression();
+    *value += e.getExpression();
   }
-  
 
   virtual InternalScalar<T_element>* createInternalRep() const
   {
@@ -222,6 +211,11 @@ public:
     {
       return false;
     }
+  }
+  
+  virtual void createTaskGraphVariable()
+  {
+    value.instantiate();
   }
 
   virtual void addParameterMappings(InternalScalar<T_element>& internal, ParameterHolder& params) const
@@ -257,22 +251,7 @@ private:
   const bool parameter;
   const std::string name;
   const int rows;
-  tg::TaskArray<1> value;
-
-  static tg::TaskArray<1> createValue(bool param, const std::string& name, int rows)
-  {
-    unsigned dims[1] = {rows};
-    if (param)
-    {
-      tParameter(tArrayFromListNamed(T_element, val, 1, dims, name.c_str()));
-      return val;
-    }
-    else
-    {
-      tArrayFromListNamed(T_element, val, 1, dims, name.c_str());
-      return val;
-    }
-  }
+  TaskArrayWrapper<T_element, 1> value;
 
   static inline const std::string getPrefix()
   {
@@ -280,27 +259,27 @@ private:
   }
   
 public:
-  TGConventionalVector(NameGenerator& generator, const ConventionalVector<T_element>& internal) :  parameter(true), name(generator.getName(getPrefix())), rows(internal.getRowCount()), value(createValue(true, name, rows))
+  TGConventionalVector(NameGenerator& generator, const ConventionalVector<T_element>& internal) :  parameter(true), name(generator.getName(getPrefix())), rows(internal.getRowCount()), value(true, name, rows)
   {
   }
 
-  TGConventionalVector(bool param, NameGenerator& generator, const ExprNode<vector, T_element>& v) :  parameter(param), name(generator.getName(getPrefix())), rows(v.getRowCount()), value(createValue(param, name, rows))
+  TGConventionalVector(bool param, NameGenerator& generator, const ExprNode<vector, T_element>& v) :  parameter(param), name(generator.getName(getPrefix())), rows(v.getRowCount()), value(param, name, rows)
   {
   }
   
   const TGScalarExpr<T_element> getExpression(const tg::TaskExpression& row) const
   {
-    return TGScalarExpr<T_element>(value[row]);
+    return TGScalarExpr<T_element>((*value)[row]);
   }
 
   void setExpression(const tg::TaskExpression& row, const TGScalarExpr<T_element>& e)
   {
-    value[row] = e.getExpression();
+    (*value)[row] = e.getExpression();
   }
 
   void addExpression(const tg::TaskExpression& row, const TGScalarExpr<T_element>& e)
   {
-    value[row] += e.getExpression();
+    (*value)[row] += e.getExpression();
   }
 
   virtual int getRows() const
@@ -350,6 +329,11 @@ public:
     }
   }
     
+  virtual void createTaskGraphVariable()
+  {
+    value.instantiate();
+  }
+
   class Mapper : public InternalVectorVisitor<T_element>
   {
   private:
@@ -378,22 +362,7 @@ private:
   const std::string name;
   const int rows;
   const int cols;
-  tg::TaskArray<2>  value;
-
-  static tg::TaskArray<2> createValue(bool param, const std::string& name, int rows, int cols)
-  {
-    unsigned dims[2] = {rows, cols};
-    if (param)
-    {
-      tParameter(tArrayFromListNamed(T_element, val, 2, dims, name.c_str()));
-      return val;
-    }
-    else
-    {
-      tArrayFromListNamed(T_element, val, 2, dims, name.c_str());      
-      return val;
-    }
-  }
+  TaskArrayWrapper<T_element, 2> value;
 
   static inline const std::string getPrefix()
   {
@@ -401,27 +370,27 @@ private:
   }
       
 public:
-  TGConventionalMatrix(NameGenerator& generator, ConventionalMatrix<T_element>& internal) : parameter(true), name(generator.getName(getPrefix())),  rows(internal.getRowCount()), cols(internal.getColCount()), value(createValue(true, name, rows, cols))
+  TGConventionalMatrix(NameGenerator& generator, ConventionalMatrix<T_element>& internal) : parameter(true), name(generator.getName(getPrefix())),  rows(internal.getRowCount()), cols(internal.getColCount()), value(true, name, rows, cols)
   {
   }
 
-  TGConventionalMatrix(bool param, NameGenerator& generator, const ExprNode<matrix, T_element>& m) :  parameter(param), name(generator.getName(getPrefix())), rows(m.getRowCount()), cols(m.getColCount()), value(createValue(param, name, rows, cols))
+  TGConventionalMatrix(bool param, NameGenerator& generator, const ExprNode<matrix, T_element>& m) :  parameter(param), name(generator.getName(getPrefix())), rows(m.getRowCount()), cols(m.getColCount()), value(param, name, rows, cols)
   {
   }
 
   const TGScalarExpr<T_element> getExpression(const tg::TaskExpression& row, const tg::TaskExpression& col) const
   {
-    return TGScalarExpr<T_element>(value[row][col]);
+    return TGScalarExpr<T_element>((*value)[row][col]);
   }
 
   void setExpression(const tg::TaskExpression& row, const tg::TaskExpression& col, const TGScalarExpr<T_element>& e)
   {
-    value[row][col] = e.getExpression();
+    (*value)[row][col] = e.getExpression();
   }
 
   void addExpression(const tg::TaskExpression& row, const tg::TaskExpression& col, const TGScalarExpr<T_element>& e)
   {
-    value[row][col] += e.getExpression();
+    (*value)[row][col] += e.getExpression();
   }
   
   virtual int getRows() const
@@ -478,6 +447,11 @@ public:
     }
   }
    
+  virtual void createTaskGraphVariable()
+  {
+    value.instantiate();
+  }
+
   class Mapper : public InternalMatrixVisitor<T_element>
   {
   private:

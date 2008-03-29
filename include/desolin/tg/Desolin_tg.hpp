@@ -33,6 +33,7 @@
 #include "ExpressionNodeVisitor.hpp"
 #include "HashingVisitor.hpp"
 #include "EqualityCheckingVisitor.hpp"
+#include "TaskGraphWrappers.hpp"
 #include "Objects.hpp"
 #include "ExpressionGraph.hpp"
 #include "Evaluator.hpp"

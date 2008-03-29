@@ -19,7 +19,6 @@
 #define DESOLIN_TG_EVALUATOR_HPP
 
 #include <boost/shared_ptr.hpp>
-#include <boost/function.hpp>
 #include <boost/bind.hpp>
 #include <boost/functional/hash.hpp>
 #include <vector>
@@ -70,14 +69,6 @@ private:
   TGObjectGenerator<T_element> objectGenerator;
   std::vector<ExpressionNode<T_element>*> claimed;
 
-  void generateNodes()
-  {
-    for(typename std::vector<ExpressionNode<T_element>*>::iterator iterator = claimed.begin(); iterator!=claimed.end(); ++iterator)
-    {
-      (*iterator)->accept(objectGenerator);
-    }	   
-  }
-
 public:
   TGEvaluator(EvaluationStrategy<T_element>& s) : evaluated(false), strategy(s), graph(new TGExpressionGraph<T_element>()), objectGenerator(*this)
   {
@@ -93,8 +84,10 @@ public:
 
   virtual void generateEvaluatedNodes()
   {
-    boost::function<void ()> nodeGenerator = boost::bind(&TGEvaluator::generateNodes, this);
-    graph->generateCode(nodeGenerator);
+    for(typename std::vector<ExpressionNode<T_element>*>::iterator iterator = claimed.begin(); iterator!=claimed.end(); ++iterator)
+    {
+      (*iterator)->accept(objectGenerator);
+    }	   
   }
 
   inline EvaluationStrategy<T_element>& getStrategy()
@@ -127,6 +120,7 @@ public:
     }
     else
     {
+      graph->generateCode();
       graph->compile();
       cachedGraphMap[hash] = graph;
     }

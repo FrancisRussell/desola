@@ -99,6 +99,10 @@ template<typename T_elementType> class TGConventionalMatrix;
 template<typename T_elementType> class TGScalarGen;
 template<typename T_elementType> class TGVectorGen;
 template<typename T_elementType> class TGMatrixGen;
+
+// Wrappers for TaskGraph scalars and arrays to allow delayed instantiation
+template<typename T> class ScalarVariableWrapper;
+template<typename T, unsigned dimensions> class TaskArrayWrapper;
 }
 
 }

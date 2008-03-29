@@ -143,6 +143,7 @@ public:
   }
   
   virtual void accept(TGExpressionNodeVisitor<T_element>& visitor) = 0;
+  virtual void createTaskGraphVariable() = 0;
 
   std::set<TGExpressionNode<T_element>*> getDependencies() const
   {
@@ -169,6 +170,11 @@ public:
   
   TGExprNode(T_internal* i) : internal(i)
   {
+  }
+
+  void createTaskGraphVariable()
+  {
+    internal->createTaskGraphVariable();
   }
 
   inline T_internal& getInternal()
