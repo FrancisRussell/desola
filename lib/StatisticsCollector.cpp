@@ -22,7 +22,7 @@ namespace desolin
 
 StatisticsCollector StatisticsCollector::statsCollector;
 
-StatisticsCollector::StatisticsCollector() : compileTime(0.0), compileCount(0)
+StatisticsCollector::StatisticsCollector() : compileTime(0.0), compileCount(0), flops(0.0)
 {
 }
 
@@ -59,6 +59,21 @@ void StatisticsCollector::incrementCompileCount()
 void StatisticsCollector::resetCompileCount()
 {
   compileCount=0;
+}
+
+double StatisticsCollector::getFlops() const
+{
+  return flops;
+}
+
+void StatisticsCollector::addFlops(const double f)
+{
+  flops+=f;
+}
+
+void StatisticsCollector::resetFlops()
+{
+  flops=0.0;
 }
 
 }

@@ -26,6 +26,7 @@ class StatisticsCollector
 private:
   double compileTime;
   int compileCount;
+  double flops;
 	
   StatisticsCollector(const StatisticsCollector&);
   StatisticsCollector& operator=(const StatisticsCollector&);
@@ -35,6 +36,7 @@ private:
 
 public:
   static StatisticsCollector& getStatisticsCollector();
+
   double getCompileTime() const;
   void addCompileTime(const double time);
   void resetCompileTime();
@@ -42,6 +44,10 @@ public:
   int getCompileCount() const;
   void incrementCompileCount();
   void resetCompileCount();
+
+  double getFlops() const;
+  void addFlops(const double flops);
+  void resetFlops();
 };
 
 }

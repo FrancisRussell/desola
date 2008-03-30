@@ -18,6 +18,7 @@
 #ifndef DESOLIN_SCALAR_PIECEWISE
 #define DESOLIN_SCALAR_PIECEWISE
 
+#include <boost/array.hpp>
 #include <desolin/Desolin_fwd.hpp>
 
 namespace desolin
@@ -45,6 +46,11 @@ public:
   void accept(ExpressionNodeVisitor<T_element>& v)
   {
     v.visit(*this);
+  }
+
+  virtual double getFlops() const
+  {
+    return std::accumulate(this->dimensions.begin(), this->dimensions.end(), 1.0, std::multiplies<double>());
   }
 };
 

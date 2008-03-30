@@ -22,6 +22,7 @@
 #include <vector>
 #include <map>
 #include <cassert>
+#include <numeric>
 #include <boost/array.hpp>
 #include <boost/functional/hash.hpp>
 #include <boost/static_assert.hpp>

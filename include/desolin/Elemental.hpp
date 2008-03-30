@@ -62,6 +62,11 @@ public:
   {
     return this->getOperand().getElementValue(index);
   }   
+
+  virtual double getFlops() const
+  {
+    return 0.0;
+  }
 };
 
 template<ExprType exprType, typename T_element>
@@ -115,7 +120,11 @@ public:
       updateAssignmentDependency(*i, previous, next);
     }
   }
-  
+
+  virtual double getFlops() const
+  {
+    return 0.0;
+  }
 };
 
 }

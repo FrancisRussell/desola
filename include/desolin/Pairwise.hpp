@@ -18,6 +18,9 @@
 #ifndef DESOLIN_PAIRWISE_HPP
 #define DESOLIN_PAIRWISE_HPP
 
+#include <numeric>
+#include <functional>
+#include <boost/array.hpp>
 #include <desolin/Desolin_fwd.hpp>
 
 namespace desolin
@@ -32,12 +35,12 @@ class Pairwise : public BinOp<exprType, exprType, exprType, T_element>
 private:
   const PairwiseOp operation;
   
-  static const boost::array<int, ExprDimensions<exprType>::dims> getDims(const ExprNode<exprType, T_element>& l, const ExprNode<exprType, T_element>& r)
+  static const boost::array<int, ExprDimensions<exprType>::dims> createDims(const ExprNode<exprType, T_element>& l, const ExprNode<exprType, T_element>& r)
   {
     return l.getDims();
   }
 public:  
-  Pairwise(const PairwiseOp op, ExprNode<exprType, T_element>& l, ExprNode<exprType, T_element>& r) : BinOp<exprType, exprType, exprType, T_element>(getDims(l, r), l, r), operation(op)
+  Pairwise(const PairwiseOp op, ExprNode<exprType, T_element>& l, ExprNode<exprType, T_element>& r) : BinOp<exprType, exprType, exprType, T_element>(createDims(l, r), l, r), operation(op)
   {
   }
 
@@ -49,6 +52,11 @@ public:
   void accept(ExpressionNodeVisitor<T_element>& v)
   {
     v.visit(*this);
+  }
+
+  virtual double getFlops() const
+  {
+    return std::accumulate(this->dimensions.begin(), this->dimensions.end(), 1.0, std::multiplies<double>());
   }
 };
 

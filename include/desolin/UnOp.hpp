@@ -91,6 +91,11 @@ public:
   {
     visitor.visit(*this);
   }
+
+  virtual double getFlops() const
+  {
+    return std::accumulate(this->dimensions.begin(), this->dimensions.end(), 1.0, std::multiplies<double>());
+  }
 };
 
 template<typename T_element>
@@ -115,6 +120,11 @@ public:
   {
     return std::abs(this->getOperand().getElementValue());
   }
+
+  virtual double getFlops() const
+  {
+    return 1.0;
+  }
 };
 
 template<typename T_element>
@@ -138,6 +148,11 @@ public:
   virtual T_element getElementValue()
   { 
     return std::sqrt(this->getOperand().getElementValue());
+  }
+
+  virtual double getFlops() const
+  {
+    return 1.0;
   }
 };
 

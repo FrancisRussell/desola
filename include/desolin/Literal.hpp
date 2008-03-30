@@ -76,6 +76,11 @@ public:
   {
     return value->getElementValue();
   }
+
+  virtual double getFlops() const
+  {
+    return 0.0;
+  }
 };
 
 template<typename T_element>
@@ -124,6 +129,11 @@ public:
   {
     return value->getElementValue(index);
   }
+
+  virtual double getFlops() const
+  {
+    return 0.0;
+  }
 };
 
 template<typename T_element>
@@ -171,6 +181,11 @@ public:
   virtual T_element getElementValue(const ElementIndex<matrix>& index)
   {
     return value->getElementValue(index);
+  }
+
+  virtual double getFlops() const
+  {
+    return 0.0;
   }
 };
 

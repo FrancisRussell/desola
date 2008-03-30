@@ -56,6 +56,10 @@ public:
     std::cout << "Compile Time: " << statsCollector.getCompileTime() << " seconds" << std::endl;
     std::cout << "Compile Count: " << statsCollector.getCompileCount() << std::endl;
     std::cout << "Total Time: " << elapsed << " seconds" << std::endl;
+    std::cout << "FLOPs: " << statsCollector.getFlops() << std::endl;
+
+    if (configManager.livenessAnalysisEnabled())
+      std::cout << std::endl << "Warning: FLOPs figure may be misleading with liveness analysis enabled." << std::endl;
   }
 
   template<typename MatrixStreamType, typename IterationType>
@@ -76,7 +80,8 @@ public:
     std::cout << "Iter_time: " << elapsed / iter.iterations() << "\t";
     std::cout << "Compile_time: " << statsCollector.getCompileTime() << "\t";
     std::cout << "Compile_count: " << statsCollector.getCompileCount() << "\t";
-    std::cout << "Total_time: " << elapsed << std::endl;
+    std::cout << "Total_time: " << elapsed << "\t";
+    std::cout << "FLOPs: " << statsCollector.getFlops() << std::endl;
   }
 
   template<typename MatrixStreamType, typename IterationType>

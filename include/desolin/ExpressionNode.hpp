@@ -118,6 +118,8 @@ public:
   {
   }
 
+  virtual double getFlops() const = 0;
+
   inline void setEvaluationDirective(const EvaluationDirective d)
   {
     evaluationDirective = d;
@@ -280,7 +282,11 @@ protected:
   {
     const std::vector<ExpressionNode*> leaves(getLeaves());
     const std::vector<ExpressionNode*> nodes(getTopologicallySortedNodes(leaves));
+
     std::auto_ptr< ExpressionGraph<T_element> > expressionGraph = getExpressionGraph(nodes);
+    StatisticsCollector& statsCollector = StatisticsCollector::getStatisticsCollector();
+    statsCollector.addFlops(expressionGraph->getFlops());
+
     boost::shared_ptr< EvaluationStrategy<T_element> > strategy = expressionGraph->createEvaluationStrategy();
     TGEvaluatorFactory<T_element> tgEvaluatorFactory;
     strategy->addEvaluator(tgEvaluatorFactory);

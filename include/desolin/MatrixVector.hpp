@@ -31,20 +31,25 @@ template<typename T_element>
 class MatrixMult : public BinOp<matrix, matrix, matrix, T_element>
 {
 private:
-  inline static const boost::array<int, 2> getDims(const ExprNode<matrix, T_element>& l, const ExprNode<matrix, T_element>& r)
+  inline static const boost::array<int, 2> createDims(const ExprNode<matrix, T_element>& l, const ExprNode<matrix, T_element>& r)
   {
     boost::array<int, 2> dimensions = { {l.getRowCount(), r.getColCount()} };
     return dimensions;
   }
   
 public:
-  MatrixMult(ExprNode<matrix, T_element>& left, ExprNode<matrix, T_element>& right) : BinOp<matrix, matrix, matrix, T_element>(getDims(left, right), left, right)
+  MatrixMult(ExprNode<matrix, T_element>& left, ExprNode<matrix, T_element>& right) : BinOp<matrix, matrix, matrix, T_element>(createDims(left, right), left, right)
   {
   }
 
   void accept(ExpressionNodeVisitor<T_element>& v)
   {
     v.visit(*this);
+  }
+
+  virtual double getFlops() const
+  {
+    return 2.0 * this->getLeft().getColCount() * this->getRowCount() * this->getColCount();
   }
 };
 
@@ -67,6 +72,11 @@ public:
   {
     v.visit(*this);
   }
+
+  virtual double getFlops() const
+  {
+    return 2.0 * this->getLeft().getColCount() * this->getLeft().getRowCount();
+  }
 };
 
 template<typename T_element>
@@ -87,6 +97,11 @@ public:
   void accept(ExpressionNodeVisitor<T_element>& v)
   {
     v.visit(*this);
+  }
+
+  virtual double getFlops() const
+  {
+    return 2.0 * this->getLeft().getColCount() * this->getLeft().getRowCount();
   }
 };
 
@@ -109,6 +124,11 @@ public:
   {
     v.visit(*this);
   }
+
+  virtual double getFlops() const
+  {
+    return 2.0 * this->getLeft().getRowCount() - 1.0;
+  }
 };
 
 template<typename T_element>
@@ -129,6 +149,11 @@ public:
   {
     v.visit(*this);
   }
+  
+  virtual double getFlops() const
+  {
+    return 3.0 * this->getRowCount();
+  }
 };
 
 template<typename T_element>
@@ -143,25 +168,37 @@ public:
   {
     v.visit(*this);
   }
+
+  virtual double getFlops() const
+  {
+    // n multiplies + (n-1) additions + 1 sqrt
+    return 2.0 * this->getOperand().getRowCount();
+  }
 };
 
 template<typename T_element>
 class MatrixTranspose : public UnOp<matrix, matrix, T_element>
 {
 private:
-  inline static const boost::array<int, 2> getDims(const ExprNode<matrix, T_element>& m)
+  inline static const boost::array<int, 2> createDims(const ExprNode<matrix, T_element>& m)
   {
     boost::array<int, 2> dimensions = { {m.getColCount(), m.getRowCount()} };
     return dimensions;
   }
+
 public:
-  MatrixTranspose(ExprNode<matrix, T_element>& m) : UnOp<matrix, matrix, T_element>(getDims(m), m)
+  MatrixTranspose(ExprNode<matrix, T_element>& m) : UnOp<matrix, matrix, T_element>(createDims(m), m)
   {
   }
 
   void accept(ExpressionNodeVisitor<T_element>& v)
   {
     v.visit(*this);
+  }
+
+  virtual double getFlops() const
+  {
+    return 0.0;
   }
 };
 

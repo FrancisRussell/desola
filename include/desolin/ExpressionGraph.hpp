@@ -22,6 +22,7 @@
 #include <vector>
 #include <functional>
 #include <cstddef>
+#include <numeric>
 #include <boost/shared_ptr.hpp>
 #include <desolin/Desolin_fwd.hpp>
 
@@ -71,6 +72,11 @@ private:
       node->setEvaluationDirective(EVALUATE);
     }
   }
+
+  static double accumulateFlops(const double flops, const ExpressionNode<T_element>* const node)
+  {
+    return flops + node->getFlops();
+  }
   
 public:
   template<typename InputIterator>
@@ -113,6 +119,11 @@ public:
   void setDefaultAnnotations()
   {
     std::for_each(exprVector.begin(), exprVector.end(), setDefaultAnnotation);
+  }
+
+  double getFlops() const
+  {
+    return std::accumulate(exprVector.begin(), exprVector.end(), 0.0, accumulateFlops);
   }
    
   boost::shared_ptr<EvaluationStrategy<T_element> > createEvaluationStrategy()
