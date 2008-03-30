@@ -124,8 +124,10 @@ namespace itl {
       }
     
       itl::mult(A, p, p_tld);
-
       ep = itl::dot(q, p_tld);
+      // New position of trans_mult
+      itl::trans_mult(A, q, w_tld);
+
       if (ep == 0.0) {
 	iter.fail(6, "qmr breakdown");
 	break;
@@ -143,7 +145,8 @@ namespace itl {
       rho_1 = rho;
       rho = itl::two_norm(y);
 
-      itl::trans_mult(A, q, w_tld);
+      //Moved higher to avoid force point
+      //itl::trans_mult(A, q, w_tld);
       itl::add(w_tld, itl::scaled(w, -beta), w_tld);
       itl::trans_solve(M2, w_tld, z);
 
