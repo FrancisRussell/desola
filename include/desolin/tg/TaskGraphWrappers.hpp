@@ -19,7 +19,7 @@ class TaskScalarVariableWrapper
 private:
   const bool param;
   const std::string name;
-  mutable boost::scoped_ptr<tg::TaskScalarVariable> var;
+  boost::scoped_ptr<tg::TaskScalarVariable> var;
 
   tg::TaskScalarVariable construct() const
   {
@@ -40,7 +40,7 @@ public:
   {
   }
 
-  void instantiate() const
+  void instantiate()
   {
     if (var.get() == NULL)
     {
@@ -69,7 +69,7 @@ private:
   const bool param;
   const std::string name;
   unsigned dims[dimensions];
-  mutable boost::scoped_ptr< tg::TaskArray<dimensions> > var;
+  boost::scoped_ptr< tg::TaskArray<dimensions> > var;
 
   tg::TaskArray<dimensions> construct() const
   {
@@ -109,7 +109,7 @@ public:
     dims[1] = dim1;
   }
 
-  void instantiate() const
+  void instantiate()
   {
     if (var.get() == NULL)
     {
