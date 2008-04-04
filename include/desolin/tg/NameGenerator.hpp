@@ -30,7 +30,8 @@ namespace detail
 class NameGenerator
 {
 private:
-  std::map<const std::string, int> nameCount;
+  std::map<const std::string, unsigned> nameCount;
+  void itoa10(const unsigned value, char* result);
   
 public:
   NameGenerator(); 

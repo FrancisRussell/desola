@@ -15,9 +15,14 @@
 /*                                                                          */
 /****************************************************************************/
 
+#include <boost/scoped_array.hpp>
 #include <desolin/tg/NameGenerator.hpp>
+#include <cstring>
+#include <cmath>
+#include <cstdlib>
 #include <string>
-#include <sstream>
+#include <algorithm>
+#include <iostream>
 
 
 namespace desolin
@@ -29,12 +34,43 @@ namespace detail
 NameGenerator::NameGenerator()
 {
 }
-  
+
+void NameGenerator::itoa10(const unsigned value, char* result)
+{
+  const int base = 10;
+  char* out = result;
+  int quotient = value;
+  do 
+  {
+    *out = "0123456789"[std::abs(quotient%base)];
+    ++out;
+    quotient /= base;
+  } 
+  while (quotient);
+       
+  std::reverse(result, out);
+  *out = 0;
+}
+
+// Name generation with either boost::format or std::stringstream appears to be enough of an overhead to
+// justify this rather ugly implementation
+
 std::string NameGenerator::getName(const std::string& prefix)
 {
-  std::stringstream nameStream;
-  nameStream << prefix << "_" << nameCount[prefix]++;
-  return nameStream.str();
+  // Conservative approximation
+  const std::size_t maxSuffixLength = 1 + (sizeof(unsigned)*CHAR_BIT)/3;
+
+  // String format: prefix+_+suffix+terminator
+  boost::scoped_array<char> name(new char[prefix.length() + 1 + maxSuffixLength + 1]);
+  char* out = name.get();
+
+  strcpy(out, prefix.c_str());
+  out+=prefix.length();
+  
+  *out++='_';
+
+  itoa10(nameCount[prefix]++, out);
+  return name.get();
 }
 
 }
