@@ -41,21 +41,16 @@ template<typename T_element>
 class TGCodeGenerator : public TGExpressionNodeVisitor<T_element>
 {
 private:
+  const std::string prefix;
   NameGenerator& generator;
 	
-  inline static const std::string getPrefix()
-  {
-    return std::string("index");
-  }
-
   inline std::string getIndexName()
   {
-    const std::string result = generator.getName(getPrefix()).c_str();
-    return result;
+    return generator.getName(prefix);
   }
 	
 public:
-  TGCodeGenerator(TGExpressionGraph<T_element>& g) : generator(g.getNameGenerator())
+  TGCodeGenerator(TGExpressionGraph<T_element>& g) : prefix("index"), generator(g.getNameGenerator())
   {
   }
   

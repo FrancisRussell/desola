@@ -17,6 +17,7 @@
 
 #include <desolin/tg/NameGenerator.hpp>
 #include <string>
+#include <sstream>
 
 
 namespace desolin
@@ -25,13 +26,15 @@ namespace desolin
 namespace detail
 {
 
-NameGenerator::NameGenerator() : formatter("%s_%i")
+NameGenerator::NameGenerator()
 {
 }
   
 std::string NameGenerator::getName(const std::string& prefix)
 {
-  return (formatter % prefix % nameCount[prefix]++).str();
+  std::stringstream nameStream;
+  nameStream << prefix << "_" << nameCount[prefix]++;
+  return nameStream.str();
 }
 
 }

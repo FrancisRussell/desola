@@ -18,7 +18,6 @@
 #ifndef DESOLIN_TG_NAME_GENERATOR_HPP
 #define DESOLIN_TG_NAME_GENERATOR_HPP
 
-#include <boost/format.hpp>
 #include <string>
 #include <map>
 
@@ -31,7 +30,6 @@ namespace detail
 class NameGenerator
 {
 private:
-  boost::format formatter;
   std::map<const std::string, int> nameCount;
   
 public:

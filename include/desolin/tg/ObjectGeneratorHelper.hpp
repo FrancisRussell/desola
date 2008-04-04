@@ -45,12 +45,12 @@ private:
   // strategy because at the time EvaluationHandler is constructed, the
   // TGEvaluator is not yet fully constructed.
    
-  inline TGExpressionGraph<T_element>& getGraph()
+  TGExpressionGraph<T_element>& getGraph()
   {
     return evaluator.getTGExpressionGraph();
   }
 
-  inline EvaluationStrategy<T_element>& getStrategy()
+  EvaluationStrategy<T_element>& getStrategy()
   {
     return evaluator.getStrategy();
   }
