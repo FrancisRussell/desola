@@ -66,7 +66,7 @@ public:
     setExpr(*new detail::Literal<detail::vector, T_element>(new detail::ConventionalVector<T_element>(rows, 0)));
   }
 
-  const inline int numRows() const
+  const int numRows() const
   {
     return this->getExpr().getRowCount();
   }

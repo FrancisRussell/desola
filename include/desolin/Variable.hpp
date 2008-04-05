@@ -79,27 +79,26 @@ protected:
       expr->unregisterRequiredBy(*this);
   }
   
-  inline void registerWith(ExpressionNode<T_element>& e) const
+  void registerWith(ExpressionNode<T_element>& e) const
   {
     e.registerRequiredBy(*this);
   }
 
-  inline void unregisterFrom(ExpressionNode<T_element>& e) const
+  void unregisterFrom(ExpressionNode<T_element>& e) const
   {
     e.unregisterRequiredBy(*this);
   }
 
-  inline void setExpr(ExprNode<expressionType, T_element>& e) const
+  void setExpr(ExprNode<expressionType, T_element>& e) const
   {
     registerWith(e);
     if (expr != NULL)
-    {
       unregisterFrom(*expr);
-    }
+
     expr = &e;
   }
 
-  inline ExprNode<expressionType, T_element>& getExpr() const
+  ExprNode<expressionType, T_element>& getExpr() const
   {
     if (expr == NULL)
     {

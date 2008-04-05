@@ -85,9 +85,7 @@ public:
   virtual void generateEvaluatedNodes()
   {
     for(typename std::vector<ExpressionNode<T_element>*>::iterator iterator = claimed.begin(); iterator!=claimed.end(); ++iterator)
-    {
       (*iterator)->accept(objectGenerator);
-    }	   
   }
 
   inline EvaluationStrategy<T_element>& getStrategy()

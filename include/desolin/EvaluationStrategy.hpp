@@ -42,9 +42,9 @@ private:
   LiteralReplacer(const LiteralReplacer&);
   LiteralReplacer& operator=(const LiteralReplacer&);
   
-  std::map< ExprNode<scalar, T_element>*, Literal<scalar, T_element>* >& scalarMap;
-  std::map< ExprNode<vector, T_element>*, Literal<vector, T_element>* >& vectorMap;
-  std::map< ExprNode<matrix, T_element>*, Literal<matrix, T_element>* >& matrixMap;
+  const std::map< ExprNode<scalar, T_element>*, Literal<scalar, T_element>* >& scalarMap;
+  const std::map< ExprNode<vector, T_element>*, Literal<vector, T_element>* >& vectorMap;
+  const std::map< ExprNode<matrix, T_element>*, Literal<matrix, T_element>* >& matrixMap;
 	
 public:
   LiteralReplacer( std::map< ExprNode<scalar, T_element>*, Literal<scalar, T_element>* >& sMap,
@@ -56,29 +56,23 @@ public:
   
   void visit(ExprNode<scalar, T_element>& expr)
   {
-    const typename std::map<ExprNode<scalar, T_element>*, Literal<scalar, T_element>*>::iterator i = scalarMap.find(&expr);
+    const typename std::map<ExprNode<scalar, T_element>*, Literal<scalar, T_element>*>::const_iterator i = scalarMap.find(&expr);
     if (i != scalarMap.end())
-    {
       i->first->replace(*(i->second));
-    }
   }
 
   void visit(ExprNode<vector, T_element>& expr)
   {
-    const typename std::map<ExprNode<vector, T_element>*, Literal<vector, T_element>*>::iterator i = vectorMap.find(&expr);
+    const typename std::map<ExprNode<vector, T_element>*, Literal<vector, T_element>*>::const_iterator i = vectorMap.find(&expr);
     if (i != vectorMap.end())
-    {
       i->first->replace(*(i->second));
-    }
   }
 
   void visit(ExprNode<matrix, T_element>& expr)
   {
-    const typename std::map<ExprNode<matrix, T_element>*, Literal<matrix, T_element>*>::iterator i = matrixMap.find(&expr);
+    const typename std::map<ExprNode<matrix, T_element>*, Literal<matrix, T_element>*>::const_iterator i = matrixMap.find(&expr);
     if (i != matrixMap.end())
-    {
       i->first->replace(*(i->second));
-    }
   }      
 };
 
@@ -126,7 +120,7 @@ private:
   }
 
   template<ExprType exprType>
-  inline static void allocateLiteralsHelper(const std::map<ExprNode<exprType, T_element>*, Literal<exprType, T_element>*> map)
+  static void allocateLiteralsHelper(const std::map<ExprNode<exprType, T_element>*, Literal<exprType, T_element>*> map)
   {
     std::for_each(map.begin(), map.end(), boost::bind(allocateLiteral<exprType>, _1));
   }
@@ -159,7 +153,7 @@ public:
       std::vector<ExpressionNode<T_element>*> newSortedUnclaimed;
       std::back_insert_iterator< std::vector<ExpressionNode<T_element>*> > out(newSortedUnclaimed);
       std::remove_copy_if(sortedUnclaimed.begin(), sortedUnclaimed.end(), out, boost::bind(&std::set<ExpressionNode<T_element>*>::count, &claimed, _1));
-      sortedUnclaimed = newSortedUnclaimed;
+      sortedUnclaimed.swap(newSortedUnclaimed);
 
       // This should come last, so the generatedEvaluatedNodes call can see all the changes already made and nodes claimed
       evaluator->generateEvaluatedNodes();	    
@@ -177,9 +171,8 @@ public:
       allocateLiterals();
       LiteralReplacer<T_element> replacer(scalarMap, vectorMap, matrixMap);
       for(typename std::vector< boost::shared_ptr< Evaluator<T_element> > >::iterator evaluatorIterator = evaluators.begin(); evaluatorIterator != evaluators.end(); ++evaluatorIterator)
-      {
         (*evaluatorIterator)->evaluate();
-      }
+
       expressionGraph.accept(replacer);
     }
   }
@@ -195,9 +188,7 @@ public:
     for(typename std::vector<ExpressionNode<T_element>*>::const_iterator iterator=internal_reqBy.begin(); iterator!=internal_reqBy.end(); ++iterator)
     {
       if (claimed.find(*iterator) == claimed.end())
-      {
         return true;
-      }
     }
 	
     return false;
@@ -208,28 +199,28 @@ public:
     return expressionGraph;
   }
 
-  inline void addEvaluatedExprMapping(ExprNode<scalar, T_element>* const e, Literal<scalar, T_element>* const l)
+  void addEvaluatedExprMapping(ExprNode<scalar, T_element>* const e, Literal<scalar, T_element>* const l)
   {
     assert(e != NULL);
     assert(l != NULL);
     scalarMap[e] = l;
   }
 
-  inline void addEvaluatedExprMapping(ExprNode<vector, T_element>* const e, Literal<vector, T_element>* const l)
+  void addEvaluatedExprMapping(ExprNode<vector, T_element>* const e, Literal<vector, T_element>* const l)
   {
     assert(e != NULL);
     assert(l != NULL);
     vectorMap[e] = l;
   }
 
-  inline void addEvaluatedExprMapping(ExprNode<matrix, T_element>* const e, Literal<matrix, T_element>* const l)
+  void addEvaluatedExprMapping(ExprNode<matrix, T_element>* const e, Literal<matrix, T_element>* const l)
   {
     assert(e != NULL);
     assert(l != NULL);
     matrixMap[e] = l;
   }
 
-  inline Literal<scalar, T_element>* getEvaluatedExpr(ExprNode<scalar, T_element>* const e) 
+  Literal<scalar, T_element>* getEvaluatedExpr(ExprNode<scalar, T_element>* const e) 
   {
     assert(e != NULL);
     Literal<scalar, T_element>* const evaluated = scalarMap[e];
@@ -237,7 +228,7 @@ public:
     return evaluated;
   }
 
-  inline Literal<vector, T_element>* getEvaluatedExpr(ExprNode<vector, T_element>* const e)
+  Literal<vector, T_element>* getEvaluatedExpr(ExprNode<vector, T_element>* const e)
   {
     assert(e != NULL);
     Literal<vector, T_element>* const evaluated = vectorMap[e];
@@ -245,7 +236,7 @@ public:
     return evaluated;
   }
 
-  inline Literal<matrix, T_element>* getEvaluatedExpr(ExprNode<matrix, T_element>* const e)
+  Literal<matrix, T_element>* getEvaluatedExpr(ExprNode<matrix, T_element>* const e)
   {
     assert(e != NULL);
     Literal<matrix, T_element>* const evaluated = matrixMap[e];
@@ -256,9 +247,7 @@ public:
   ~EvaluationStrategy()
   {
     if (!hasEvaluated)
-    {
       freeLiterals();
-    }
   }
 };
 

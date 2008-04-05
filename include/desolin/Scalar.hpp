@@ -139,7 +139,7 @@ public:
     return value() >= right.value();
   }
 
-  inline const T_element value() const
+  const T_element value() const
   {
     this->getExpr().evaluate();
     return this->getExpr().getElementValue();

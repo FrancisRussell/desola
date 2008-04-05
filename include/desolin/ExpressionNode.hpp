@@ -68,27 +68,27 @@ public:
   {
   }
 
-  inline std::vector<ExpressionNode*> getInternalRequiredBy() const
+  std::vector<ExpressionNode*> getInternalRequiredBy() const
   {
     return internal_reqBy;
   }
   
-  inline std::multiset<const Variable<T_element>*> getExternalRequiredBy() const
+  std::multiset<const Variable<T_element>*> getExternalRequiredBy() const
   {
     return external_reqBy;
   }
   
-  inline std::vector<ExpressionNode*> getDependencies() const
+  std::vector<ExpressionNode*> getDependencies() const
   {
     return deps;
   }
   
-  inline void registerRequiredBy(const Variable<T_element>& e)
+  void registerRequiredBy(const Variable<T_element>& e)
   {
     external_reqBy.insert(&e);
   }
   
-  inline void unregisterRequiredBy(const Variable<T_element>& v)
+  void unregisterRequiredBy(const Variable<T_element>& v)
   {
     // We only want to erase one instance from the multiset
     const typename std::multiset<const Variable<T_element>*>::iterator location = external_reqBy.find(&v);
@@ -97,17 +97,16 @@ public:
     checkSelfDestruct();
   }
 
-  inline void deleteIfUnused()
+  void deleteIfUnused()
   {
     checkSelfDestruct();
   }
   
-  inline void evaluate()
+  void evaluate()
   {
     for(typename std::set< PExpressionNodeRef<T_element> >::iterator monitorIterator = monitors.begin(); monitorIterator!=monitors.end(); ++monitorIterator)
-    {
       monitorIterator->getPExpressionNode().notifyLive();
-    }
+
     monitors.clear();
     internal_evaluate();
   }
@@ -120,12 +119,12 @@ public:
 
   virtual double getFlops() const = 0;
 
-  inline void setEvaluationDirective(const EvaluationDirective d)
+  void setEvaluationDirective(const EvaluationDirective d)
   {
     evaluationDirective = d;
   }
 
-  inline EvaluationDirective getEvaluationDirective() const
+  EvaluationDirective getEvaluationDirective() const
   {
     return evaluationDirective;
   }
@@ -138,9 +137,7 @@ public:
   virtual ~ExpressionNode() 
   {
     for(typename std::set< PExpressionNodeRef<T_element> >::iterator monitorIterator = monitors.begin(); monitorIterator!=monitors.end(); ++monitorIterator)
-    {
       monitorIterator->getPExpressionNode().notifyDead();
-    }
   }
 
 protected:
@@ -221,9 +218,8 @@ protected:
     {
       typedef typename std::vector<ExpressionNode*>::iterator Iterator;
       for(Iterator i = deps.begin(); i != deps.end(); ++i)
-      {
         (*i)->unregisterRequiredBy(this);
-      }
+
       delete this;
     }
   }
@@ -233,9 +229,7 @@ protected:
     if (visited.insert(node).second)
     {
       if (node->internal_reqBy.empty())
-      {
         leaves.push_back(node);
-      }
 
       std::for_each(node->deps.begin(), node->deps.end(), boost::bind(getLeavesHelper, boost::ref(visited), boost::ref(leaves), _1));
       std::for_each(node->internal_reqBy.begin(), node->internal_reqBy.end(), boost::bind(getLeavesHelper, boost::ref(visited), boost::ref(leaves), _1));

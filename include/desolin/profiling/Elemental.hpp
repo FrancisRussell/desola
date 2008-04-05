@@ -32,7 +32,7 @@ template<ExprType exprType, typename T_element>
 class PElementGet : public PUnOp<scalar, exprType, T_element>
 {
 public:
-  inline bool isEqual(const PElementGet& node, const std::map<const PExpressionNode<T_element>*, const PExpressionNode<T_element>*>& mappings) const
+  bool isEqual(const PElementGet& node, const std::map<const PExpressionNode<T_element>*, const PExpressionNode<T_element>*>& mappings) const
   {
     return PUnOp<scalar, exprType, T_element>::isEqual(node, mappings);
   }

@@ -192,12 +192,10 @@ public:
     if (!graph.isHashCached)
     {
       graph.isHashCached = true;
-	    
       std::map<const TGExpressionNode<T_element>*, int> nodeNumberings;
+
       for(std::size_t index=0; index<graph.exprVector.size(); ++index)
-      {
         nodeNumberings[&graph.exprVector[index]] = index;
-      }
 
       TGHashingVisitor<T_element> hasher(nodeNumberings);
       const_cast<TGExpressionGraph<T_element>&>(graph).accept(hasher);

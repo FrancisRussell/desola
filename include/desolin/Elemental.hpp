@@ -61,7 +61,7 @@ public:
   virtual T_element getElementValue()
   {
     return this->getOperand().getElementValue(index);
-  }   
+  }
 
   virtual double getFlops() const
   {
@@ -95,12 +95,12 @@ public:
     std::for_each(assignments.begin(), assignments.end(), boost::bind(&ElementSet::registerAssignmentDependency, this, _1));
   }
 
-  inline std::map<ElementIndex<exprType>, ExprNode<scalar, T_element>*> getAssignments()
+  std::map<ElementIndex<exprType>, ExprNode<scalar, T_element>*> getAssignments()
   {
     return assignments;
   }
 
-  inline std::map<ElementIndex<exprType>, const ExprNode<scalar, T_element>*> getAssignments() const
+  std::map<ElementIndex<exprType>, const ExprNode<scalar, T_element>*> getAssignments() const
   { 
     return std::map<ElementIndex<exprType>, const ExprNode<scalar, T_element>*>(assignments.begin(), assignments.end());
   } 

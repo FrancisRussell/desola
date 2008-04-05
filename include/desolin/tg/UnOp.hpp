@@ -36,12 +36,13 @@ private:
   TGExprNode<exprType, T_element>* expr;
 
 public:
-  inline bool isEqual(const TGUnOp& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
+  bool isEqual(const TGUnOp& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
   {
-    assert(mappings.find(expr) != mappings.end());
+    const typename std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>::const_iterator nodeMappingIter(mappings.find(expr));
+    assert(nodeMappingIter != mappings.end());
 
     return TGExprNode<resultType, T_element>::isEqual(node, mappings) && 
-           mappings.find(expr)->second == node.expr;
+           nodeMappingIter->second == node.expr;
   }
     
   TGUnOp(typename TGInternalType<resultType, T_element>::type* internal, TGExprNode<exprType, T_element>& e) : TGExprNode<resultType, T_element>(internal), expr(&e)
@@ -68,7 +69,7 @@ public:
   {
   }
 
-  inline bool isEqual(const TGNegate& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
+  bool isEqual(const TGNegate& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
   {
     return TGUnOp<exprType, exprType, T_element>::isEqual(node, mappings);
   }
@@ -87,7 +88,7 @@ public:
   {
   }
 
-  inline bool isEqual(const TGAbsolute& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
+  bool isEqual(const TGAbsolute& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
   {
     return TGUnOp<tg_scalar, tg_scalar, T_element>::isEqual(node, mappings);
   }
@@ -106,7 +107,7 @@ public:
   {
   }
 
-  inline bool isEqual(const TGSquareRoot& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
+  bool isEqual(const TGSquareRoot& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
   {
     return TGUnOp<tg_scalar, tg_scalar, T_element>::isEqual(node, mappings);
   } 

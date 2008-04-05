@@ -39,7 +39,7 @@ public:
   {
   }
   
-  inline bool isEqual(const PUnOp& node, const std::map<const PExpressionNode<T_element>*, const PExpressionNode<T_element>*>& mappings) const
+  bool isEqual(const PUnOp& node, const std::map<const PExpressionNode<T_element>*, const PExpressionNode<T_element>*>& mappings) const
   {
     assert(mappings.find(expr) != mappings.end());
 
@@ -66,7 +66,7 @@ public:
   {
   }
 
-  inline bool isEqual(const PNegate& node, const std::map<const PExpressionNode<T_element>*, const PExpressionNode<T_element>*>& mappings) const
+  bool isEqual(const PNegate& node, const std::map<const PExpressionNode<T_element>*, const PExpressionNode<T_element>*>& mappings) const
   {
     return PUnOp<exprType, exprType, T_element>::isEqual(node, mappings);
   }
@@ -85,7 +85,7 @@ public:
   {
   }
 		    
-  inline bool isEqual(const PAbsolute& node, const std::map<const PExpressionNode<T_element>*, const PExpressionNode<T_element>*>& mappings) const
+  bool isEqual(const PAbsolute& node, const std::map<const PExpressionNode<T_element>*, const PExpressionNode<T_element>*>& mappings) const
   {
     return PUnOp<scalar, scalar, T_element>::isEqual(node, mappings);
   }
@@ -104,7 +104,7 @@ public:
   {
   }
 
-  inline bool isEqual(const PSquareRoot& node, const std::map<const PExpressionNode<T_element>*, const PExpressionNode<T_element>*>& mappings) const
+  bool isEqual(const PSquareRoot& node, const std::map<const PExpressionNode<T_element>*, const PExpressionNode<T_element>*>& mappings) const
   {
     return PUnOp<scalar, scalar, T_element>::isEqual(node, mappings);
   }

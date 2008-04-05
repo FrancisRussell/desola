@@ -37,14 +37,17 @@ private:
   TGExprNode<rightType, T_element>* right;
 
 public:
-  inline bool isEqual(const TGBinOp& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
+  bool isEqual(const TGBinOp& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
   {
-    assert(mappings.find(left) != mappings.end());
-    assert(mappings.find(right) != mappings.end());
+    const typename std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>::const_iterator leftIter(mappings.find(left));
+    const typename std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>::const_iterator rightIter(mappings.find(right));
+
+    assert(leftIter != mappings.end());
+    assert(rightIter != mappings.end());
     
     return TGExprNode<resultType, T_element>::isEqual(node, mappings) && 
-	   mappings.find(left)->second == node.left &&
-	   mappings.find(right)->second == node.right;
+	   leftIter->second == node.left &&
+	   rightIter->second == node.right;
   }
   
   TGBinOp(typename TGInternalType<resultType, T_element>::type* internal, TGExprNode<leftType, T_element>& l, TGExprNode<rightType, T_element>& r) : TGExprNode<resultType, T_element>(internal), left(&l), right(&r)
