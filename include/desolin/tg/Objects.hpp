@@ -21,6 +21,7 @@
 #include <typeinfo>
 #include <cassert>
 #include <cstddef>
+#include <cstring>
 #include <string>
 #include <map>
 #include <boost/format.hpp>
@@ -193,7 +194,8 @@ public:
 
   virtual std::size_t hashValue() const
   {
-    std::size_t seed = boost::hash<std::string>()(typeid(*this).name());
+    const char* nodeTypeString = typeid(*this).name();
+    std::size_t seed = boost::hash_range(nodeTypeString, nodeTypeString+strlen(nodeTypeString));
     boost::hash_combine(seed, parameter);
     boost::hash_combine(seed, name);
     return seed;
@@ -307,7 +309,8 @@ public:
   
   virtual std::size_t hashValue() const
   {
-    std::size_t seed = boost::hash<std::string>()(typeid(*this).name());
+    const char* nodeTypeString = typeid(*this).name();
+    std::size_t seed = boost::hash_range(nodeTypeString, nodeTypeString+strlen(nodeTypeString));
     boost::hash_combine(seed, parameter);
     boost::hash_combine(seed, rows);
     boost::hash_combine(seed, name);
@@ -423,7 +426,8 @@ public:
 
   virtual std::size_t hashValue() const
   {
-    std::size_t seed = boost::hash<std::string>()(typeid(*this).name());
+    const char* nodeTypeString = typeid(*this).name();
+    std::size_t seed = boost::hash_range(nodeTypeString, nodeTypeString+strlen(nodeTypeString));
     boost::hash_combine(seed, parameter);
     boost::hash_combine(seed, rows);
     boost::hash_combine(seed, cols);

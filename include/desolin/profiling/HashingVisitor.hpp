@@ -22,6 +22,7 @@
 #include <cstddef>
 #include <typeinfo>
 #include <string>
+#include <cstring>
 #include <map>
 #include <vector>
 #include <cassert>
@@ -43,7 +44,8 @@ private:
   template<ExprType exprType>
   inline std::size_t hashExprNode(const PExprNode<exprType, T_element>& node) const
   {
-    return boost::hash<std::string>()(typeid(node).name());
+    const char* nodeTypeString = typeid(node).name();
+    return boost::hash_range(nodeTypeString, nodeTypeString+strlen(nodeTypeString));
   }
 
   template<ExprType resultType, ExprType exprType>

@@ -22,6 +22,7 @@
 #include <typeinfo>
 #include <cassert>
 #include <cstddef>
+#include <cstring>
 #include <string>
 #include <map>
 #include <boost/functional/hash.hpp>
@@ -43,7 +44,8 @@ private:
   template<TGExprType exprType>
   inline std::size_t hashExprNode(const TGExprNode<exprType, T_element>& node) const
   {
-    std::size_t seed = boost::hash<std::string>()(typeid(node).name());
+    const char* nodeTypeString = typeid(node).name();
+    std::size_t seed = boost::hash_range(nodeTypeString, nodeTypeString+strlen(nodeTypeString));
     boost::hash_combine(seed, node.getInternal().hashValue());
     return seed;
   }
