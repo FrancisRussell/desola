@@ -47,9 +47,9 @@ private:
   const std::map< ExprNode<matrix, T_element>*, Literal<matrix, T_element>* >& matrixMap;
 	
 public:
-  LiteralReplacer( std::map< ExprNode<scalar, T_element>*, Literal<scalar, T_element>* >& sMap,
-		   std::map< ExprNode<vector, T_element>*, Literal<vector, T_element>* >& vMap,
-		   std::map< ExprNode<matrix, T_element>*, Literal<matrix, T_element>* >& mMap) : 
+  LiteralReplacer( const std::map< ExprNode<scalar, T_element>*, Literal<scalar, T_element>* >& sMap,
+		   const std::map< ExprNode<vector, T_element>*, Literal<vector, T_element>* >& vMap,
+		   const std::map< ExprNode<matrix, T_element>*, Literal<matrix, T_element>* >& mMap) : 
 	           scalarMap(sMap), vectorMap(vMap), matrixMap(mMap)
   {
   }
