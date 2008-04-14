@@ -24,9 +24,9 @@
 #include <cstring>
 #include <string>
 #include <map>
-#include <boost/format.hpp>
 #include <TaskGraph>
 #include <boost/functional/hash.hpp>
+#include <boost/function.hpp>
 #include "Desolin_tg_fwd.hpp"
 #include "TaskGraphWrappers.hpp"
 
@@ -73,11 +73,15 @@ template<typename T_element>
 class TGMatrix
 {
 public:
+  typedef boost::function<void (NameGenerator& generator, const tg::TaskExpression& row, const tg::TaskExpression& col, const TGScalarExpr<T_element>& value)> MatrixIterationCallback;
+
   virtual const TGScalarExpr<T_element> getExpression(const tg::TaskExpression& row, const tg::TaskExpression& col) const = 0;
   virtual void setExpression(const tg::TaskExpression& row, const tg::TaskExpression& col, const TGScalarExpr<T_element>& e) = 0;  
   virtual void addExpression(const tg::TaskExpression& row, const tg::TaskExpression& col, const TGScalarExpr<T_element>& e) = 0;
   virtual int getRows() const = 0;
   virtual int getCols() const = 0;
+  virtual void iterateDense(NameGenerator& generator, MatrixIterationCallback& callback) const = 0;
+  virtual void iterateSparse(NameGenerator& generator, MatrixIterationCallback& callback) const = 0;
   virtual InternalMatrix<T_element>* createInternalRep() const = 0;
   virtual bool isParameter() const = 0;
   virtual void addParameterMappings(InternalMatrix<T_element>& internal, ParameterHolder& params) const = 0;
@@ -373,6 +377,8 @@ private:
   }
       
 public:
+  typedef typename TGMatrix<T_element>::MatrixIterationCallback MatrixIterationCallback;
+
   TGConventionalMatrix(NameGenerator& generator, ConventionalMatrix<T_element>& internal) : parameter(true), name(generator.getName(getPrefix())),  rows(internal.getRowCount()), cols(internal.getColCount()), value(true, name, rows, cols)
   {
   }
@@ -404,6 +410,27 @@ public:
   virtual int getCols() const
   {
     return cols;
+  }
+
+  virtual void iterateDense(NameGenerator& generator, MatrixIterationCallback& callback) const
+  {
+    using namespace tg;
+
+    tVarNamed(int, i, generator.getName("ConvMatrix_row").c_str());
+    tVarNamed(int, j, generator.getName("ConvMatrix_col").c_str());
+
+    tFor(i, 0, rows-1)
+    {
+      tFor(j, 0, cols-1)
+      {
+        callback(generator, i, j, getExpression(i, j));
+      }
+    }
+  }
+
+  virtual void iterateSparse(NameGenerator& generator, MatrixIterationCallback& callback) const
+  {
+    iterateDense(generator, callback);
   }
 
   virtual InternalMatrix<T_element>* createInternalRep() const

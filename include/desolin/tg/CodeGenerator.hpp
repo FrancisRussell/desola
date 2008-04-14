@@ -25,7 +25,8 @@
 #include <boost/bind.hpp>
 #include <boost/ref.hpp>
 #include <TaskGraph>
-#include <desolin/tg/Desolin_tg_fwd.hpp>
+#include "Desolin_tg_fwd.hpp"
+#include "Objects.hpp"
 
 //NOTE: The storage for the results is uninitialized, so make sure that
 //      setExpression is used before calling addExpression on any result
@@ -49,6 +50,37 @@ private:
     return generator.getName(prefix);
   }
 	
+  static void setMatrixElement(TGMatrix<T_element>& matrix, const std::pair<const TGElementIndex<tg_matrix>, TGExprNode<tg_scalar, T_element>*>& pair)
+  {
+    matrix.setExpression(tg::TaskExpression(pair.first.getRow()), tg::TaskExpression(pair.first.getCol()), pair.second->getInternal().getExpression());
+  }
+
+  static void setVectorElement(TGVector<T_element>& vector, const std::pair<const TGElementIndex<tg_vector>, TGExprNode<tg_scalar, T_element>*>& pair)
+  {
+    vector.setExpression(tg::TaskExpression(pair.first.getRow()), pair.second->getInternal().getExpression());
+  }
+
+  static void matrixVectorMultKernel(NameGenerator& generator, TGVector<T_element>& lhs, TGVector<T_element>& rhs, const tg::TaskExpression& row, const tg::TaskExpression& col, const TGScalarExpr<T_element>& value)
+  {
+    rhs.addExpression(row, value.mul(lhs.getExpression(col)));
+  }
+
+  static void transposeMatrixVectorMultKernel(NameGenerator& generator, TGVector<T_element>& lhs, TGVector<T_element>& rhs, const tg::TaskExpression& row, const tg::TaskExpression& col, const TGScalarExpr<T_element>& value)
+  {
+    rhs.addExpression(col, value.mul(lhs.getExpression(row)));
+  }
+
+  static void matrixMultKernel(NameGenerator& generator, TGMatrix<T_element>& b, TGMatrix<T_element>& c, const tg::TaskExpression& row, const tg::TaskExpression& col, const TGScalarExpr<T_element>& value)
+  {
+    using namespace tg;
+
+    tVarNamed(int, j, generator.getName("mat_mult_inner").c_str());
+    tFor(j, 0, c.getCols()-1)
+    {
+      c.addExpression(row, j, value.mul(b.getExpression(col, j)));
+    }
+  }
+
 public:
   TGCodeGenerator(TGExpressionGraph<T_element>& g) : prefix("index"), generator(g.getNameGenerator())
   {
@@ -71,11 +103,6 @@ public:
     std::for_each(assignments.begin(), assignments.end(), boost::bind(setVectorElement, boost::ref(newVector), _1));
   }
 
-  static void setVectorElement(TGVector<T_element>& vector, const std::pair<const TGElementIndex<tg_vector>, TGExprNode<tg_scalar, T_element>*>& pair)
-  {
-    vector.setExpression(tg::TaskExpression(pair.first.getRow()), pair.second->getInternal().getExpression());
-  }
-
   virtual void visit(TGElementSet<tg_matrix, T_element>& e)
   {
     using namespace tg;
@@ -95,11 +122,6 @@ public:
 
     const std::map<TGElementIndex<tg_matrix>, TGExprNode<tg_scalar, T_element>*> assignments(e.getAssignments());
     std::for_each(assignments.begin(), assignments.end(), boost::bind(setMatrixElement, boost::ref(newMatrix), _1));
-  }
-
-  static void setMatrixElement(TGMatrix<T_element>& matrix, const std::pair<const TGElementIndex<tg_matrix>, TGExprNode<tg_scalar, T_element>*>& pair)
-  {
-    matrix.setExpression(tg::TaskExpression(pair.first.getRow()), tg::TaskExpression(pair.first.getCol()), pair.second->getInternal().getExpression());
   }
 
   virtual void visit(TGElementGet<tg_vector, T_element>& e)
@@ -143,32 +165,25 @@ public:
   {
     using namespace tg;
 	 
-    TGMatrix<T_element>& result(e.getInternal());
-    TGMatrix<T_element>& left(e.getLeft().getInternal());
-    TGMatrix<T_element>& right(e.getRight().getInternal());
+    TGMatrix<T_element>& a(e.getLeft().getInternal());
+    TGMatrix<T_element>& b(e.getRight().getInternal());
+    TGMatrix<T_element>& c(e.getInternal());
 
     tVarNamed(int, i, getIndexName().c_str());
     tVarNamed(int, j, getIndexName().c_str());
     tVarNamed(int, k, getIndexName().c_str());
 
-    tFor(i, 0, result.getRows()-1)
+    tFor(i, 0, c.getRows()-1)
     {
-      tFor(j, 0, result.getCols()-1)
+      tFor(j, 0, c.getCols()-1)
       {
-        result.setExpression(i, j, TGScalarExpr<T_element>());
+        c.setExpression(i, j, TGScalarExpr<T_element>());
       }
     }
     
-    tFor(i, 0, result.getRows()-1)
-    {
-      tFor(k, 0, right.getRows()-1)
-      {
-        tFor(j, 0, result.getCols()-1)
-        {
-         result.addExpression(i, j, left.getExpression(i, k).mul(right.getExpression(k, j)));
-        }
-      }
-    }
+    typename TGMatrix<T_element>::MatrixIterationCallback kernel;
+    kernel = boost::bind(matrixMultKernel, _1, boost::ref(b), boost::ref(c), _2, _3, _4);
+    a.iterateSparse(generator, kernel);
   }
  
   virtual void visit(TGMatrixVectorMult<T_element>& e)
@@ -181,15 +196,16 @@ public:
 
     tVarNamed(int, i, getIndexName().c_str());
     tVarNamed(int, j, getIndexName().c_str());
-    
+
     tFor(i, 0, matrix.getRows()-1)
     {
       result.setExpression(i, TGScalarExpr<T_element>());
-      tFor(j, 0, matrix.getCols()-1)
-      {
-        result.addExpression(i, matrix.getExpression(i, j).mul(vector.getExpression(j)));
-      }
     }
+
+    typename TGMatrix<T_element>::MatrixIterationCallback kernel
+      = boost::bind(matrixVectorMultKernel, _1, boost::ref(vector), boost::ref(result), _2, _3, _4);
+
+    matrix.iterateSparse(generator, kernel);
   }
 
   virtual void visit(TGTransposeMatrixVectorMult<T_element>& e)
@@ -207,14 +223,11 @@ public:
     {
       result.setExpression(j, TGScalarExpr<T_element>());
     }
-			 
-    tFor(i, 0, matrix.getRows()-1)
-    {
-      tFor(j, 0, matrix.getCols()-1)
-      {
-        result.addExpression(j, matrix.getExpression(i, j).mul(vector.getExpression(i)));
-      }
-    }	
+
+    typename TGMatrix<T_element>::MatrixIterationCallback kernel = 
+      boost::bind(transposeMatrixVectorMultKernel, _1, boost::ref(vector), boost::ref(result), _2, _3, _4);
+
+    matrix.iterateSparse(generator, kernel);
   }
  
   virtual void visit(TGVectorDot<T_element>& e)
