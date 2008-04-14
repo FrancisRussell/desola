@@ -80,7 +80,7 @@ gmres(const Matrix &A, Vector &x, const VectorB &b,
   itl::mult(A, itl::scaled(x, -1.0), b, w);
 
   itl::solve(M, w, r);
-  Real beta = std::abs(itl::two_norm(r));
+  Real beta = abs(itl::two_norm(r));
 
   while (! outer.finished(beta)) {
 

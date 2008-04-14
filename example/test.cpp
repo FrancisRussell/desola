@@ -26,7 +26,7 @@ int main()
   Scalar<double> aa = -5.4;
   Scalar<double> bb = -12.2;
 
-  std::cout << std::abs(aa + bb) << std::endl;
+  std::cout << abs(aa + bb) << std::endl;
   
   Scalar<double> x(10);
   Scalar<double> y(44);

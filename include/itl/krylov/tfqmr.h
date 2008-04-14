@@ -154,7 +154,7 @@ int tfqmr(const Matrix& A, Vector& x, const VectorB& b,
     theta  = itl::two_norm(w) / tau;
     
     // 15. c=1/sqrt(1+theta^2)
-    c = 1. / std::sqrt(1. + theta * theta);
+    c = 1. / sqrt(1. + theta * theta);
 
     // 16. tau=tau0*theta*c
     tau = tau * c * theta;
@@ -191,7 +191,7 @@ int tfqmr(const Matrix& A, Vector& x, const VectorB& b,
     theta = itl::two_norm(w) / tau;
     
     // 15. c=1/sqrt(1+theta^2)
-    c = 1. / std::sqrt(1. + theta * theta);
+    c = 1. / sqrt(1. + theta * theta);
 
     // 16. tau=tau0*theta*c
     tau = tau * c * theta;

@@ -200,20 +200,17 @@ public:
   }
 };
 
+template<typename T_element>
+const desolin::Scalar<T_element> abs(const desolin::Scalar<T_element>& operand)
+{
+  return operand.abs();
 }
 
-namespace std
+template<typename T_element>
+const desolin::Scalar<T_element> sqrt(const desolin::Scalar<T_element>& operand)
 {
-  template<typename T_element>
-  const desolin::Scalar<T_element> abs(const desolin::Scalar<T_element>& operand)
-  {
-    return operand.abs();
-  }
+  return operand.sqrt();
+}
 
-  template<typename T_element>
-  const desolin::Scalar<T_element> sqrt(const desolin::Scalar<T_element>& operand)
-  {
-    return operand.sqrt();
-  }
 }
 #endif
