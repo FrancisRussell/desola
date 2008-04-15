@@ -50,12 +50,12 @@ private:
     return generator.getName(prefix);
   }
 	
-  static void setMatrixElement(TGMatrix<T_element>& matrix, const std::pair<const TGElementIndex<tg_matrix>, TGExprNode<tg_scalar, T_element>*>& pair)
+  static void setMatrixElement(NameGenerator& generator, TGMatrix<T_element>& matrix, const std::pair<const TGElementIndex<tg_matrix>, TGExprNode<tg_scalar, T_element>*>& pair)
   {
-    matrix.setExpression(tg::TaskExpression(pair.first.getRow()), tg::TaskExpression(pair.first.getCol()), pair.second->getInternal().getExpression());
+    matrix.setExpression(generator, tg::TaskExpression(pair.first.getRow()), tg::TaskExpression(pair.first.getCol()), pair.second->getInternal().getExpression());
   }
 
-  static void setVectorElement(TGVector<T_element>& vector, const std::pair<const TGElementIndex<tg_vector>, TGExprNode<tg_scalar, T_element>*>& pair)
+  static void setVectorElement(NameGenerator& generator, TGVector<T_element>& vector, const std::pair<const TGElementIndex<tg_vector>, TGExprNode<tg_scalar, T_element>*>& pair)
   {
     vector.setExpression(tg::TaskExpression(pair.first.getRow()), pair.second->getInternal().getExpression());
   }
@@ -77,7 +77,7 @@ private:
     tVarNamed(int, j, generator.getName("mat_mult_inner").c_str());
     tFor(j, 0, c.getCols()-1)
     {
-      c.addExpression(row, j, value.mul(b.getExpression(col, j)));
+      c.addExpression(generator, row, j, value.mul(b.getExpression(generator, col, j)));
     }
   }
 
@@ -100,7 +100,7 @@ public:
     }
 
     const std::map<TGElementIndex<tg_vector>, TGExprNode<tg_scalar, T_element>*> assignments(e.getAssignments());
-    std::for_each(assignments.begin(), assignments.end(), boost::bind(setVectorElement, boost::ref(newVector), _1));
+    std::for_each(assignments.begin(), assignments.end(), boost::bind(setVectorElement, boost::ref(generator), boost::ref(newVector), _1));
   }
 
   virtual void visit(TGElementSet<tg_matrix, T_element>& e)
@@ -116,12 +116,12 @@ public:
     {
       tFor(j, 0, matrix.getCols()-1)
       {
-        newMatrix.setExpression(i, j, matrix.getExpression(i, j));
+        newMatrix.setExpression(generator, i, j, matrix.getExpression(generator, i, j));
       }
     }
 
     const std::map<TGElementIndex<tg_matrix>, TGExprNode<tg_scalar, T_element>*> assignments(e.getAssignments());
-    std::for_each(assignments.begin(), assignments.end(), boost::bind(setMatrixElement, boost::ref(newMatrix), _1));
+    std::for_each(assignments.begin(), assignments.end(), boost::bind(setMatrixElement, boost::ref(generator), boost::ref(newMatrix), _1));
   }
 
   virtual void visit(TGElementGet<tg_vector, T_element>& e)
@@ -141,7 +141,7 @@ public:
     TGScalar<T_element>& result(e.getInternal());
     TGMatrix<T_element>& matrix(e.getOperand().getInternal());
 
-    result.setExpression(matrix.getExpression(TaskExpression(e.getIndex().getRow()), TaskExpression(e.getIndex().getCol())));
+    result.setExpression(matrix.getExpression(generator, TaskExpression(e.getIndex().getRow()), TaskExpression(e.getIndex().getCol())));
   }
 
   virtual void visit(TGLiteral<tg_scalar, T_element>& e)
@@ -177,7 +177,7 @@ public:
     {
       tFor(j, 0, c.getCols()-1)
       {
-        c.setExpression(i, j, TGScalarExpr<T_element>());
+        c.setExpression(generator, i, j, TGScalarExpr<T_element>());
       }
     }
     
@@ -291,7 +291,7 @@ public:
     {
       tFor(j, 0, matrix.getCols()-1)
       {
-        result.setExpression(j, i, matrix.getExpression(i, j));
+        result.setExpression(generator, j, i, matrix.getExpression(generator, i, j));
       }
     }
   }
@@ -337,7 +337,7 @@ public:
     {
       tFor(j, 0, result.getCols()-1)
       {
-        result.setExpression(i, j, performOp(e.getOperation(), left.getExpression(i, j), right.getExpression(i, j)));
+        result.setExpression(generator, i, j, performOp(e.getOperation(), left.getExpression(generator, i, j), right.getExpression(generator, i, j)));
       }
     }
   }
@@ -382,7 +382,7 @@ public:
     {
       tFor(j, 0, result.getCols()-1)
       {
-        result.setExpression(i, j, performOp(e.getOperation(), left.getExpression(i, j), right.getExpression()));
+        result.setExpression(generator, i, j, performOp(e.getOperation(), left.getExpression(generator, i, j), right.getExpression()));
       }
     }		    
   }
@@ -424,7 +424,7 @@ public:
     {
       tFor(j, 0, result.getCols()-1)
       {
-        result.setExpression(i, j, operand.getExpression(i, j).negate());
+        result.setExpression(generator, i, j, operand.getExpression(generator, i, j).negate());
       }
     }
   }
