@@ -201,12 +201,8 @@ public:
   {
   }
 
-  ConventionalMatrix(const int rowCount, const int colCount, const T_element initialValue) : InternalMatrix<T_element>(true, rowCount, colCount), value(rowCount*colCount, initialValue)
-  {
-  }
-
   template<typename StreamType>
-  ConventionalMatrix(StreamType& stream) : InternalMatrix<T_element>(true, stream.nrows(), stream.ncols()), value(stream.nrows()*stream.ncols(), T_element(0))
+  ConventionalMatrix(StreamType& stream) : InternalMatrix<T_element>(true, stream.nrows(), stream.ncols()), value(stream.nrows()*stream.ncols(), T_element())
   {
     while(!stream.eof())
     {
@@ -220,7 +216,7 @@ public:
   {
     if(!this->allocated)
     {
-      value.resize(this->rows * this->cols, T_element(0));
+      value.resize(this->rows * this->cols, T_element());
       this->allocated=true;
     }
   }
