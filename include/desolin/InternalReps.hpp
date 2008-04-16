@@ -19,10 +19,10 @@
 #define DESOLIN_INTERNAL_REPS_HPP
 
 #include <cassert>
+#include <map>
+#include <vector>
 #include <desolin/Desolin_fwd.hpp>
 #include <desolin/file-access/mtl_entry.hpp>
-#include <boost/numeric/ublas/matrix_sparse.hpp>
-#include <boost/numeric/ublas/matrix_proxy.hpp>
 
 namespace desolin
 {
@@ -257,30 +257,29 @@ public:
   template<typename StreamType>
   CRSMatrix(StreamType& stream) : InternalMatrix<T_element>(true, stream.nrows(), stream.ncols())
   {
-    typedef boost::numeric::ublas::mapped_matrix<T_element> TempMatrixType;
-    TempMatrixType matrix(this->getRowCount(), this->getColCount());
+    std::vector< std::map<std::size_t, T_element> > matrixData(this->getRowCount());
 
     while(!stream.eof())
     {
-        entry2<double> entry;
-        stream >> entry;
-        matrix(entry.row, entry.col) = entry.value;
+      entry2<double> entry;
+      stream >> entry;
+      assert(entry.row >= 0 && entry.col >=0);
+      matrixData[entry.row][entry.col] = entry.value;
     }
 
     for(int row=0; row<this->getRowCount(); ++row)
     {
       row_ptr.push_back(val.size());
-      typedef boost::numeric::ublas::matrix_row<TempMatrixType> row_t;
-      row_t mr(matrix, row);
-      for(typename row_t::const_iterator colIter(mr.begin()); colIter!=mr.end(); ++colIter)
+      const std::map<std::size_t, T_element>& mr(matrixData[row]);
+      for(typename std::map<std::size_t, T_element>::const_iterator colIter(mr.begin()); colIter!=mr.end(); ++colIter)
       {
-        col_ind.push_back(colIter.index());
-        val.push_back(*colIter);
+        col_ind.push_back(colIter->first);
+        val.push_back(colIter->second);
       }
     }
     row_ptr.push_back(val.size());
   }
-  
+ 
   virtual void allocate()
   {
     if(!this->allocated)
