@@ -37,8 +37,8 @@ int main()
   Vector<double> r = q*c;
   std::cout << r.norm() << std::endl;
 
-  Matrix<double> m1(5,4, 0);
-  Matrix<double> m2(4,7, 0);
+  Matrix<double> m1(5,4);
+  Matrix<double> m2(4,7);
   Matrix<double> m3 = m1*m2;
   std::cout << "m3(1,1) = " << m3(1,1).value() << std::endl;
   m3(1,1) = c;

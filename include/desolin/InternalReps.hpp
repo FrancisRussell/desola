@@ -22,7 +22,7 @@
 #include <desolin/Desolin_fwd.hpp>
 #include <desolin/file-access/mtl_entry.hpp>
 #include <boost/numeric/ublas/matrix_sparse.hpp>
-#include<boost/numeric/ublas/matrix_proxy.hpp>
+#include <boost/numeric/ublas/matrix_proxy.hpp>
 
 namespace desolin
 {
@@ -203,12 +203,8 @@ public:
   {
   }
 
-  ConventionalMatrix(const int rowCount, const int colCount, const T_element initialValue) : InternalMatrix<T_element>(true, rowCount, colCount), value(rowCount*colCount, initialValue)
-  {
-  }
-
   template<typename StreamType>
-  ConventionalMatrix(StreamType& stream) : InternalMatrix<T_element>(true, stream.nrows(), stream.ncols()), value(stream.nrows()*stream.ncols(), T_element(0))
+  ConventionalMatrix(StreamType& stream) : InternalMatrix<T_element>(true, stream.nrows(), stream.ncols()), value(stream.nrows()*stream.ncols())
   {
     while(!stream.eof())
     {

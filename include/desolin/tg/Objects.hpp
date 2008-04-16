@@ -624,8 +624,7 @@ public:
     tVarNamed(int, valPtr, generator.getName("valPtr").c_str());
     tVarNamed(int, currentRow, generator.getName("currentRow").c_str());
 
-    valPtr = T_element();
-    currentRow = T_element();
+    currentRow = 0;
 
     tFor(valPtr, 0, nnz-1)
     {

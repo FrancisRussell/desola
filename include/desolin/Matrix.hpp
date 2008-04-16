@@ -40,15 +40,10 @@ public:
   {
   }
  
-  explicit Matrix(const int rows, const int cols) : detail::Var<detail::matrix, T_element>(*new detail::Literal<detail::matrix, T_element>(new detail::ConventionalMatrix<T_element>(rows, cols, 0)))
+  explicit Matrix(const int rows, const int cols) : detail::Var<detail::matrix, T_element>(*new detail::Literal<detail::matrix, T_element>(new detail::ConventionalMatrix<T_element>(rows, cols)))
   {
   }
   
-  
-  Matrix(const int rows, const int cols, const T_element initialValue) : detail::Var<detail::matrix, T_element>(*new detail::Literal<detail::matrix, T_element>(new detail::ConventionalMatrix<T_element>(rows, cols, initialValue)))
-  {
-  }
-
   Matrix(const Matrix& m) : detail::Var<detail::matrix, T_element>(m.getExpr())
   {
   }
