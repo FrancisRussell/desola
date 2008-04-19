@@ -112,6 +112,7 @@ public:
 
     tVarNamed(int, i, getIndexName().c_str());
     tVarNamed(int, j, getIndexName().c_str());
+
     tFor(i, 0, matrix.getRows()-1)
     {
       tFor(j, 0, matrix.getCols()-1)

@@ -97,7 +97,7 @@ class TGScalarExpr
   const tg::TaskExpression expr;
 
 public:
-  TGScalarExpr() : expr(0)
+  TGScalarExpr() : expr(T_element())
   {
   }
   
