@@ -134,6 +134,7 @@ public:
 
     if (configurationManager.loopFusionEnabled())
     {
+      taskGraphObject->applyOptimisation("raise_initial_assignments");
       taskGraphObject->applyOptimisation("fusion");
     }
 
