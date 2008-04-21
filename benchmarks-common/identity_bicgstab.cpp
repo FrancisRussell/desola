@@ -29,39 +29,40 @@
 
 using namespace itl;
 
-int main (int argc, char* argv[]) 
+template<typename MatrixType, typename VectorType, typename ScalarType>
+void solver(SolverOptions& options, MatrixType& A, VectorType& x, VectorType& b)
 {
-  library_init();
-
-  using std::cout;
-  using std::endl;
-
-  SolverOptions solverOptions("Unsymmetric matrix in Harwell-Boeing format");
-  solverOptions.processOptions(argc, argv);
-          
-  harwell_boeing_stream<Type> hbs(const_cast<char*>(solverOptions.getFile().c_str()));
-  const int max_iter = solverOptions.getIterations();	
-  //begin
-  Matrix A(hbs);
-
-  Vector x(num_rows(A), Type(0));
-  Vector b(num_rows(A), Type(1));
-  //SSOR preconditioner
+  const int max_iter = options.getIterations();	
   identity_preconditioner precond;
-  //iteration
-  noisy_iteration<Scalar> iter(b, max_iter, 1e-9);
-  //bicgstab algorithm
+
+  noisy_iteration<ScalarType> iter(b, max_iter, 1e-9);
   StatisticsGenerator stats;
   bicgstab(A, x, b, precond(), iter);
-  //end
 
   //verify the result
   Vector b1(num_cols(A));
   itl::mult(A, x, b1);
   itl::add(b1, itl::scaled(b, -1.), b1);
 
-  std::cout << "Residual " << itl::two_norm(b1) << endl;
-  stats.printResults(A, iter, solverOptions);
+  std::cout << "Residual " << itl::two_norm(b1) << std::endl;
+  stats.printResults(A, iter, options);
+}
+
+int main (int argc, char* argv[]) 
+{
+  library_init();
+
+  SolverOptions options("Unsymmetric matrix in Harwell-Boeing format");
+  options.processOptions(argc, argv);
+          
+  harwell_boeing_stream<Type> hbs(const_cast<char*>(options.getFile().c_str()));
+
+  Matrix A(hbs);
+  Vector x(num_rows(A), Type(0));
+  Vector b(num_rows(A), Type(1));
+
+  solver<Matrix, Vector, Scalar>(options, A, x, b);
+
   return EXIT_SUCCESS;
 }
 
