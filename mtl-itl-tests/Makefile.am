@@ -5,8 +5,9 @@ noinst_PROGRAMS = identity_cg identity_qmr identity_cgs identity_bicg identity_b
 
 %.cpp:: ../benchmarks-common/%.cpp
 	cp ../benchmarks-common/$@ .
+
 #CXX=icpc
-#CXXFLAGS+=-O3 -restrict -ansi-alias -xP
+#CXXFLAGS+=-O3 -ipo -restrict -ansi-alias -xP
 
 nodist_identity_cg_SOURCES = identity_cg.cpp
 identity_cg_SOURCES = solver_options.cpp
@@ -39,5 +40,3 @@ identity_cheby_LDFLAGS = ${BOOST_PROGRAM_OPTIONS_LIB} ${BOOST_FILESYSTEM_LIB}
 nodist_identity_richardson_SOURCES = identity_richardson.cpp 
 identity_richardson_SOURCES = solver_options.cpp
 identity_richardson_LDFLAGS = ${BOOST_PROGRAM_OPTIONS_LIB} ${BOOST_FILESYSTEM_LIB}
-
-EXTRA_DIST = rebuild_with_icpc
