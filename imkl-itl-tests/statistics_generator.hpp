@@ -15,8 +15,8 @@
 /*                                                                          */
 /****************************************************************************/
 
-#ifndef DESOLIN_MTL_STATISTICS_GENERATOR_HPP
-#define DESOLIN_MTL_STATISTICS_GENERATOR_HPP
+#ifndef DESOLIN_IMKL_STATISTICS_GENERATOR_HPP
+#define DESOLIN_IMKL_STATISTICS_GENERATOR_HPP
 
 #include <iostream>
 #include <string>
@@ -33,57 +33,49 @@ public:
   {
   }
   
-  template<typename MatrixStreamType, typename IterationType>
-  void printLongResults(const std::string& matrixPath, const MatrixStreamType& matrixStream, IterationType& iter)
+  template<typename MatrixType, typename IterationType>
+  void printLongResults(const MatrixType& matrix, IterationType& iter, const SolverOptions& options)
   {
     const double elapsed = getTime() - startTime;
     std::cout.precision(5);
     std::cout.setf(std::ios::fixed);
     std::cout << "Library: IMKL" << std::endl;
-    std::cout << "Matrix: " << getLeaf(matrixPath) << std::endl;
-    std::cout << "Matrix Size: " << matrixStream.ncols() << std::endl;
+    std::cout << "Matrix: " << getLeaf(options.getFile()) << std::endl;
+    std::cout << "Matrix Size: " << num_cols(matrix) << std::endl;
     std::cout << "Iterations: " << iter.iterations() << std::endl;
     std::cout << "Time per Iteration: " << elapsed / iter.iterations() << " seconds" << std::endl;
     std::cout << "Total Time: " << elapsed << " seconds" << std::endl;
   }
 
-  template<typename MatrixStreamType, typename IterationType>
-  void printShortResults(const std::string& matrixPath, const MatrixStreamType& matrixStream, IterationType& iter)
+  template<typename MatrixType, typename IterationType>
+  void printShortResults(const MatrixType& matrix, IterationType& iter, const SolverOptions& options)
   {
     const double elapsed = getTime() - startTime;
     std::cout.precision(5);
     std::cout.setf(std::ios::fixed);
     std::cout << "Library: IMKL\t";
-    std::cout << "Matrix: " << getLeaf(matrixPath) << "\t";
-    std::cout << "Matrix Size: " << matrixStream.ncols() << "\t";
+    std::cout << "Matrix: " << getLeaf(options.getFile()) << "\t";
+    std::cout << "Matrix Size: " << num_cols(matrix) << "\t";
     std::cout << "Iterations: " << iter.iterations() << "\t";
     std::cout << "Iter_time: " << elapsed / iter.iterations() << "\t";
     std::cout << "Total_time: " << elapsed << std::endl;
   }
 
-  template<typename MatrixStreamType, typename IterationType>
-  void printResults(const std::string& matrixPath, const MatrixStreamType& matrixStream, IterationType& iter, const bool multiLine)
+  template<typename MatrixType, typename IterationType>
+  void printResults(const MatrixType& matrix, IterationType& iter, const SolverOptions& options)
   {
-    if(multiLine)
-    {
-      printLongResults(matrixPath, matrixStream, iter);
-    }
+    if(options.singleLineResult())
+      printShortResults(matrix, iter, options);
     else
-    {
-      printShortResults(matrixPath, matrixStream, iter);
-    }
+      printLongResults(matrix, iter, options);
   }
 
   static std::string getStatus(const bool b)
   {
     if (b)
-    {
       return "On";
-    }
     else
-    {
       return "Off";
-    }
   }
 
   static std::string getLeaf(const std::string& pathString)

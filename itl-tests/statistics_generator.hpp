@@ -15,8 +15,8 @@
 /*                                                                          */
 /****************************************************************************/
 
-#ifndef DESOLIN_STATISTICS_GENERATOR_HPP
-#define DESOLIN_STATISTICS_GENERATOR_HPP
+#ifndef DESOLIN_DESOLIN_STATISTICS_GENERATOR_HPP
+#define DESOLIN_DESOLIN_STATISTICS_GENERATOR_HPP
 
 #include <desolin/ConfigurationManager.hpp>
 #include <desolin/StatisticsCollector.hpp>
@@ -24,6 +24,7 @@
 #include <string>
 #include <sys/time.h>
 #include <boost/filesystem/path.hpp>
+#include "solver_options.hpp"
 
 class StatisticsGenerator
 {
@@ -37,15 +38,15 @@ public:
   {
   }
   
-  template<typename MatrixStreamType, typename IterationType>
-  void printLongResults(const std::string& matrixPath, const MatrixStreamType& matrixStream, IterationType& iter)
+  template<typename MatrixType, typename IterationType>
+  void printLongResults(const MatrixType& matrix, IterationType& iter, const SolverOptions& options)
   {
     const double elapsed = getTime() - startTime;
     std::cout.precision(5);
     std::cout.setf(std::ios::fixed);
     std::cout << "Library: desolin" << std::endl;
-    std::cout << "Matrix: " << getLeaf(matrixPath) << std::endl;
-    std::cout << "Matrix Size: " << matrixStream.ncols() << std::endl;
+    std::cout << "Matrix: " << getLeaf(options.getFile()) << std::endl;
+    std::cout << "Matrix Size: " << num_cols(matrix) << std::endl;
     std::cout << "Compiler: " << getCompiler() << std::endl;
     std::cout << "Code Caching: " << getStatus(configManager.codeCachingEnabled()) << std::endl;
     std::cout << "Loop Fusion: " << getStatus(configManager.loopFusionEnabled()) << std::endl;
@@ -62,15 +63,15 @@ public:
       std::cout << std::endl << "Warning: FLOPs figure may be misleading with liveness analysis enabled." << std::endl;
   }
 
-  template<typename MatrixStreamType, typename IterationType>
-  void printShortResults(const std::string& matrixPath, const MatrixStreamType& matrixStream, IterationType& iter)
+  template<typename MatrixType, typename IterationType>
+  void printShortResults(const MatrixType& matrix, IterationType& iter, const SolverOptions& options)
   {
     const double elapsed = getTime() - startTime;
     std::cout.precision(5);
     std::cout.setf(std::ios::fixed);
     std::cout << "Library: desolin\t";
-    std::cout << "Matrix: " << getLeaf(matrixPath) << "\t";
-    std::cout << "Matrix Size: " << matrixStream.ncols() << "\t";
+    std::cout << "Matrix: " << getLeaf(options.getFile()) << "\t";
+    std::cout << "Matrix Size: " << num_cols(matrix) << "\t";
     std::cout << "Compiler: " << getCompiler() << "\t";
     std::cout << "Code_cache: " << getStatus(configManager.codeCachingEnabled()) << "\t";
     std::cout << "Fusion: " << getStatus(configManager.loopFusionEnabled()) << "\t";
@@ -84,16 +85,16 @@ public:
     std::cout << "FLOPs: " << statsCollector.getFlops() << std::endl;
   }
 
-  template<typename MatrixStreamType, typename IterationType>
-  void printResults(const std::string& matrixPath, const MatrixStreamType& matrixStream, IterationType& iter, const bool multiLine)
+  template<typename MatrixType, typename IterationType>
+  void printResults(const MatrixType& matrix, IterationType& iter, const SolverOptions& options)
   {
-    if(multiLine)
+    if(options.singleLineResult())
     {
-      printLongResults(matrixPath, matrixStream, iter);
+      printShortResults(matrix, iter, options);
     }
     else
     {
-      printShortResults(matrixPath, matrixStream, iter);
+      printLongResults(matrix, iter, options);
     }
   }
 
@@ -116,13 +117,9 @@ public:
   static std::string getStatus(const bool b)
   {
     if (b)
-    {
       return "On";
-    }
     else
-    {
       return "Off";
-    }
   }
 
   static std::string getLeaf(const std::string& pathString)
@@ -133,9 +130,9 @@ public:
 
   static double getTime()
   {
-   timeval time;
-   gettimeofday(&time, NULL);
-   return time.tv_sec + time.tv_usec/1000000.0;
+    timeval time;
+    gettimeofday(&time, NULL);
+    return time.tv_sec + time.tv_usec/1000000.0;
   }
 };
 

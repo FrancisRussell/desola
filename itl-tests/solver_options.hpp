@@ -15,8 +15,8 @@
 /*                                                                          */
 /****************************************************************************/
 
-#ifndef DESOLIN_ITL_SOLVER_OPTIONS
-#define DESOLIN_ITL_SOLVER_OPTIONS
+#ifndef DESOLIN_DESOLIN_SOLVER_OPTIONS
+#define DESOLIN_DESOLIN_SOLVER_OPTIONS
 
 #include <string>
 #include <boost/program_options.hpp>

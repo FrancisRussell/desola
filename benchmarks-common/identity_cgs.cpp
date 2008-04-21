@@ -22,13 +22,11 @@
 // OR DOCUMENTATION WILL NOT INFRINGE ANY PATENTS, COPYRIGHTS, TRADEMARKS
 // OR OTHER RIGHTS.
 
+#include <cstdlib>
 #include <iostream>
 #include "library_specific.hpp"
 #include <itl/krylov/cgs.h>
 
-/*
-  In this example, we show how to use bicgstab algorithm.
-*/
 using namespace itl;
 
 int main (int argc, char* argv[]) 
@@ -62,8 +60,7 @@ int main (int argc, char* argv[])
   itl::mult(A, x, b1);
   itl::add(b1, itl::scaled(b, -1.), b1);
 
-
   std::cout << "Residual " << itl::two_norm(b1) << std::endl;
-  stats.printResults(solverOptions.getFile(), hbs, iter, !solverOptions.singleLineResult());
-  return 0;
+  stats.printResults(A, iter, solverOptions);
+  return EXIT_SUCCESS;
 }

@@ -18,7 +18,6 @@ inline std::size_t num_rows(const Matrix& m)
   return m.numRows();
 }
 
-
 inline std::size_t num_cols(const Matrix& m)
 {
   return m.numCols();

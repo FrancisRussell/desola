@@ -1,5 +1,5 @@
-#ifndef DESOLIN_BLAS_LIBARY_SPECIFIC_HPP
-#define DESOLIN_BLAS_LIBARY_SPECIFIC_HPP
+#ifndef DESOLIN_ATLAS_LIBARY_SPECIFIC_HPP
+#define DESOLIN_ATLAS_LIBARY_SPECIFIC_HPP
 
 #include "solver_options.hpp"
 #include "statistics_generator.hpp"

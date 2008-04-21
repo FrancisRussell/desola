@@ -6,6 +6,8 @@ bin_PROGRAMS = identity_cg identity_qmr identity_cgs identity_bicg identity_bicg
 %.cpp:: ../benchmarks-common/%.cpp
 	cp ../benchmarks-common/$@ .
 
+CXXFLAGS+=-g
+
 nodist_identity_cg_SOURCES = identity_cg.cpp
 identity_cg_SOURCES = solver_options.cpp
 identity_cg_LDFLAGS = ${BOOST_PROGRAM_OPTIONS_LIB} ${BOOST_FILESYSTEM_LIB}
