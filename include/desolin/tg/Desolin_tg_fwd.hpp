@@ -94,6 +94,7 @@ template<typename T_elementType> class TGScalarExpr;
 template<typename T_elementType> class TGConventionalScalar;
 template<typename T_elementType> class TGConventionalVector;
 template<typename T_elementType> class TGConventionalMatrix;
+template<typename T_elementType> class TGCRSMatrix;
 
 // Creates TaskGraph Evaluator Storage Representations from Generic Representations
 template<typename T_elementType> class TGScalarGen;

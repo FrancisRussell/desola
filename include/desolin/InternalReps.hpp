@@ -19,6 +19,8 @@
 #define DESOLIN_INTERNAL_REPS_HPP
 
 #include <cassert>
+#include <map>
+#include <vector>
 #include <desolin/Desolin_fwd.hpp>
 #include <desolin/file-access/mtl_entry.hpp>
 
@@ -202,7 +204,7 @@ public:
   }
 
   template<typename StreamType>
-  ConventionalMatrix(StreamType& stream) : InternalMatrix<T_element>(true, stream.nrows(), stream.ncols()), value(stream.nrows()*stream.ncols(), T_element())
+  ConventionalMatrix(StreamType& stream) : InternalMatrix<T_element>(true, stream.nrows(), stream.ncols()), value(stream.nrows()*stream.ncols())
   {
     while(!stream.eof())
     {
@@ -239,6 +241,95 @@ public:
   }
 };
 
+template<typename T_element>
+class CRSMatrix : public InternalMatrix<T_element>
+{
+private:
+  std::vector<int> col_ind;
+  std::vector<int> row_ptr;
+  std::vector<T_element> val;
+  
+public:
+  CRSMatrix(const int rowCount, const int colCount) : InternalMatrix<T_element>(false, rowCount, colCount)
+  {
+  }
+
+  template<typename StreamType>
+  CRSMatrix(StreamType& stream) : InternalMatrix<T_element>(true, stream.nrows(), stream.ncols())
+  {
+    std::vector< std::map<std::size_t, T_element> > matrixData(this->getRowCount());
+
+    while(!stream.eof())
+    {
+      entry2<double> entry;
+      stream >> entry;
+      assert(entry.row >= 0 && entry.col >=0);
+      matrixData[entry.row][entry.col] = entry.value;
+    }
+
+    for(int row=0; row<this->getRowCount(); ++row)
+    {
+      row_ptr.push_back(val.size());
+      const std::map<std::size_t, T_element>& mr(matrixData[row]);
+      for(typename std::map<std::size_t, T_element>::const_iterator colIter(mr.begin()); colIter!=mr.end(); ++colIter)
+      {
+        col_ind.push_back(colIter->first);
+        val.push_back(colIter->second);
+      }
+    }
+    row_ptr.push_back(val.size());
+  }
+ 
+  virtual void allocate()
+  {
+    if(!this->allocated)
+    {
+      row_ptr.resize(this->getRowCount()+1, 0);
+      this->allocated=true;
+    }
+  }
+
+  virtual void accept(InternalMatrixVisitor<T_element>& visitor)
+  {
+    visitor.visit(*this);
+  }
+
+  unsigned nnz() const
+  {
+    return col_ind.size();
+  }
+
+  unsigned row_ptr_size() const
+  {
+    return row_ptr.size();
+  }
+
+  int* get_col_ind()
+  {
+    return &col_ind[0];
+  }
+
+  int* get_row_ptr()
+  {
+    return &row_ptr[0];
+  }
+
+  T_element* get_val()
+  {
+    return &val[0];
+  }
+
+  virtual T_element getElementValue(const ElementIndex<matrix>& index) 
+  {
+    assert(this->allocated);
+    for(int valPtr = row_ptr[index.getRow()]; valPtr < row_ptr[index.getRow()+1]; ++valPtr)
+      if (col_ind[valPtr] == index.getCol())
+        return val[valPtr];
+
+    return T_element();
+  }
+};
+
 template<typename T_elementType>
 class InternalScalarVisitor
 {
@@ -260,6 +351,7 @@ class InternalMatrixVisitor
 {
 public:
   virtual void visit(ConventionalMatrix<T_elementType>& value) = 0;
+  virtual void visit(CRSMatrix<T_elementType>& value) = 0;
   virtual ~InternalMatrixVisitor() {}
 };
 
