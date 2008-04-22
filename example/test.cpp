@@ -48,5 +48,5 @@ int main()
   hello.push_back(m3(1,1) = c);
 
   harwell_boeing_stream<double> hbstream("../test-matrices/bcsstk14.rsa");
-  Matrix<double> hb(hbstream);
+  Matrix<double> hb = Matrix<double>::loadDense(hbstream);
 }
