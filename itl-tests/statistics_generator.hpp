@@ -20,10 +20,10 @@
 
 #include <desolin/ConfigurationManager.hpp>
 #include <desolin/StatisticsCollector.hpp>
+#include <boost/filesystem/path.hpp>
 #include <iostream>
 #include <string>
 #include <sys/time.h>
-#include <boost/filesystem/path.hpp>
 #include "solver_options.hpp"
 
 class StatisticsGenerator

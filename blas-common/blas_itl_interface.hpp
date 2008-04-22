@@ -24,8 +24,8 @@
 #include <itl/number_traits.h>
 
 namespace itl {
-  using desolin_blas_wrappers::BLASVector;
-  using desolin_blas_wrappers::BLASGeneralMatrix;
+  using desolin::blas_wrappers::BLASVector;
+  using desolin::blas_wrappers::BLASGeneralMatrix;
   
   //: The vector type used inside of the ITL routines for work space
   template <typename Vec>

@@ -5,7 +5,10 @@
 #include<mtl/harwell_boeing_stream.h>
 #include<mtl/entry.h>
 
-namespace desolin_blas_wrappers
+namespace desolin
+{
+
+namespace blas_wrappers
 {
 
 template<typename T>
@@ -91,6 +94,8 @@ public:
     return &values[0];
   }
 };
+
+}
 
 }
 #endif

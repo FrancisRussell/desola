@@ -30,7 +30,7 @@
 using namespace itl;
 
 template<typename MatrixType, typename VectorType, typename ScalarType>
-void solver(SolverOptions& options, MatrixType& A, VectorType& x, VectorType& b)
+void solver(const SolverOptions& options, MatrixType& A, VectorType& x, VectorType& b)
 {
   const int max_iter = options.getIterations();
   identity_preconditioner precond;
@@ -40,7 +40,7 @@ void solver(SolverOptions& options, MatrixType& A, VectorType& x, VectorType& b)
   bicg(A, x, b, precond(), iter);
 
   //verify the result
-  Vector b1(num_cols(A));
+  VectorType b1(num_cols(A));
   itl::mult(A, x, b1);
   itl::add(b1, itl::scaled(b, -1.), b1);
 
@@ -55,13 +55,7 @@ int main (int argc, char* argv[])
   SolverOptions options("Unsymmetric matrix in Harwell-Boeing format");
   options.processOptions(argc, argv);
 
-  harwell_boeing_stream<Type> hbs(const_cast<char*>(options.getFile().c_str()));
-
-  Matrix A(hbs);
-  Vector x(num_rows(A), Type(0));
-  Vector b(num_cols(A), Type(1));
- 
-  solver<Matrix, Vector, Scalar>(options, A, x, b);
+  invokeSolver(options);
 
   return EXIT_SUCCESS;
 }
