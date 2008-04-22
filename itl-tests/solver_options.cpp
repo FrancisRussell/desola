@@ -35,6 +35,7 @@ SolverOptions::SolverOptions(const std::string& fileDesc) : description("Allowed
     ("code-caching", po::value<bool>(&useCodeCaching)->default_value(true), "enable code caching and resue")
     ("loop-fusion", po::value<bool>(&useLoopFusion)->default_value(true), "enable loop fusion of runtime generated code")
     ("array-contraction", po::value<bool>(&useArrayContraction)->default_value(true), "enable array contraction on runtime generated code")
+    ("sparse", "use sparse representation for matrix storage")
     ("single-line-result", "print statistics on single line")
     ("input-file", po::value<std::string>(), fileDesc.c_str());
 
@@ -98,6 +99,11 @@ std::string SolverOptions::getFile() const
 bool SolverOptions::singleLineResult() const
 {
   return vm.count("single-line-result") > 0;
+}
+
+bool SolverOptions::useSparse() const
+{
+  return vm.count("sparse") > 0;
 }
 
 int SolverOptions::getIterations() const

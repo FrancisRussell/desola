@@ -40,6 +40,7 @@ public:
   void processOptions(int argc, char* argv[]);
   std::string getFile() const;
   bool singleLineResult() const;
+  bool useSparse() const;
   int getIterations() const;
 };
 

@@ -35,7 +35,27 @@ public:
   typedef int size_type;
 	
   static const detail::ExprType expressionType = detail::matrix;
+
+  static Matrix loadDense(harwell_boeing_stream<T_element>& stream)
+  {
+    return Matrix(*new detail::Literal<detail::matrix, T_element>(new detail::ConventionalMatrix<T_element>(stream)));
+  }
+
+  static Matrix loadSparse(harwell_boeing_stream<T_element>& stream)
+  {
+    return Matrix(*new detail::Literal<detail::matrix, T_element>(new detail::CRSMatrix<T_element>(stream)));
+  }
     
+  static Matrix loadDense(matrix_market_stream<T_element>& stream)
+  {
+    return Matrix(*new detail::Literal<detail::matrix, T_element>(new detail::ConventionalMatrix<T_element>(stream)));
+  }
+
+  static Matrix loadSparse(matrix_market_stream<T_element>& stream)
+  {
+    return Matrix(*new detail::Literal<detail::matrix, T_element>(new detail::CRSMatrix<T_element>(stream)));
+  }
+
   Matrix()
   {
   }
@@ -45,14 +65,6 @@ public:
   }
   
   Matrix(const Matrix& m) : detail::Var<detail::matrix, T_element>(m.getExpr())
-  {
-  }
-
-  explicit Matrix(harwell_boeing_stream<T_element>& stream) : detail::Var<detail::matrix, T_element>(*new detail::Literal<detail::matrix, T_element>(new detail::ConventionalMatrix<T_element>(stream)))
-  {
-  }
-
-  explicit Matrix(matrix_market_stream<T_element>& stream) : detail::Var<detail::matrix, T_element>(*new detail::Literal<detail::matrix, T_element>(new detail::ConventionalMatrix<T_element>(stream)))
   {
   }
 

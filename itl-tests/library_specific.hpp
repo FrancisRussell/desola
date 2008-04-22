@@ -33,8 +33,13 @@ void invokeSolver(const SolverOptions& options)
   typedef desolin::Scalar<Type> Scalar;
   
   desolin::harwell_boeing_stream<Type> hbs(const_cast<char*>(options.getFile().c_str()));
+  Matrix A;
 
-  Matrix A(hbs);
+  if (options.useSparse())
+    A = Matrix::loadSparse(hbs);
+  else
+    A = Matrix::loadDense(hbs);
+
   Vector x(num_rows(A), Type(0));
   Vector b(num_cols(A), Type(1));
 
