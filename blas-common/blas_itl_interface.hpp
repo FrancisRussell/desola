@@ -138,7 +138,7 @@ namespace itl {
   template<typename VecX, typename VecY>
   inline void mult(const BLASGeneralMatrix<double>& A, const VecX& x, const VecY& y, BLASVector<double>& z)
   {
-    cblas_dcopy(y.nrows(), y.data(), 1, z.data(), 1);
+    cblas_dcopy(y.nrows(), get_data(y), 1, z.data(), 1);
     cblas_dgemv(CblasRowMajor, CblasNoTrans, A.nrows(), A.ncols(), scale_factor(x), A.data(), A.ncols(), get_data(x), 1, scale_factor(y), z.data(), 1);
   }
 
