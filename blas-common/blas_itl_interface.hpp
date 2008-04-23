@@ -142,6 +142,12 @@ namespace itl {
     cblas_dgemv(CblasRowMajor, CblasNoTrans, A.nrows(), A.ncols(), scale_factor(x), A.data(), A.ncols(), get_data(x), 1, scale_factor(y), z.data(), 1);
   }
 
+  template <class VecX>
+  inline void trans_mult(const BLASGeneralMatrix<double>& A, const VecX& x, BLASVector<double>& y) 
+  {
+    cblas_dgemv(CblasRowMajor, CblasTrans, A.nrows(), A.ncols(), scale_factor(x), A.data(), A.ncols(), get_data(x), 1, 0.0, y.data(), 1);
+  }
+
   inline void scale(BLASVector<double>& s, const itl_traits< BLASVector<double> >::value_type& alpha)
   {
     cblas_dscal(s.nrows(), alpha, s.data(), 1);
@@ -166,12 +172,6 @@ namespace itl {
     x.resize(sz);
   }
 */
-  
-  template <class Matrix, class VecX, class VecY>
-  inline void trans_mult(const Matrix& A, const VecX& x, VecY& y) 
-  {
-    cblas_dgemv(CblasRowMajor, CblasTrans, A.nrows(), A.ncols(), 1.0, A.data(), A.ncols(), x.data(), 1, 0.0, y.data(), 1);
-  }
 }
 
 #endif
