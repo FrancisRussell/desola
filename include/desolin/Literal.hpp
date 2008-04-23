@@ -187,6 +187,11 @@ public:
   {
     return 0.0;
   }
+
+  virtual int nnz() const
+  {
+    return value->nnz();
+  }
 };
 
 }

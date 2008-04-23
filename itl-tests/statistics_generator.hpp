@@ -59,6 +59,9 @@ public:
     std::cout << "Total Time: " << elapsed << " seconds" << std::endl;
     std::cout << "FLOPs: " << statsCollector.getFlops() << std::endl;
 
+    if (options.useSparse())
+      std::cout << "NNZ: " << nnz(matrix) << std::endl;
+
     if (configManager.livenessAnalysisEnabled())
       std::cout << std::endl << "Warning: FLOPs figure may be misleading with liveness analysis enabled." << std::endl;
   }
@@ -82,7 +85,12 @@ public:
     std::cout << "Compile_time: " << statsCollector.getCompileTime() << "\t";
     std::cout << "Compile_count: " << statsCollector.getCompileCount() << "\t";
     std::cout << "Total_time: " << elapsed << "\t";
-    std::cout << "FLOPs: " << statsCollector.getFlops() << std::endl;
+    std::cout << "FLOPs: " << statsCollector.getFlops();
+    
+    if (options.useSparse())
+      std::cout << "\tNNZ: " << nnz(matrix);
+      
+    std::cout << std::endl;
   }
 
   template<typename MatrixType, typename IterationType>

@@ -53,7 +53,7 @@ public:
     row_ptr.push_back(val.size());
   }
 
-  size_type nnz() const
+  inline size_type nnz() const
   {
     return val.size();
   }

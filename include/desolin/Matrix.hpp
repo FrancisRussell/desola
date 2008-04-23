@@ -78,6 +78,12 @@ public:
     return this->getExpr().getColCount();
   }
 
+  const int nnz() const
+  {
+    this->getExpr().evaluate();
+    return this->getExpr().nnz();
+  }
+
   Matrix& operator=(const Matrix& right)
   {
     if(this != &right)

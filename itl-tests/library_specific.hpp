@@ -21,6 +21,12 @@ inline std::size_t num_cols(const Matrix& m)
   return m.numCols();
 }
 
+template<typename Matrix>
+inline std::size_t nnz(const Matrix& m)
+{
+  return m.nnz();
+}
+
 void library_init()
 {
 }

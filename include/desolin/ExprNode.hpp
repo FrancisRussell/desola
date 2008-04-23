@@ -142,6 +142,12 @@ public:
     return dimensions[1];
   }
 
+  virtual int nnz() const
+  {
+    assert(false);
+    return 0;
+  }
+
   virtual void accept(ExpressionNodeTypeVisitor<T_elementType>& visitor)
   {
     visitor.visit(*this);

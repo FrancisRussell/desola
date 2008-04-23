@@ -30,6 +30,18 @@ inline std::size_t num_cols(const Matrix& m)
   return m.ncols();
 }
 
+template<typename T>
+inline std::size_t nnz(const desolin::blas_wrappers::BLASCRSMatrix<T>& m)
+{
+  return m.nnz();
+}
+
+template<typename T>
+inline std::size_t nnz(const desolin::blas_wrappers::BLASGeneralMatrix<T>& m)
+{
+  return m.nrows() * m.ncols();
+}
+
 void library_init()
 {
   mkl_set_num_threads(1);

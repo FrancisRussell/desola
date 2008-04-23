@@ -45,6 +45,9 @@ public:
     std::cout << "Iterations: " << iter.iterations() << std::endl;
     std::cout << "Time per Iteration: " << elapsed / iter.iterations() << " seconds" << std::endl;
     std::cout << "Total Time: " << elapsed << " seconds" << std::endl;
+
+    if (options.useSparse())
+      std::cout << "NNZ: " << nnz(matrix) << std::endl;
   }
 
   template<typename MatrixType, typename IterationType>
@@ -58,7 +61,12 @@ public:
     std::cout << "Matrix Size: " << num_cols(matrix) << "\t";
     std::cout << "Iterations: " << iter.iterations() << "\t";
     std::cout << "Iter_time: " << elapsed / iter.iterations() << "\t";
-    std::cout << "Total_time: " << elapsed << std::endl;
+    std::cout << "Total_time: " << elapsed;
+
+    if (options.useSparse())
+      std::cout << "\tNNZ: " << nnz(matrix);
+      
+    std::cout << std::endl;
   }
 
   template<typename MatrixType, typename IterationType>

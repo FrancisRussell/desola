@@ -23,6 +23,12 @@ inline std::size_t num_cols(const Matrix& m)
   return m.ncols();
 }
 
+template<typename Matrix>
+inline std::size_t nnz(const Matrix& m)
+{
+  return m.nnz();
+}
+
 void invokeSolver(const SolverOptions& options)
 {
   typedef double Type;

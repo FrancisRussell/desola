@@ -107,6 +107,8 @@ public:
     return cols;
   }
 
+  virtual int nnz() const = 0;
+
   virtual void accept(InternalMatrixVisitor<T_element>& visitor) = 0;
 
   virtual T_element getElementValue(const ElementIndex<matrix>& index) = 0;
@@ -228,6 +230,11 @@ public:
     visitor.visit(*this);
   }
 
+  virtual int nnz() const
+  {
+    return this->rows * this->cols;
+  }
+
   T_element* getValue()
   {
     assert(this->allocated);
@@ -294,7 +301,7 @@ public:
     visitor.visit(*this);
   }
 
-  unsigned nnz() const
+  int nnz() const
   {
     return col_ind.size();
   }
