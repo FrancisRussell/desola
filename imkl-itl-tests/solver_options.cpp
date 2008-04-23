@@ -28,6 +28,7 @@ SolverOptions::SolverOptions(const std::string& fileDesc) : description("Allowed
   description.add_options()
     ("help", "produce help message")
     ("iterations", po::value<int>(&iterations)->default_value(256), "number of iterations to perform")
+    ("sparse", "use sparse representation for matrix storage")
     ("single-line-result", "print statistics on single line")
     ("input-file", po::value<std::string>(), fileDesc.c_str());
 
@@ -63,6 +64,11 @@ std::string SolverOptions::getFile() const
 bool SolverOptions::singleLineResult() const
 {
   return vm.count("single-line-result") > 0;
+}
+
+bool SolverOptions::useSparse() const
+{
+  return vm.count("sparse") > 0;
 }
 
 int SolverOptions::getIterations() const

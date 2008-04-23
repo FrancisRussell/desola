@@ -15,8 +15,8 @@
 /*                                                                          */
 /****************************************************************************/
 
-#ifndef ITL_BLAS_INTERFACE_HPP
-#define ITL_BLAS_INTERFACE_HPP
+#ifndef DESOLIN_ITL_BLAS_INTERFACE_HPP
+#define DESOLIN_ITL_BLAS_INTERFACE_HPP
 
 #include <cassert>
 #include <complex>

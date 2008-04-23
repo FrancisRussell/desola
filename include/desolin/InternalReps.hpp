@@ -204,7 +204,7 @@ public:
   }
 
   template<typename StreamType>
-  ConventionalMatrix(StreamType& stream) : InternalMatrix<T_element>(true, stream.nrows(), stream.ncols()), value(stream.nrows()*stream.ncols())
+  explicit ConventionalMatrix(StreamType& stream) : InternalMatrix<T_element>(true, stream.nrows(), stream.ncols()), value(stream.nrows()*stream.ncols())
   {
     while(!stream.eof())
     {
@@ -255,7 +255,7 @@ public:
   }
 
   template<typename StreamType>
-  CRSMatrix(StreamType& stream) : InternalMatrix<T_element>(true, stream.nrows(), stream.ncols())
+  explicit CRSMatrix(StreamType& stream) : InternalMatrix<T_element>(true, stream.nrows(), stream.ncols())
   {
     std::vector< std::map<std::size_t, T_element> > matrixData(this->getRowCount());
 

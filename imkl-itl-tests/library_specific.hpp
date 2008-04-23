@@ -9,10 +9,11 @@ extern "C"
 {
 #include "mkl.h"
 #include "mkl_cblas.h"
+#include "mkl_spblas.h"
 }
 
-#include "blas_wrappers.hpp"
-#include "blas_itl_interface.hpp"
+#include "imkl_blas_wrappers.hpp"
+#include "imkl_blas_itl_interface.hpp"
 
 template<typename MatrixType, typename VectorType, typename ScalarType>
 void solver(const SolverOptions& options, MatrixType& A, VectorType& x, VectorType& b);
@@ -37,17 +38,27 @@ void library_init()
 void invokeSolver(const SolverOptions& options)
 {
   typedef double Type;
-  typedef desolin::blas_wrappers::BLASGeneralMatrix<Type> Matrix;
+  typedef desolin::blas_wrappers::BLASGeneralMatrix<Type> MatrixDense;
+  typedef desolin::blas_wrappers::BLASCRSMatrix<Type> MatrixSparse;
   typedef desolin::blas_wrappers::BLASVector<Type> Vector;
   typedef Type Scalar;
 
   mtl::harwell_boeing_stream<Type> hbs(const_cast<char*>(options.getFile().c_str()));
 
-  Matrix A(hbs);
-  Vector x(num_rows(A), Type(0));
-  Vector b(num_cols(A), Type(1));
-
-  solver<Matrix, Vector, Scalar>(options, A, x, b);
+  if (options.useSparse())
+  {
+    MatrixSparse A(hbs);
+    Vector x(num_rows(A), Type(0));
+    Vector b(num_cols(A), Type(1));
+    solver<MatrixSparse, Vector, Scalar>(options, A, x, b);
+  }
+  else
+  {
+    MatrixDense A(hbs);
+    Vector x(num_rows(A), Type(0));
+    Vector b(num_cols(A), Type(1));
+    solver<MatrixDense, Vector, Scalar>(options, A, x, b);
+  }
 }
 
 #endif

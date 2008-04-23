@@ -64,12 +64,13 @@ public:
   {
   }
 
-  BLASGeneralMatrix(mtl::harwell_boeing_stream<value_type>& hbs) : rows(hbs.nrows()), cols(hbs.ncols()), values(rows*cols, 0)
+  template<typename StreamType>
+  explicit BLASGeneralMatrix(StreamType& str) : rows(str.nrows()), cols(str.ncols()), values(rows*cols, 0)
   {
-    while(!hbs.eof())
+    while(!str.eof())
     {
       mtl::entry2<double> entry;
-      hbs >> entry;
+      str >> entry;
       values[ncols()*entry.row + entry.col] = entry.value;
     }
   }
