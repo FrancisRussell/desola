@@ -416,8 +416,8 @@ public:
   {
     using namespace tg;
 
-    tVarNamed(int, i, generator.getName("ConvMatrix_row").c_str());
-    tVarNamed(int, j, generator.getName("ConvMatrix_col").c_str());
+    tVarNamed(std::size_t, i, generator.getName("ConvMatrix_row").c_str());
+    tVarNamed(std::size_t, j, generator.getName("ConvMatrix_col").c_str());
 
     tFor(i, 0, rows-1)
     {
@@ -564,7 +564,7 @@ public:
     using namespace tg;
 
     tVarNamed(int, valPtr, generator.getName("valPtr").c_str());
-    tVarNamed(int, result, generator.getName("elementVal").c_str());
+    tVarTemplateTypeNamed(T_element, result, generator.getName("elementVal").c_str());
 
     result = T_element();
 
