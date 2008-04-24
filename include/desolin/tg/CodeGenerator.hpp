@@ -75,8 +75,8 @@ private:
   {
     using namespace tg;
 
-    tVarNamed(std::size_t, j, generator.getName("mat_mult_inner").c_str());
-    tFor(j, 0, c.getCols()-1)
+    tVarNamed(unsigned, j, generator.getName("mat_mult_inner").c_str());
+    tFor(j, 0u, c.getCols()-1)
     {
       c.addExpression(generator, row, j, value.mul(b.getExpression(generator, col, j)));
     }
@@ -94,8 +94,8 @@ public:
     TGVector<T_element>&  newVector(e.getInternal());
     TGVector<T_element>&  vector(e.getOperand().getInternal());
 
-    tVarNamed(std::size_t, i, getIndexName().c_str());
-    tFor(i, 0, vector.getRows()-1)
+    tVarNamed(unsigned, i, getIndexName().c_str());
+    tFor(i, 0u, vector.getRows()-1)
     {
       newVector.setExpression(i, vector.getExpression(i));
     }
@@ -111,12 +111,12 @@ public:
     TGMatrix<T_element>& newMatrix(e.getInternal());
     TGMatrix<T_element>& matrix(e.getOperand().getInternal());
 
-    tVarNamed(std::size_t, i, getIndexName().c_str());
-    tVarNamed(std::size_t, j, getIndexName().c_str());
+    tVarNamed(unsigned, i, getIndexName().c_str());
+    tVarNamed(unsigned, j, getIndexName().c_str());
 
-    tFor(i, 0, matrix.getRows()-1)
+    tFor(i, 0u, matrix.getRows()-1)
     {
-      tFor(j, 0, matrix.getCols()-1)
+      tFor(j, 0u, matrix.getCols()-1)
       {
         newMatrix.setExpression(generator, i, j, matrix.getExpression(generator, i, j));
       }
@@ -171,13 +171,13 @@ public:
     TGMatrix<T_element>& b(e.getRight().getInternal());
     TGMatrix<T_element>& c(e.getInternal());
 
-    tVarNamed(std::size_t, i, getIndexName().c_str());
-    tVarNamed(std::size_t, j, getIndexName().c_str());
-    tVarNamed(std::size_t, k, getIndexName().c_str());
+    tVarNamed(unsigned, i, getIndexName().c_str());
+    tVarNamed(unsigned, j, getIndexName().c_str());
+    tVarNamed(unsigned, k, getIndexName().c_str());
 
-    tFor(i, 0, c.getRows()-1)
+    tFor(i, 0u, c.getRows()-1)
     {
-      tFor(j, 0, c.getCols()-1)
+      tFor(j, 0u, c.getCols()-1)
       {
         c.setExpression(generator, i, j, TGScalarExpr<T_element>());
       }
@@ -196,10 +196,10 @@ public:
     TGMatrix<T_element>& matrix(e.getLeft().getInternal());
     TGVector<T_element>& vector(e.getRight().getInternal());
 
-    tVarNamed(std::size_t, i, getIndexName().c_str());
-    tVarNamed(std::size_t, j, getIndexName().c_str());
+    tVarNamed(unsigned, i, getIndexName().c_str());
+    tVarNamed(unsigned, j, getIndexName().c_str());
 
-    tFor(i, 0, matrix.getRows()-1)
+    tFor(i, 0u, matrix.getRows()-1)
     {
       result.setExpression(i, TGScalarExpr<T_element>());
     }
@@ -218,10 +218,10 @@ public:
     TGMatrix<T_element>& matrix(e.getLeft().getInternal());
     TGVector<T_element>& vector(e.getRight().getInternal());
 
-    tVarNamed(std::size_t, i, getIndexName().c_str());
-    tVarNamed(std::size_t, j, getIndexName().c_str());
+    tVarNamed(unsigned, i, getIndexName().c_str());
+    tVarNamed(unsigned, j, getIndexName().c_str());
 
-    tFor(j, 0, matrix.getRows()-1)
+    tFor(j, 0u, matrix.getRows()-1)
     {
       result.setExpression(j, TGScalarExpr<T_element>());
     }
@@ -240,10 +240,10 @@ public:
     TGVector<T_element>& left(e.getLeft().getInternal());
     TGVector<T_element>& right(e.getRight().getInternal());
 
-    tVarNamed(std::size_t, i, getIndexName().c_str());
+    tVarNamed(unsigned, i, getIndexName().c_str());
 
     result.setExpression(TGScalarExpr<T_element>());
-    tFor(i, 0, left.getRows()-1)
+    tFor(i, 0u, left.getRows()-1)
     {
       result.addExpression(left.getExpression(i).mul(right.getExpression(i)));
     }
@@ -269,10 +269,10 @@ public:
     TGScalar<T_element>& result(e.getInternal());
     TGVector<T_element>& vector(e.getOperand().getInternal());
    
-    tVarNamed(std::size_t, i, getIndexName().c_str());
+    tVarNamed(unsigned, i, getIndexName().c_str());
 
     result.setExpression(TGScalarExpr<T_element>());
-    tFor(i, 0, vector.getRows()-1)
+    tFor(i, 0u, vector.getRows()-1)
     {
       result.addExpression(vector.getExpression(i).mul(vector.getExpression(i)));
     }
@@ -286,12 +286,12 @@ public:
     TGMatrix<T_element>& result(e.getInternal());
     TGMatrix<T_element>& matrix(e.getOperand().getInternal());
 
-    tVarNamed(std::size_t, i, getIndexName().c_str());
-    tVarNamed(std::size_t, j, getIndexName().c_str());
+    tVarNamed(unsigned, i, getIndexName().c_str());
+    tVarNamed(unsigned, j, getIndexName().c_str());
 
-    tFor(i, 0, matrix.getRows()-1)
+    tFor(i, 0u, matrix.getRows()-1)
     {
-      tFor(j, 0, matrix.getCols()-1)
+      tFor(j, 0u, matrix.getCols()-1)
       {
         result.setExpression(generator, j, i, matrix.getExpression(generator, i, j));
       }
@@ -317,8 +317,8 @@ public:
      TGVector<T_element>& left(e.getLeft().getInternal());
      TGVector<T_element>& right(e.getRight().getInternal());
 
-     tVarNamed(std::size_t, i, getIndexName().c_str());
-     tFor(i, 0, result.getRows()-1)
+     tVarNamed(unsigned, i, getIndexName().c_str());
+     tFor(i, 0u, result.getRows()-1)
      {
        result.setExpression(i, performOp(e.getOperation(), left.getExpression(i), right.getExpression(i)));
      }
@@ -333,11 +333,11 @@ public:
     TGMatrix<T_element>& right(e.getRight().getInternal());
    
       
-    tVarNamed(std::size_t, i, getIndexName().c_str());
-    tVarNamed(std::size_t, j, getIndexName().c_str());
-    tFor(i, 0, result.getRows()-1)
+    tVarNamed(unsigned, i, getIndexName().c_str());
+    tVarNamed(unsigned, j, getIndexName().c_str());
+    tFor(i, 0u, result.getRows()-1)
     {
-      tFor(j, 0, result.getCols()-1)
+      tFor(j, 0u, result.getCols()-1)
       {
         result.setExpression(generator, i, j, performOp(e.getOperation(), left.getExpression(generator, i, j), right.getExpression(generator, i, j)));
       }
@@ -363,8 +363,8 @@ public:
      TGVector<T_element>& left(e.getLeft().getInternal());
      TGScalar<T_element>& right(e.getRight().getInternal());
 
-     tVarNamed(std::size_t, i, getIndexName().c_str());
-     tFor(i, 0, result.getRows()-1)
+     tVarNamed(unsigned, i, getIndexName().c_str());
+     tFor(i, 0u, result.getRows()-1)
      {
        result.setExpression(i, performOp(e.getOperation(), left.getExpression(i), right.getExpression()));
      }			
@@ -378,11 +378,11 @@ public:
     TGMatrix<T_element>& left(e.getLeft().getInternal());
     TGScalar<T_element>& right(e.getRight().getInternal());
 
-    tVarNamed(std::size_t, i, getIndexName().c_str());
-    tVarNamed(std::size_t, j, getIndexName().c_str());
-    tFor(i, 0, result.getRows()-1)
+    tVarNamed(unsigned, i, getIndexName().c_str());
+    tVarNamed(unsigned, j, getIndexName().c_str());
+    tFor(i, 0u, result.getRows()-1)
     {
-      tFor(j, 0, result.getCols()-1)
+      tFor(j, 0u, result.getCols()-1)
       {
         result.setExpression(generator, i, j, performOp(e.getOperation(), left.getExpression(generator, i, j), right.getExpression()));
       }
@@ -406,8 +406,8 @@ public:
     TGVector<T_element>& result(e.getInternal());
     TGVector<T_element>& operand(e.getOperand().getInternal());
 
-    tVarNamed(std::size_t, i, getIndexName().c_str());
-    tFor(i, 0, result.getRows()-1)
+    tVarNamed(unsigned, i, getIndexName().c_str());
+    tFor(i, 0u, result.getRows()-1)
     {
       result.setExpression(i, operand.getExpression(i).negate());
     }
@@ -420,11 +420,11 @@ public:
     TGMatrix<T_element>& result(e.getInternal());
     TGMatrix<T_element>& operand(e.getOperand().getInternal());
 
-    tVarNamed(std::size_t, i, getIndexName().c_str());
-    tVarNamed(std::size_t, j, getIndexName().c_str());
-    tFor(i, 0, result.getRows()-1)
+    tVarNamed(unsigned, i, getIndexName().c_str());
+    tVarNamed(unsigned, j, getIndexName().c_str());
+    tFor(i, 0u, result.getRows()-1)
     {
-      tFor(j, 0, result.getCols()-1)
+      tFor(j, 0u, result.getCols()-1)
       {
         result.setExpression(generator, i, j, operand.getExpression(generator, i, j).negate());
       }

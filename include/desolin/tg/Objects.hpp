@@ -416,12 +416,12 @@ public:
   {
     using namespace tg;
 
-    tVarNamed(std::size_t, i, generator.getName("ConvMatrix_row").c_str());
-    tVarNamed(std::size_t, j, generator.getName("ConvMatrix_col").c_str());
+    tVarNamed(unsigned, i, generator.getName("ConvMatrix_row").c_str());
+    tVarNamed(unsigned, j, generator.getName("ConvMatrix_col").c_str());
 
-    tFor(i, 0, rows-1)
+    tFor(i, 0u, rows-1)
     {
-      tFor(j, 0, cols-1)
+      tFor(j, 0u, cols-1)
       {
         callback(generator, i, j, getExpression(generator, i, j));
       }
@@ -621,12 +621,12 @@ public:
   {
     using namespace tg;
 
-    tVarNamed(std::size_t, valPtr, generator.getName("valPtr").c_str());
-    tVarNamed(std::size_t, currentRow, generator.getName("currentRow").c_str());
+    tVarNamed(unsigned, valPtr, generator.getName("valPtr").c_str());
+    tVarNamed(unsigned, currentRow, generator.getName("currentRow").c_str());
 
-    currentRow = 0;
+    currentRow = 0u;
 
-    tFor(valPtr, 0, nnz-1)
+    tFor(valPtr, 0u, nnz-1)
     {
       tWhile((*row_ptr)[currentRow+1] == valPtr)
         ++currentRow;
