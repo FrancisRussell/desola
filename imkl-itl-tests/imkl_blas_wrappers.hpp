@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 #include <cassert>
+#include <cstddef>
 #include "blas_wrappers.hpp"
 
 namespace desolin
@@ -40,7 +41,11 @@ public:
       matrixData[entry.row][ entry.col] = entry.value;
     }
 
-    for(size_type row=0; row<rows; ++row)
+    row_ptr.reserve(rows+1);
+    col_ind.reserve(stream.nnz());
+    val.reserve(stream.nnz());
+
+    for(std::size_t row=0; row<rows; ++row)
     {
       row_ptr.push_back(val.size());
       const std::map<std::size_t, T>& mr(matrixData[row]);

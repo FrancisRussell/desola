@@ -275,6 +275,10 @@ public:
       matrixData[entry.row][entry.col] = entry.value;
     }
 
+    row_ptr.reserve(this->getRowCount() + 1);
+    col_ind.reserve(stream.nnz());
+    val.reserve(stream.nnz());
+
     for(std::size_t row=0; row<this->getRowCount(); ++row)
     {
       row_ptr.push_back(val.size());
