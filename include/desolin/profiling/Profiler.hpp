@@ -51,7 +51,7 @@ private:
   {
     assert(graph.nodeCount() == profilingGraph->nodeCount());
 
-    for(int index=0; index<graph.nodeCount(); ++index)
+    for(std::size_t index=0; index<graph.nodeCount(); ++index)
     {
       PExpressionNodeRef<T_element> ref(profilingGraph, profilingGraph->nodeAt(index));
       graph.nodeAt(index).notifyOfUse(ref);
@@ -62,7 +62,7 @@ private:
   {
     assert(graph.nodeCount() == profilingGraph->nodeCount());
 
-    for(int index=0; index<graph.nodeCount(); ++index)
+    for(std::size_t index=0; index<graph.nodeCount(); ++index)
     {
       const EvaluationDirective directive(profilingGraph->nodeAt(index).getSuggestedEvaluationDirective());
       graph.nodeAt(index).setEvaluationDirective(directive);

@@ -39,7 +39,7 @@ private:
   const ElementIndex<exprType> index;
 
 public:
-  ElementGet(ExprNode<exprType, T_element>& e, const ElementIndex<exprType>& i) : UnOp<scalar, exprType, T_element>(boost::array<int, 0>(), e), index(i)
+  ElementGet(ExprNode<exprType, T_element>& e, const ElementIndex<exprType>& i) : UnOp<scalar, exprType, T_element>(boost::array<std::size_t, 0>(), e), index(i)
   {
   }
   

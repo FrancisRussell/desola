@@ -22,6 +22,7 @@
 #include <vector>
 #include <map>
 #include <cassert>
+#include <cstddef>
 #include <numeric>
 #include <boost/array.hpp>
 #include <boost/functional/hash.hpp>
@@ -45,18 +46,18 @@ template<typename T_elementType>
 class ExprNode<scalar, T_elementType> : public ExpressionNode<T_elementType>
 {
 protected:
-  const boost::array<int, 0> dimensions;
+  const boost::array<std::size_t, 0> dimensions;
 	
 public:
-  ExprNode() : dimensions(boost::array<int, 0>())
+  ExprNode() : dimensions(boost::array<std::size_t, 0>())
   {
   }
 
-  ExprNode(const boost::array<int, 0>& dims) : dimensions(dims)
+  ExprNode(const boost::array<std::size_t, 0>& dims) : dimensions(dims)
   {
   }
 
-  const boost::array<int, 0>& getDims() const
+  const boost::array<std::size_t, 0>& getDims() const
   {
     return dimensions;
   }
@@ -82,19 +83,19 @@ template<typename T_elementType>
 class ExprNode<vector, T_elementType> : public ExpressionNode<T_elementType>
 {
 protected:
-  const boost::array<int, 1> dimensions;
+  const boost::array<std::size_t, 1> dimensions;
   
 public:
-  ExprNode(const boost::array<int, 1>& dims) : dimensions(dims)
+  ExprNode(const boost::array<std::size_t, 1>& dims) : dimensions(dims)
   {
   }
   
-  const boost::array<int, 1>& getDims() const
+  const boost::array<std::size_t, 1>& getDims() const
   {
     return dimensions;
   }
   
-  const int getRowCount() const
+  const std::size_t getRowCount() const
   {
     return dimensions[0];
   }
@@ -120,29 +121,29 @@ template<typename T_elementType>
 class ExprNode<matrix, T_elementType> : public ExpressionNode<T_elementType>
 {
 protected:
-  const boost::array<int, 2> dimensions;
+  const boost::array<std::size_t, 2> dimensions;
 	
 public:
-  ExprNode(const boost::array<int, 2>& dims) : dimensions(dims)
+  ExprNode(const boost::array<std::size_t, 2>& dims) : dimensions(dims)
   {
   }
 
-  const boost::array<int, 2>& getDims() const
+  const boost::array<std::size_t, 2>& getDims() const
   {
     return dimensions;
   }
   
-  const int getRowCount() const
+  const std::size_t getRowCount() const
   {
     return dimensions[0];
   }
 
-  const int getColCount() const
+  const std::size_t getColCount() const
   {
     return dimensions[1];
   }
 
-  virtual int nnz() const
+  virtual std::size_t nnz() const
   {
     assert(false);
     return 0;
@@ -176,14 +177,14 @@ template<>
 class ElementIndex<vector>
 {
 private:
-  const int row;
+  const std::size_t row;
 
 public:
-  ElementIndex(const int r) : row(r)
+  ElementIndex(const std::size_t r) : row(r)
   {
   }
   
-  inline int getRow() const
+  inline std::size_t getRow() const
   {
     return row;
   }
@@ -201,27 +202,27 @@ public:
 
 std::size_t hash_value(const ElementIndex<vector>& index)
 {
-  return boost::hash<int>()(index.getRow());
+  return boost::hash<std::size_t>()(index.getRow());
 }
 
 template<>
 class ElementIndex<matrix>
 {
 private:
-  const int row;
-  const int col;
+  const std::size_t row;
+  const std::size_t col;
 
 public:
-  ElementIndex(const int r, const int c) : row(r), col(c)
+  ElementIndex(const std::size_t r, const size_t c) : row(r), col(c)
   {
   }
 
-  inline const int getRow() const
+  inline const std::size_t getRow() const
   {
     return row;
   }
 
-  inline const int getCol() const
+  inline const std::size_t getCol() const
   {
     return col;
   }
@@ -246,7 +247,7 @@ public:
 
 std::size_t hash_value(const ElementIndex<matrix>& index)
 {
-  std::size_t seed = boost::hash<int>()(index.getRow());
+  std::size_t seed = boost::hash<std::size_t>()(index.getRow());
   boost::hash_combine(seed, index.getCol());
   return seed;
 }
@@ -259,19 +260,19 @@ struct ExprDimensions
 template<>
 struct ExprDimensions<scalar>
 {
-  static const int dims = 0;
+  static const std::size_t dims = 0;
 };
 
 template<>
 struct ExprDimensions<vector>
 {
-  static const int dims = 1;
+  static const std::size_t dims = 1;
 };
 
 template<>
 struct ExprDimensions<matrix>
 {
-  static const int dims = 2;
+  static const std::size_t dims = 2;
 };
 
 }

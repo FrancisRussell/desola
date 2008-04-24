@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <cstddef>
 #include <string>
 #include <iostream>
 #include "generator_options.hpp"
@@ -43,7 +44,7 @@ bool GeneratorOptions::getSymmetric() const
   return vm.count("symmetric") > 0;
 }
 
-int GeneratorOptions::getSize() const
+std::size_t GeneratorOptions::getSize() const
 {
   return size;
 }

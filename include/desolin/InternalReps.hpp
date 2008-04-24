@@ -68,14 +68,14 @@ template<typename T_element>
 class InternalVector : public InternalValue<T_element>
 {
 protected:
-  const int rows;
+  const std::size_t rows;
 
 public:
-  InternalVector(const bool allocated, const int rowCount) : InternalValue<T_element>(allocated), rows(rowCount)
+  InternalVector(const bool allocated, const std::size_t rowCount) : InternalValue<T_element>(allocated), rows(rowCount)
   {
   }
   
-  const inline int getRowCount() const
+  const inline std::size_t getRowCount() const
   {
     return rows;
   }
@@ -89,25 +89,25 @@ template<typename T_element>
 class InternalMatrix : public InternalValue<T_element>
 {
 protected:
-  const int rows;
-  const int cols;
+  const std::size_t rows;
+  const std::size_t cols;
   
 public:
-  InternalMatrix(const bool allocated, const int rowCount, const int colCount) : InternalValue<T_element>(allocated), rows(rowCount), cols(colCount)
+  InternalMatrix(const bool allocated, const std::size_t rowCount, const std::size_t colCount) : InternalValue<T_element>(allocated), rows(rowCount), cols(colCount)
   {
   }
   
-  const inline int getRowCount() const
+  const inline std::size_t getRowCount() const
   {
     return rows;
   }
 
-  const inline int getColCount() const
+  const inline std::size_t getColCount() const
   {
     return cols;
   }
 
-  virtual int nnz() const = 0;
+  virtual std::size_t nnz() const = 0;
 
   virtual void accept(InternalMatrixVisitor<T_element>& visitor) = 0;
 
@@ -159,11 +159,11 @@ private:
   std::vector<T_element> value;
   
 public:
-  ConventionalVector(const int rowCount) : InternalVector<T_element>(false, rowCount)
+  ConventionalVector(const std::size_t rowCount) : InternalVector<T_element>(false, rowCount)
   {
   }
 
-  ConventionalVector(const int rowCount, const T_element initialValue) : InternalVector<T_element>(true, rowCount), value(rowCount, initialValue)
+  ConventionalVector(const std::size_t rowCount, const T_element initialValue) : InternalVector<T_element>(true, rowCount), value(rowCount, initialValue)
   {
   }
 
@@ -171,7 +171,7 @@ public:
   {
     if(!this->allocated)
     {
-      value.resize(this->rows, T_element(0));
+      value.resize(this->rows);
       this->allocated=true;
     }
   }
@@ -201,7 +201,7 @@ private:
   std::vector<T_element> value;
   
 public:
-  ConventionalMatrix(const int rowCount, const int colCount) : InternalMatrix<T_element>(false, rowCount, colCount)
+  ConventionalMatrix(const std::size_t rowCount, const std::size_t colCount) : InternalMatrix<T_element>(false, rowCount, colCount)
   {
   }
 
@@ -220,7 +220,7 @@ public:
   {
     if(!this->allocated)
     {
-      value.resize(this->rows * this->cols, T_element());
+      value.resize(this->rows * this->cols);
       this->allocated=true;
     }
   }
@@ -230,7 +230,7 @@ public:
     visitor.visit(*this);
   }
 
-  virtual int nnz() const
+  virtual std::size_t nnz() const
   {
     return this->rows * this->cols;
   }
@@ -257,7 +257,7 @@ private:
   std::vector<T_element> val;
   
 public:
-  CRSMatrix(const int rowCount, const int colCount) : InternalMatrix<T_element>(false, rowCount, colCount)
+  CRSMatrix(const std::size_t rowCount, const std::size_t colCount) : InternalMatrix<T_element>(false, rowCount, colCount)
   {
   }
 
@@ -274,7 +274,7 @@ public:
       matrixData[entry.row][entry.col] = entry.value;
     }
 
-    for(int row=0; row<this->getRowCount(); ++row)
+    for(std::size_t row=0; row<this->getRowCount(); ++row)
     {
       row_ptr.push_back(val.size());
       const std::map<std::size_t, T_element>& mr(matrixData[row]);
@@ -301,12 +301,12 @@ public:
     visitor.visit(*this);
   }
 
-  int nnz() const
+  std::size_t nnz() const
   {
     return col_ind.size();
   }
 
-  unsigned row_ptr_size() const
+  std::size_t row_ptr_size() const
   {
     return row_ptr.size();
   }
@@ -330,7 +330,7 @@ public:
   {
     assert(this->allocated);
     for(int valPtr = row_ptr[index.getRow()]; valPtr < row_ptr[index.getRow()+1]; ++valPtr)
-      if (col_ind[valPtr] == index.getCol())
+      if (col_ind[valPtr] == static_cast<int>(index.getCol()))
         return val[valPtr];
 
     return T_element();

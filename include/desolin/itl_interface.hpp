@@ -28,8 +28,7 @@ namespace itl {
   //: The vector type used inside of the ITL routines for work space
   template <typename Vec>
   struct itl_traits {
-    // TODO: Work out what this does before allowing it to be defined.
-    //typedef referencing_object_tag vector_category;
+    typedef referencing_object_tag vector_category;
     typedef typename Vec::value_type value_type;
     typedef typename Vec::size_type size_type;
   };
@@ -106,15 +105,6 @@ namespace itl {
     return x.numRows();
   }
 
-// Only define this when semantics are understood
-/*
-  template <class Vector>
-  inline void resize(Vector& x, const int sz) 
-  {
-    x.resize(sz);
-  }
-*/
-  
   template <class Matrix, class VecX, class VecY>
   inline void trans_mult(const Matrix& A, const VecX& x, VecY& y) 
   {

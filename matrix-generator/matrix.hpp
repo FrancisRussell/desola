@@ -5,6 +5,7 @@
 #include<boost/numeric/ublas/matrix.hpp>
 #include<boost/numeric/ublas/matrix_proxy.hpp>
 #include<cassert>
+#include<cstddef>
 #include<vector>
 #include<string>
 
@@ -16,8 +17,8 @@ public:
   typedef T value_type;
 
 private:
-  const unsigned rows;
-  const unsigned cols;
+  const std::size_t rows;
+  const std::size_t cols;
   const bool symmetric;
   std::vector<int> col_ptr;
   std::vector<int> row_ind;
@@ -27,7 +28,7 @@ public:
   template<typename UblasSparseMatrix>
   CCSMatrix(UblasSparseMatrix& matrix, const bool s) : rows(matrix.size1()), cols(matrix.size2()), symmetric(s)
   {
-    for(unsigned col=0; col<cols; ++col)
+    for(std::size_t col=0; col<cols; ++col)
     {
       col_ptr.push_back(val.size() + 1);
       typedef boost::numeric::ublas::matrix_column<UblasSparseMatrix> column_t;

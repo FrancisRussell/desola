@@ -16,6 +16,7 @@
 /****************************************************************************/
 
 #include <iosfwd>
+#include <cstddef>
 #include <desolin/Desolin_fwd.hpp>
 
 namespace desolin
@@ -30,9 +31,9 @@ std::ostream& operator<< (std::ostream& o, const Scalar<T_element>& s)
 template<typename T_element>
 std::ostream& operator<< (std::ostream& o, const Vector<T_element>& v)
 {
-  const int rows = v.numRows();
+  const std::size_t rows = v.numRows();
   o << "Vector: " << rows << std:: endl << "[";
-  for(int row=0; row<rows; ++row)
+  for(std::size_t row=0; row<rows; ++row)
   {
     o.width(10);
     o << v(row).value();
@@ -46,14 +47,14 @@ std::ostream& operator<< (std::ostream& o, const Vector<T_element>& v)
 template<typename T_element>
 std::ostream& operator<< (std::ostream& o, const Matrix<T_element>& m)
 {
-  const int rows = m.numRows();
-  const int cols = m.numCols();
+  const std::size_t rows = m.numRows();
+  const std::size_t cols = m.numCols();
 
   o << "Matrix: " << rows << " * " << cols << std::endl << "[" << std::endl;
-  for(int row=0; row<rows; ++row)
+  for(std::size_t row=0; row<rows; ++row)
   {
     o << "[";
-    for(int col=0; col<cols; ++col)
+    for(std::size_t col=0; col<cols; ++col)
     {
       o.width(10);
       o << m(row,col).value();

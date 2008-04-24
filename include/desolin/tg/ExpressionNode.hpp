@@ -42,10 +42,10 @@ template<>
 class TGElementIndex<tg_vector>
 {
 private:
-  const int row;
+  const std::size_t row;
 
 public:
-  TGElementIndex(const int r) : row(r)
+  TGElementIndex(const std::size_t r) : row(r)
   {
   }
 
@@ -53,7 +53,7 @@ public:
   {
   }
 
-  const inline int getRow() const
+  const inline std::size_t getRow() const
   {
     return row;
   }
@@ -78,11 +78,11 @@ template<>
 class TGElementIndex<tg_matrix>
 {
 private:
-  const int row;
-  const int col;
+  const std::size_t row;
+  const std::size_t col;
   
 public:
-  TGElementIndex(const int r, const int c) : row(r), col(c)
+  TGElementIndex(const std::size_t r, const std::size_t c) : row(r), col(c)
   {
   }
 
@@ -90,12 +90,12 @@ public:
   {
   }
 
-  const inline int getRow() const
+  const inline std::size_t getRow() const
   {
     return row;
   }
 
-  const inline int getCol() const
+  const inline std::size_t getCol() const
   {
     return col;
   }
@@ -120,7 +120,7 @@ public:
 
 std::size_t hash_value(const TGElementIndex<tg_matrix>& index)
 {
-  std::size_t seed = boost::hash<int>()(index.getRow());
+  std::size_t seed = boost::hash<std::size_t>()(index.getRow());
   boost::hash_combine(seed, index.getCol());
   return seed;
 }

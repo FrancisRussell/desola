@@ -59,7 +59,7 @@ public:
   virtual const TGScalarExpr<T_element> getExpression(const tg::TaskExpression& row) const = 0;
   virtual void setExpression(const tg::TaskExpression& row, const TGScalarExpr<T_element>& e) = 0;
   virtual void addExpression(const tg::TaskExpression& row, const TGScalarExpr<T_element>& e) = 0;
-  virtual int getRows() const = 0;
+  virtual std::size_t getRows() const = 0;
   virtual InternalVector<T_element>* createInternalRep() const = 0;
   virtual bool isParameter() const = 0;
   virtual void addParameterMappings(InternalVector<T_element>& internal, ParameterHolder& params) const = 0;
@@ -78,8 +78,8 @@ public:
   virtual const TGScalarExpr<T_element> getExpression(NameGenerator& generator, const tg::TaskExpression& row, const tg::TaskExpression& col) const = 0;
   virtual void setExpression(NameGenerator& generator, const tg::TaskExpression& row, const tg::TaskExpression& col, const TGScalarExpr<T_element>& e) = 0;  
   virtual void addExpression(NameGenerator& generator, const tg::TaskExpression& row, const tg::TaskExpression& col, const TGScalarExpr<T_element>& e) = 0;
-  virtual int getRows() const = 0;
-  virtual int getCols() const = 0;
+  virtual std::size_t getRows() const = 0;
+  virtual std::size_t getCols() const = 0;
   virtual void iterateDense(NameGenerator& generator, MatrixIterationCallback& callback) const = 0;
   virtual void iterateSparse(NameGenerator& generator, MatrixIterationCallback& callback) const = 0;
   virtual InternalMatrix<T_element>* createInternalRep() const = 0;
@@ -256,7 +256,7 @@ class TGConventionalVector : public TGVector<T_element>
 private:
   const bool parameter;
   const std::string name;
-  const int rows;
+  const std::size_t rows;
   TaskArrayWrapper<T_element, 1> value;
 
   static inline const std::string getPrefix()
@@ -288,7 +288,7 @@ public:
     (*value)[row] += e.getExpression();
   }
 
-  virtual int getRows() const
+  virtual std::size_t getRows() const
   {
     return rows;
   }
@@ -367,8 +367,8 @@ class TGConventionalMatrix : public TGMatrix<T_element>
 private:
   const bool parameter;
   const std::string name;
-  const int rows;
-  const int cols;
+  const std::size_t rows;
+  const std::size_t cols;
   TaskArrayWrapper<T_element, 2> value;
 
   static inline const std::string getPrefix()
@@ -402,12 +402,12 @@ public:
     (*value)[row][col] += e.getExpression();
   }
   
-  virtual int getRows() const
+  virtual std::size_t getRows() const
   {
     return rows;
   }
 
-  virtual int getCols() const
+  virtual std::size_t getCols() const
   {
     return cols;
   }
@@ -531,9 +531,9 @@ private:
   const std::string col_ind_name;
   const std::string row_ptr_name;
   const std::string val_name; 
-  const int nnz;
-  const int rows;
-  const int cols;
+  const std::size_t nnz;
+  const std::size_t rows;
+  const std::size_t cols;
   TaskArrayWrapper<int, 1> col_ind;
   TaskArrayWrapper<int, 1> row_ptr;
   TaskArrayWrapper<T_element, 1> val;
@@ -549,7 +549,7 @@ public:
   {
   }
 
-  // TaskGraph code should generate CRS intermediates or returns so comment out this constructor for now
+  // TaskGraph code shouldn't generate CRS intermediates or returns so comment out this constructor for now
   //TGCRSMatrix(bool param, NameGenerator& generator, const ExprNode<matrix, T_element>& m) :  parameter(param), col_ind_name(generator.getName(getColIndPrefix())), 
   //                                                                        row_ptr_name(generator.getName(getRowPtrPrefix())), val_name(generator.getName(getValPrefix())),
   //                                                                        nnz(0), rows(m.getRowCount()), cols(m.getColCount()), col_ind(param, col_ind_name, 0), 
@@ -590,12 +590,12 @@ public:
     assert(0 && "Editing a CRS Matrix inside TaskGraph code is not implemented.");
   }
   
-  virtual int getRows() const
+  virtual std::size_t getRows() const
   {
     return rows;
   }
 
-  virtual int getCols() const
+  virtual std::size_t getCols() const
   {
     return cols;
   }
@@ -621,8 +621,8 @@ public:
   {
     using namespace tg;
 
-    tVarNamed(int, valPtr, generator.getName("valPtr").c_str());
-    tVarNamed(int, currentRow, generator.getName("currentRow").c_str());
+    tVarNamed(std::size_t, valPtr, generator.getName("valPtr").c_str());
+    tVarNamed(std::size_t, currentRow, generator.getName("currentRow").c_str());
 
     currentRow = 0;
 

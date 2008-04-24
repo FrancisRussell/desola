@@ -18,6 +18,7 @@
 #ifndef DESOLIN_VECTOR_HPP
 #define DESOLIN_VECTOR_HPP
 
+#include <cstddef>
 #include <desolin/Desolin_fwd.hpp>
 
 namespace desolin
@@ -32,7 +33,7 @@ public:
 	  
   // Typedefs for ITL
   typedef Scalar<T_element> value_type;
-  typedef int size_type;
+  typedef std::size_t size_type;
 
   static const detail::ExprType expressionType = detail::vector;
     
@@ -40,11 +41,11 @@ public:
   {
   }
  
-  explicit Vector(const int rows) : detail::Var<detail::vector, T_element>(*new detail::Literal<detail::vector, T_element>(new detail::ConventionalVector<T_element>(rows, 0)))
+  explicit Vector(const size_type rows) : detail::Var<detail::vector, T_element>(*new detail::Literal<detail::vector, T_element>(new detail::ConventionalVector<T_element>(rows)))
   {
   }
   
-  Vector(const int rows, const T_element initialValue) : detail::Var<detail::vector, T_element>(*new detail::Literal<detail::vector, T_element>(new detail::ConventionalVector<T_element>(rows, initialValue)))
+  Vector(const size_type rows, const T_element initialValue) : detail::Var<detail::vector, T_element>(*new detail::Literal<detail::vector, T_element>(new detail::ConventionalVector<T_element>(rows, initialValue)))
   {
   }
 
@@ -61,12 +62,7 @@ public:
     return *this;
   }
 
-  void resize(const int rows)
-  {
-    setExpr(*new detail::Literal<detail::vector, T_element>(new detail::ConventionalVector<T_element>(rows, 0)));
-  }
-
-  const int numRows() const
+  const size_type numRows() const
   {
     return this->getExpr().getRowCount();
   }
@@ -138,7 +134,7 @@ public:
     return Vector(*new Pairwise<vector, T_element>(pair_div, this->getExpr(), right.getExpr()));
   }
 
-  ScalarElement<detail::vector, T_element> operator()(const int row) const
+  ScalarElement<detail::vector, T_element> operator()(const size_type row) const
   {
     using namespace detail;
     const ElementIndex<vector> index(row);
@@ -159,9 +155,7 @@ protected:
   virtual void internal_update(detail::ExprNode<detail::vector, T_element>& previous, detail::ExprNode<detail::vector, T_element>& next) const
   {
     if (&this->getExpr() == &previous)
-    {
       this->setExpr(next);
-    }  
   }
   virtual void internal_update(detail::ExprNode<detail::matrix, T_element>& previous, detail::ExprNode<detail::matrix, T_element>& next) const {}    
 };

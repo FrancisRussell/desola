@@ -2,6 +2,7 @@
 #define DESOLIN_MATRIX_GENERATOR_GENERATOR_OPTIONS_HPP
 
 #include <boost/program_options.hpp>
+#include <cstddef>
 #include <string>
 
 namespace po = boost::program_options;
@@ -18,7 +19,7 @@ public:
   GeneratorOptions();
   void processOptions(int argc, char* argv[]);
   bool getSymmetric() const;
-  int getSize() const;
+  std::size_t getSize() const;
   std::string getOutputFile() const;
 };
 

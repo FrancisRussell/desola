@@ -89,7 +89,7 @@ public:
     return exprVector;
   }
   
-  inline int nodeCount() const
+  inline std::size_t nodeCount() const
   {
     return exprVector.size();
   }

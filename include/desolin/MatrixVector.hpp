@@ -18,6 +18,7 @@
 #ifndef DESOLIN_MATRIX_VECTOR_HPP
 #define DESOLIN_MATRIX_VECTOR_HPP
 
+#include <cstddef>
 #include <boost/array.hpp>
 #include <desolin/Desolin_fwd.hpp>
 
@@ -31,9 +32,9 @@ template<typename T_element>
 class MatrixMult : public BinOp<matrix, matrix, matrix, T_element>
 {
 private:
-  inline static const boost::array<int, 2> createDims(const ExprNode<matrix, T_element>& l, const ExprNode<matrix, T_element>& r)
+  inline static const boost::array<std::size_t, 2> createDims(const ExprNode<matrix, T_element>& l, const ExprNode<matrix, T_element>& r)
   {
-    boost::array<int, 2> dimensions = { {l.getRowCount(), r.getColCount()} };
+    boost::array<std::size_t, 2> dimensions = { {l.getRowCount(), r.getColCount()} };
     return dimensions;
   }
   
@@ -57,9 +58,9 @@ template<typename T_element>
 class MatrixVectorMult : public BinOp<vector, matrix, vector, T_element>
 {
 private:
-  inline static const boost::array<int, 1> getDims(const ExprNode<matrix, T_element>& l, const ExprNode<vector, T_element>& r)
+  inline static const boost::array<std::size_t, 1> getDims(const ExprNode<matrix, T_element>& l, const ExprNode<vector, T_element>& r)
   {
-    boost::array<int, 1> dimensions = { {l.getRowCount()} };
+    boost::array<std::size_t, 1> dimensions = { {l.getRowCount()} };
     return dimensions;
   }
   
@@ -83,9 +84,9 @@ template<typename T_element>
 class TransposeMatrixVectorMult : public BinOp<vector, matrix, vector, T_element>
 {
 private:
-  inline static const boost::array<int, 1> getDims(const ExprNode<matrix, T_element>& l, const ExprNode<vector, T_element>& r)
+  inline static const boost::array<std::size_t, 1> getDims(const ExprNode<matrix, T_element>& l, const ExprNode<vector, T_element>& r)
   {
-    boost::array<int, 1> dimensions = { {l.getColCount()} };
+    boost::array<std::size_t, 1> dimensions = { {l.getColCount()} };
     return dimensions;
   }
 
@@ -110,13 +111,13 @@ template<typename T_element>
 class VectorDot : public BinOp<scalar, vector, vector, T_element>
 {
 private:
-  inline static const boost::array<int, 0> getDims(const ExprNode<vector, T_element>& left, const ExprNode<vector, T_element>& right)
+  inline static const boost::array<std::size_t, 0> getDims(const ExprNode<vector, T_element>& left, const ExprNode<vector, T_element>& right)
   {
-    return boost::array<int, 0>();
+    return boost::array<std::size_t, 0>();
   }
   
 public:
-  VectorDot(ExprNode<vector, T_element>& left, ExprNode<vector, T_element>& right) : BinOp<scalar, vector, vector, T_element>(boost::array<int, 0>(), left, right)
+  VectorDot(ExprNode<vector, T_element>& left, ExprNode<vector, T_element>& right) : BinOp<scalar, vector, vector, T_element>(boost::array<std::size_t, 0>(), left, right)
   {
   }
 
@@ -135,7 +136,7 @@ template<typename T_element>
 class VectorCross : public BinOp<vector, vector, vector, T_element>
 {
 private:
-  inline static const boost::array<int, 1>& getDims(const ExprNode<vector, T_element>& l, const ExprNode<vector, T_element>& r)
+  inline static const boost::array<std::size_t, 1>& getDims(const ExprNode<vector, T_element>& l, const ExprNode<vector, T_element>& r)
   {
     return l.getDims();
   }
@@ -160,7 +161,7 @@ template<typename T_element>
 class VectorNorm : public UnOp<scalar, vector, T_element>
 {
 public:
-  VectorNorm(ExprNode<vector, T_element>& left) : UnOp<scalar, vector, T_element>(boost::array<int, 0>(), left)
+  VectorNorm(ExprNode<vector, T_element>& left) : UnOp<scalar, vector, T_element>(boost::array<std::size_t, 0>(), left)
   {
   }
 
@@ -180,9 +181,9 @@ template<typename T_element>
 class MatrixTranspose : public UnOp<matrix, matrix, T_element>
 {
 private:
-  inline static const boost::array<int, 2> createDims(const ExprNode<matrix, T_element>& m)
+  inline static const boost::array<std::size_t, 2> createDims(const ExprNode<matrix, T_element>& m)
   {
-    boost::array<int, 2> dimensions = { {m.getColCount(), m.getRowCount()} };
+    boost::array<std::size_t, 2> dimensions = { {m.getColCount(), m.getRowCount()} };
     return dimensions;
   }
 

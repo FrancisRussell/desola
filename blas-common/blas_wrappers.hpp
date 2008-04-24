@@ -2,6 +2,7 @@
 #define DESOLIN_BLAS_WRAPPERS_HPP
 
 #include<vector>
+#include<cstddef>
 #include<mtl/harwell_boeing_stream.h>
 #include<mtl/entry.h>
 
@@ -19,21 +20,25 @@ public:
   typedef std::size_t size_type;
 
 private:
-  const size_type rows;
   std::vector<value_type> values;
 
 public:
-  BLASVector(const size_type r) : rows(r), values(rows, 0)
+  BLASVector(const size_type rows) : values(rows)
   {
   }
 
-  BLASVector(const size_type r, const value_type initial) : rows(r), values(rows, initial)
+  BLASVector(const size_type rows, const value_type initial) : values(rows, initial)
   {
+  }
+
+  void resize(const size_type rows)
+  {
+    values.resize(rows);
   }
 
   inline size_type nrows() const
   {
-    return rows;
+    return values.size();
   }
 
   inline value_type* data()
@@ -54,6 +59,7 @@ class BLASGeneralMatrix
 public:
   typedef T value_type;
   typedef std::size_t size_type;
+
 private:
   const size_type rows;
   const size_type cols;

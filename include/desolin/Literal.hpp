@@ -19,6 +19,7 @@
 #define DESOLIN_LITERAL_HPP
 
 #include <cassert>
+#include <cstddef>
 #include <boost/scoped_ptr.hpp>
 #include <boost/static_assert.hpp>
 #include <desolin/Desolin_fwd.hpp>
@@ -93,9 +94,9 @@ protected:
   virtual void update(ExprNode<vector, T_element>& previous, ExprNode<vector, T_element>& next) {}
   virtual void update(ExprNode<matrix, T_element>& previous, ExprNode<matrix, T_element>& next) {}
 
-  inline static const boost::array<int, 1> getDimensions(const InternalVector<T_element>& internal)
+  inline static const boost::array<std::size_t, 1> getDimensions(const InternalVector<T_element>& internal)
   {
-    const boost::array<int, 1> dims = { {internal.getRowCount()} };
+    const boost::array<std::size_t, 1> dims = { {internal.getRowCount()} };
     return dims;
   }
   
@@ -146,9 +147,9 @@ protected:
   virtual void update(ExprNode<vector, T_element>& previous, ExprNode<vector, T_element>& next) {}
   virtual void update(ExprNode<matrix, T_element>& previous, ExprNode<matrix, T_element>& next) {}
 
-  inline static const boost::array<int, 2> getDimensions(const InternalMatrix<T_element>& internal)
+  inline static const boost::array<std::size_t, 2> getDimensions(const InternalMatrix<T_element>& internal)
   {
-    const boost::array<int, 2> dims = { {internal.getRowCount(), internal.getColCount()} };
+    const boost::array<std::size_t, 2> dims = { {internal.getRowCount(), internal.getColCount()} };
     return dims;
   }
   
@@ -188,7 +189,7 @@ public:
     return 0.0;
   }
 
-  virtual int nnz() const
+  virtual std::size_t nnz() const
   {
     return value->nnz();
   }

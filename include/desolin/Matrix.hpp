@@ -18,6 +18,7 @@
 #ifndef DESOLIN_MATRIX_HPP
 #define DESOLIN_MATRIX_HPP
 
+#include <cstddef>
 #include <desolin/Desolin_fwd.hpp>
 
 namespace desolin
@@ -32,7 +33,7 @@ public:
 	  
   // Typedefs for ITL
   typedef Scalar<T_element> value_type;
-  typedef int size_type;
+  typedef std::size_t size_type;
 	
   static const detail::ExprType expressionType = detail::matrix;
 
@@ -60,7 +61,7 @@ public:
   {
   }
  
-  explicit Matrix(const int rows, const int cols) : detail::Var<detail::matrix, T_element>(*new detail::Literal<detail::matrix, T_element>(new detail::ConventionalMatrix<T_element>(rows, cols)))
+  explicit Matrix(const size_type rows, const size_type cols) : detail::Var<detail::matrix, T_element>(*new detail::Literal<detail::matrix, T_element>(new detail::ConventionalMatrix<T_element>(rows, cols)))
   {
   }
   
@@ -68,17 +69,17 @@ public:
   {
   }
 
-  const int numRows() const
+  const size_type numRows() const
   {
     return this->getExpr().getRowCount();
   }
 
-  const int numCols() const
+  const size_type numCols() const
   {
     return this->getExpr().getColCount();
   }
 
-  const int nnz() const
+  const size_type nnz() const
   {
     this->getExpr().evaluate();
     return this->getExpr().nnz();
@@ -87,9 +88,8 @@ public:
   Matrix& operator=(const Matrix& right)
   {
     if(this != &right)
-    {
       setExpr(right.getExpr());
-    }
+
     return *this;
   }
 
@@ -167,7 +167,7 @@ public:
     return Matrix(*new Pairwise<matrix, T_element>(pair_div, this->getExpr(), right.getExpr()));
   }
 
-  ScalarElement<detail::matrix, T_element> operator()(const int row, const int col) const
+  ScalarElement<detail::matrix, T_element> operator()(const size_type row, const size_type col) const
   {
     using namespace detail;
     const ElementIndex<matrix> index(row, col);
@@ -189,9 +189,7 @@ protected:
   virtual void internal_update(detail::ExprNode<detail::matrix, T_element>& previous, detail::ExprNode<detail::matrix, T_element>& next) const
   {
     if (&this->getExpr() == &previous)
-    {
       this->setExpr(next);
-    }
   }   
 };
 

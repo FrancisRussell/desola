@@ -19,6 +19,7 @@
 #define DESOLIN_PAIRWISE_HPP
 
 #include <numeric>
+#include <cstddef>
 #include <functional>
 #include <boost/array.hpp>
 #include <desolin/Desolin_fwd.hpp>
@@ -35,7 +36,7 @@ class Pairwise : public BinOp<exprType, exprType, exprType, T_element>
 private:
   const PairwiseOp operation;
   
-  static const boost::array<int, ExprDimensions<exprType>::dims> createDims(const ExprNode<exprType, T_element>& l, const ExprNode<exprType, T_element>& r)
+  static const boost::array<std::size_t, ExprDimensions<exprType>::dims> createDims(const ExprNode<exprType, T_element>& l, const ExprNode<exprType, T_element>& r)
   {
     return l.getDims();
   }

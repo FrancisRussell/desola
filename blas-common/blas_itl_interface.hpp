@@ -20,6 +20,7 @@
 
 #include <cassert>
 #include <complex>
+#include <cstddef>
 #include <itl/itl_tags.h>
 #include <itl/number_traits.h>
 
@@ -27,11 +28,9 @@ namespace itl {
   using desolin::blas_wrappers::BLASVector;
   using desolin::blas_wrappers::BLASGeneralMatrix;
   
-  //: The vector type used inside of the ITL routines for work space
   template <typename Vec>
   struct itl_traits {
-    // TODO: Work out what this does before allowing it to be defined.
-    //typedef referencing_object_tag vector_category;
+    typedef non_referencing_object_tag vector_category;
     typedef typename Vec::value_type value_type;
     typedef typename Vec::size_type size_type;
   };
@@ -49,7 +48,7 @@ namespace itl {
     const Vec _v;
   };
 
-  // Getting the scaling factor for scaled and unscaled vectors
+  // Get the scaling factor for scaled and unscaled vectors
   template<typename Vec>
   inline typename Vec::value_type scale_factor(const Vec& v)
   {
@@ -62,7 +61,7 @@ namespace itl {
     return s.alpha();
   }
 
-  // Getting the data for scaled and unscaled vectors
+  // Get the data for scaled and unscaled vectors
   template<typename Vec>
   inline typename Vec::value_type* get_data(Vec& v)
   {
@@ -164,14 +163,11 @@ namespace itl {
     return x.nrows();
   }
 
-// Only define this when semantics are understood
-/*
   template <class Vector>
-  inline void resize(Vector& x, const int sz) 
+  inline void resize(Vector& x, const std::size_t sz) 
   {
     x.resize(sz);
   }
-*/
 }
 
 #endif

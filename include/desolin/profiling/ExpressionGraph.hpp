@@ -69,7 +69,7 @@ public:
     expressionGraph.accept(generator);
   }
 
-  inline int nodeCount() const
+  inline std::size_t nodeCount() const
   {
     return exprVector.size();
   }

@@ -22,6 +22,7 @@
 #include <boost/array.hpp>
 #include <boost/cast.hpp>
 #include <cassert>
+#include <cstddef>
 
 namespace desolin
 {
@@ -54,7 +55,7 @@ private:
   }
 
 public:
-  BinOp(const boost::array<int, ExprDimensions<resultType>::dims> dims, ExprNode<leftType, T_element>& l, ExprNode<rightType, T_element>& r) : ExprNode<resultType, T_element>(dims), left(&l), right(&r)
+  BinOp(const boost::array<std::size_t, ExprDimensions<resultType>::dims> dims, ExprNode<leftType, T_element>& l, ExprNode<rightType, T_element>& r) : ExprNode<resultType, T_element>(dims), left(&l), right(&r)
   {
     this->registerDependency(left);
     this->registerDependency(right);

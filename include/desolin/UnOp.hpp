@@ -48,7 +48,7 @@ private:
   }
   
 public:
-  UnOp(const boost::array<int, ExprDimensions<resultType>::dims> dims, ExprNode<exprType, T_element>& e) : ExprNode<resultType, T_element>(dims), expr(&e)
+  UnOp(const boost::array<std::size_t, ExprDimensions<resultType>::dims> dims, ExprNode<exprType, T_element>& e) : ExprNode<resultType, T_element>(dims), expr(&e)
   {
     this->registerDependency(expr);
   }
