@@ -13,7 +13,7 @@ private:
   po::options_description description;
   po::positional_options_description positional_description;
   po::variables_map vm;
-  int size;
+  std::size_t size;
 
 public:
   GeneratorOptions();

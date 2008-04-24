@@ -11,7 +11,7 @@ GeneratorOptions::GeneratorOptions() : description("Supported Options")
 {
   description.add_options()
     ("help", "produce help message")
-    ("size", po::value<int>(&size)->default_value(1000), "size of matrix to generate")
+    ("size", po::value<std::size_t>(&size)->default_value(1000), "size of matrix to generate")
     ("symmetric", "generate a symmetric matrix")
     ("output-file", po::value<std::string>(), "path to file to generate");
 
