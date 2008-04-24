@@ -262,7 +262,7 @@ public:
     result.setExpression(TaskExpression(2), left.getExpression(0).mul(right.getExpression(1)).sub(right.getExpression(0).mul(left.getExpression(1))));
   }
  
-  virtual void visit(TGVectorNorm<T_element>& e)
+  virtual void visit(TGVectorTwoNorm<T_element>& e)
   {
     using namespace tg;
 

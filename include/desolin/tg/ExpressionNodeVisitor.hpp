@@ -45,7 +45,7 @@ public:
   virtual void visit(TGTransposeMatrixVectorMult<T_element>& e)=0;
   virtual void visit(TGVectorDot<T_element>& e)=0;
   virtual void visit(TGVectorCross<T_element>& e)=0;
-  virtual void visit(TGVectorNorm<T_element>& e)=0;
+  virtual void visit(TGVectorTwoNorm<T_element>& e)=0;
   virtual void visit(TGMatrixTranspose<T_element>& e)=0;
 
   virtual void visit(TGPairwise<tg_scalar, T_element>& e) = 0;

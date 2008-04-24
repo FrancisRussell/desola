@@ -183,11 +183,11 @@ public:
     vectorHandler.handleNode(e, new TGVectorCross<T_element>(internal, left, right));		
   }
 
-  void visit(VectorNorm<T_element>& e)
+  void visit(VectorTwoNorm<T_element>& e)
   {
     TGScalar<T_element>* internal = scalarHandler.createTGRep(e);
     TGExprNode<tg_vector, T_element>& v = vectorHandler.getTGExprNode(e.getOperand());
-    scalarHandler.handleNode(e, new TGVectorNorm<T_element>(internal, v));
+    scalarHandler.handleNode(e, new TGVectorTwoNorm<T_element>(internal, v));
   }
   
   void visit(MatrixTranspose<T_element>& e)

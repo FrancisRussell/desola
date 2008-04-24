@@ -45,7 +45,7 @@ public:
   virtual void visit(PTransposeMatrixVectorMult<T_element>& e) = 0;
   virtual void visit(PVectorDot<T_element>& e) = 0;
   virtual void visit(PVectorCross<T_element>& e) = 0;
-  virtual void visit(PVectorNorm<T_element>& e) = 0;
+  virtual void visit(PVectorTwoNorm<T_element>& e) = 0;
   virtual void visit(PMatrixTranspose<T_element>& e) = 0;
 
   virtual void visit(PPairwise<scalar, T_element>& e) = 0;

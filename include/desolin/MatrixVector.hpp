@@ -158,10 +158,10 @@ public:
 };
 
 template<typename T_element>
-class VectorNorm : public UnOp<scalar, vector, T_element>
+class VectorTwoNorm : public UnOp<scalar, vector, T_element>
 {
 public:
-  VectorNorm(ExprNode<vector, T_element>& left) : UnOp<scalar, vector, T_element>(boost::array<std::size_t, 0>(), left)
+  VectorTwoNorm(ExprNode<vector, T_element>& left) : UnOp<scalar, vector, T_element>(boost::array<std::size_t, 0>(), left)
   {
   }
 

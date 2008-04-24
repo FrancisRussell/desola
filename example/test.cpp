@@ -35,7 +35,7 @@ int main()
   std::cout << c << std::endl;
   Vector<double> q(5, 4);
   Vector<double> r = q*c;
-  std::cout << r.norm() << std::endl;
+  std::cout << r.two_norm() << std::endl;
 
   Matrix<double> m1(5,4);
   Matrix<double> m2(4,7);

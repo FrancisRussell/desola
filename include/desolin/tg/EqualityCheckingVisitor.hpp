@@ -124,7 +124,7 @@ public:
     checkMatch(e);
   }
   
-  virtual void visit(TGVectorNorm<T_element>& e)
+  virtual void visit(TGVectorTwoNorm<T_element>& e)
   {
     checkMatch(e);
   }

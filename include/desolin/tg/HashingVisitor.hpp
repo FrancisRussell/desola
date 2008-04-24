@@ -191,7 +191,7 @@ public:
     boost::hash_combine(hash, hashBinOp(e));
   }
   
-  virtual void visit(TGVectorNorm<T_element>& e)
+  virtual void visit(TGVectorTwoNorm<T_element>& e)
   {
     boost::hash_combine(hash, hashUnOp(e));
   }

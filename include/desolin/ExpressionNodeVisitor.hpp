@@ -43,7 +43,7 @@ public:
   virtual void visit(TransposeMatrixVectorMult<T_element>& e)=0;
   virtual void visit(VectorDot<T_element>& e)= 0;	
   virtual void visit(VectorCross<T_element>& e)= 0;
-  virtual void visit(VectorNorm<T_element>& e)= 0;
+  virtual void visit(VectorTwoNorm<T_element>& e)= 0;
   virtual void visit(MatrixTranspose<T_element>& e)= 0;
 
   virtual void visit(ElementGet<vector, T_element>& e)= 0;

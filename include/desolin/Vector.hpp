@@ -116,10 +116,10 @@ public:
     return Vector(*new VectorCross<T_element>(this->getExpr(), right.getExpr()));
   }
 
-  const Scalar<T_element> norm() const
+  const Scalar<T_element> two_norm() const
   {
     using namespace detail;
-    return Scalar<T_element>(*new VectorNorm<T_element>(this->getExpr()));
+    return Scalar<T_element>(*new VectorTwoNorm<T_element>(this->getExpr()));
   }
 
   const Vector ele_mul(const Vector& right) const

@@ -123,15 +123,15 @@ public:
 };
 
 template<typename T_element>
-class PVectorNorm : public PUnOp<scalar, vector, T_element>
+class PVectorTwoNorm : public PUnOp<scalar, vector, T_element>
 {
 public:
-  bool isEqual(const PVectorNorm& node, const std::map<const PExpressionNode<T_element>*, const PExpressionNode<T_element>*>& mappings) const
+  bool isEqual(const PVectorTwoNorm& node, const std::map<const PExpressionNode<T_element>*, const PExpressionNode<T_element>*>& mappings) const
   {     
     return PUnOp<scalar, vector, T_element>::isEqual(node, mappings);
   }
 
-  PVectorNorm(PExprNode<vector, T_element>& operand) : PUnOp<scalar, vector, T_element>(operand)
+  PVectorTwoNorm(PExprNode<vector, T_element>& operand) : PUnOp<scalar, vector, T_element>(operand)
   {
   }
 

@@ -74,7 +74,7 @@ template<typename T_element> class MatrixVectorMult;
 template<typename T_element> class TransposeMatrixVectorMult;
 template<typename T_element> class VectorDot;
 template<typename T_element> class VectorCross;
-template<typename T_element> class VectorNorm;
+template<typename T_element> class VectorTwoNorm;
 template<typename T_element> class MatrixTranspose;
 template<ExprType exprType, typename T_element> class Negate;
 template<typename T_element> class Absolute;

@@ -174,7 +174,7 @@ public:
     boost::hash_combine(hash, hashBinOp(e));
   }
   
-  virtual void visit(PVectorNorm<T_element>& e)
+  virtual void visit(PVectorTwoNorm<T_element>& e)
   {
     boost::hash_combine(hash, hashUnOp(e));
   }

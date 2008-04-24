@@ -70,7 +70,7 @@ template<typename T_element> class TGMatrixVectorMult;
 template<typename T_element> class TGTransposeMatrixVectorMult;
 template<typename T_element> class TGVectorDot;
 template<typename T_element> class TGVectorCross;
-template<typename T_element> class TGVectorNorm;
+template<typename T_element> class TGVectorTwoNorm;
 template<typename T_element> class TGMatrixTranspose;
 template<TGExprType exprType, typename T_element> class TGPairwise;
 template<TGExprType exprType, typename T_element> class TGScalarPiecewise;

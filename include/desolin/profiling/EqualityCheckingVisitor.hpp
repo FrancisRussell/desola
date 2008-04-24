@@ -123,7 +123,7 @@ public:
     checkMatch(e);
   }
   
-  virtual void visit(PVectorNorm<T_element>& e)
+  virtual void visit(PVectorTwoNorm<T_element>& e)
   {
     checkMatch(e);
   }

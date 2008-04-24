@@ -152,9 +152,9 @@ public:
     handleNode(e, new PVectorCross<T_element>(getVector(e.getLeft()), getVector(e.getRight())));
   }
   
-  virtual void visit(VectorNorm<T_element>& e)
+  virtual void visit(VectorTwoNorm<T_element>& e)
   {
-    handleNode(e, new PVectorNorm<T_element>(getVector(e.getOperand())));
+    handleNode(e, new PVectorTwoNorm<T_element>(getVector(e.getOperand())));
   }
   
   virtual void visit(MatrixTranspose<T_element>& e)

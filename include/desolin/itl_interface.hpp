@@ -36,7 +36,7 @@ namespace itl {
   template <class Vec>
   inline typename itl::number_traits< typename Vec::value_type >::magnitude_type two_norm(const Vec& v)
   {
-    return v.norm();
+    return v.two_norm();
   }
 
   template <class VecA, class VecB>

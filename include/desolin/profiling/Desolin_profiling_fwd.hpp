@@ -38,7 +38,7 @@ template<typename T_element> class PMatrixVectorMult;
 template<typename T_element> class PTransposeMatrixVectorMult;
 template<typename T_element> class PVectorDot;
 template<typename T_element> class PVectorCross;
-template<typename T_element> class PVectorNorm;
+template<typename T_element> class PVectorTwoNorm;
 template<typename T_element> class PMatrixTranspose;
 template<ExprType exprType, typename T_element> class PPairwise;
 template<ExprType exprType, typename T_element> class PScalarPiecewise;

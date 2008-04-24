@@ -133,15 +133,15 @@ public:
 };
 
 template<typename T_element>
-class TGVectorNorm : public TGUnOp<tg_scalar, tg_vector, T_element>
+class TGVectorTwoNorm : public TGUnOp<tg_scalar, tg_vector, T_element>
 {
 public:
-  bool isEqual(const TGVectorNorm& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
+  bool isEqual(const TGVectorTwoNorm& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
   {
     return TGUnOp<tg_scalar, tg_vector, T_element>::isEqual(node, mappings);
   }
 
-  TGVectorNorm(TGScalar<T_element>* internal, 
+  TGVectorTwoNorm(TGScalar<T_element>* internal, 
 		  TGExprNode<tg_vector, T_element>& left) : TGUnOp<tg_scalar, tg_vector, T_element>(internal, left)
   {
   }
