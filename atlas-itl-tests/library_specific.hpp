@@ -1,9 +1,11 @@
 #ifndef DESOLIN_ATLAS_LIBARY_SPECIFIC_HPP
 #define DESOLIN_ATLAS_LIBARY_SPECIFIC_HPP
 
+#include <cassert>
 #include "solver_options.hpp"
 #include "statistics_generator.hpp"
 #include "mtl/harwell_boeing_stream.h"
+#include "mtl/matrix_market_stream.h"
 
 extern "C"
 {
@@ -28,21 +30,44 @@ inline std::size_t num_cols(const Matrix& m)
   return m.ncols();
 }
 
-void invokeSolver(const SolverOptions& options)
+namespace
+{
+
+template<typename StreamType>
+void invokeSolver(const SolverOptions& options, StreamType& stream)
 {
   typedef double Type;
   typedef desolin::blas_wrappers::BLASGeneralMatrix<Type> Matrix;
   typedef desolin::blas_wrappers::BLASVector<Type> Vector;
   typedef Type Scalar;
 
-  mtl::harwell_boeing_stream<Type> hbs(const_cast<char*>(options.getFile().c_str()));
-
-  Matrix A(hbs);
-  Vector x(num_rows(A), Type(0));
-  Vector b(num_cols(A), Type(1));
+  Matrix A(stream);
+  Vector x(num_cols(A), Type(0));
+  Vector b(num_rows(A), Type(1));
 
   solver<Matrix, Vector, Scalar>(options, A, x, b);
 }
+
+}
+
+void invokeSolver(const SolverOptions& options)
+{
+  if (options.fileIsHB())
+  {
+    mtl::harwell_boeing_stream<double> stream(const_cast<char*>(options.getFile().c_str()));
+    invokeSolver(options, stream);
+  }
+  else if (options.fileIsMM())
+  {
+    mtl::matrix_market_stream<double> stream(const_cast<char*>(options.getFile().c_str()));
+    invokeSolver(options, stream);
+  }
+  else
+  {
+    assert(false && "Unknown file type");
+  }
+}
+
 
 void library_init()
 {

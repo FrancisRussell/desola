@@ -1,9 +1,11 @@
 #ifndef DESOLIN_IMKL_LIBARY_SPECIFIC_HPP
 #define DESOLIN_IMKL_LIBARY_SPECIFIC_HPP
 
+#include <cassert>
 #include "solver_options.hpp"
 #include "statistics_generator.hpp"
 #include "mtl/harwell_boeing_stream.h"
+#include "mtl/matrix_market_stream.h"
 
 extern "C" 
 {
@@ -47,7 +49,11 @@ void library_init()
   mkl_set_num_threads(1);
 }
 
-void invokeSolver(const SolverOptions& options)
+namespace
+{
+
+template<typename StreamType>
+void invokeSolver(const SolverOptions& options, StreamType& stream)
 {
   typedef double Type;
   typedef desolin::blas_wrappers::BLASGeneralMatrix<Type> MatrixDense;
@@ -55,22 +61,41 @@ void invokeSolver(const SolverOptions& options)
   typedef desolin::blas_wrappers::BLASVector<Type> Vector;
   typedef Type Scalar;
 
-  mtl::harwell_boeing_stream<Type> hbs(const_cast<char*>(options.getFile().c_str()));
-
   if (options.useSparse())
   {
-    MatrixSparse A(hbs);
-    Vector x(num_rows(A), Type(0));
-    Vector b(num_cols(A), Type(1));
+    MatrixSparse A(stream);
+    Vector x(num_cols(A), Type(0));
+    Vector b(num_rows(A), Type(1));
     solver<MatrixSparse, Vector, Scalar>(options, A, x, b);
   }
   else
   {
-    MatrixDense A(hbs);
-    Vector x(num_rows(A), Type(0));
-    Vector b(num_cols(A), Type(1));
+    MatrixDense A(stream);
+    Vector x(num_cols(A), Type(0));
+    Vector b(num_rows(A), Type(1));
     solver<MatrixDense, Vector, Scalar>(options, A, x, b);
   }
 }
+
+}
+
+void invokeSolver(const SolverOptions& options)
+{
+  if (options.fileIsHB())
+  {
+    mtl::harwell_boeing_stream<double> stream(const_cast<char*>(options.getFile().c_str()));
+    invokeSolver(options, stream);
+  }
+  else if (options.fileIsMM())
+  {
+    mtl::matrix_market_stream<double> stream(const_cast<char*>(options.getFile().c_str()));
+    invokeSolver(options, stream);
+  }
+  else
+  {
+    assert(false && "Unknown file type");
+  }
+}
+
 
 #endif

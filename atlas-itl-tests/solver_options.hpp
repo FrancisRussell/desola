@@ -28,6 +28,7 @@ private:
   po::options_description description;
   po::positional_options_description positional_description;
   po::variables_map vm;
+  std::string format;
   bool useSingleLineResult;
   int iterations;
   
@@ -36,6 +37,8 @@ public:
   void processOptions(int argc, char* argv[]);
   std::string getFile() const;
   bool singleLineResult() const;
+  bool fileIsHB() const;
+  bool fileIsMM() const;
   int getIterations() const;
 };
 

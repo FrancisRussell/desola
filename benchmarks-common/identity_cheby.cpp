@@ -43,7 +43,7 @@ void solver(const SolverOptions& options, MatrixType& A, VectorType& x, VectorTy
   cheby(A, x, b, precond(), iter, eigmin, eigmax);
 
   //verify the result
-  VectorType b1(num_cols(A));
+  VectorType b1(num_rows(A));
   itl::mult(A, x, b1);
   itl::add(b1, itl::scaled(b, -1.), b1);
 

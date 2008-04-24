@@ -1,6 +1,7 @@
 #ifndef DESOLIN_DESOLIN_LIBRARY_SPECIFIC_HPP
 #define DESOLIN_DESOLIN_LIBRARY_SPECIFIC_HPP
 
+#include <cassert>
 #include <desolin/Desolin.hpp>
 #include <desolin/itl_interface.hpp>
 #include "solver_options.hpp"
@@ -31,25 +32,48 @@ void library_init()
 {
 }
 
-void invokeSolver(const SolverOptions& options)
+namespace 
+{
+
+template<typename StreamType>
+void invokeSolver(const SolverOptions& options, StreamType& stream)
 {
   typedef double Type;
   typedef desolin::Matrix<Type> Matrix;
   typedef desolin::Vector<Type> Vector;
   typedef desolin::Scalar<Type> Scalar;
   
-  desolin::harwell_boeing_stream<Type> hbs(const_cast<char*>(options.getFile().c_str()));
   Matrix A;
 
   if (options.useSparse())
-    A = Matrix::loadSparse(hbs);
+    A = Matrix::loadSparse(stream);
   else
-    A = Matrix::loadDense(hbs);
+    A = Matrix::loadDense(stream);
 
-  Vector x(num_rows(A), Type(0));
-  Vector b(num_cols(A), Type(1));
+  Vector x(num_cols(A), Type(0));
+  Vector b(num_rows(A), Type(1));
 
   solver<Matrix, Vector, Scalar>(options, A, x, b);
+}
+
+}
+
+void invokeSolver(const SolverOptions& options)
+{
+  if (options.fileIsHB())
+  {
+    desolin::harwell_boeing_stream<double> stream(const_cast<char*>(options.getFile().c_str()));
+    invokeSolver(options, stream);
+  }
+  else if (options.fileIsMM())
+  {
+    desolin::matrix_market_stream<double> stream(const_cast<char*>(options.getFile().c_str()));
+    invokeSolver(options, stream);
+  }
+  else
+  {
+    assert(false && "Unknown file type");
+  }
 }
 
 #endif

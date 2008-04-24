@@ -271,6 +271,7 @@ public:
       entry2<double> entry;
       stream >> entry;
       assert(entry.row >= 0 && entry.col >=0);
+      assert(entry.row < this->getRowCount() && entry.col < this->getColCount());
       matrixData[entry.row][entry.col] = entry.value;
     }
 

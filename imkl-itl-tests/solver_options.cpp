@@ -30,6 +30,7 @@ SolverOptions::SolverOptions(const std::string& fileDesc) : description("Allowed
     ("iterations", po::value<int>(&iterations)->default_value(256), "number of iterations to perform")
     ("sparse", "use sparse representation for matrix storage")
     ("single-line-result", "print statistics on single line")
+    ("format", po::value<std::string>(&format)->default_value("hb"), "format of input file: Harwell-Boeing=hb, Matrix-Market=mm")
     ("input-file", po::value<std::string>(), fileDesc.c_str());
 
   positional_description.add("input-file", -1);
@@ -74,4 +75,14 @@ bool SolverOptions::useSparse() const
 int SolverOptions::getIterations() const
 {
   return iterations;
+}
+
+bool SolverOptions::fileIsHB() const
+{
+  return format=="hb";
+}
+
+bool SolverOptions::fileIsMM() const
+{
+  return format=="mm";
 }
