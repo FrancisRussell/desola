@@ -1,11 +1,11 @@
-#!/bin/sh
+#!/bin/bash
 
-MTL_ITL_TEST_PATH="../mtl-itl-tests"
+. ./solver_invoker
+
+SOLVER_PATH="../mtl-itl-tests"
 MATRIX_PATH="../benchmark-matrices"
+SOLVERS="identity_bicg identity_bicgstab identity_cgs identity_qmr identity_tfqmr"
+MATRICES=$(find ${MATRIX_PATH} -name "*.rua")
+unset SOLVER_OPTIONS
 
-for solver in identity_bicg identity_bicgstab identity_cgs identity_qmr identity_tfqmr; do
-for matrix in $(find ${MATRIX_PATH} -name "*.rua"); do
-  echo -n -e "Solver: $solver\t"
-  $MTL_ITL_TEST_PATH/$solver --iterations 256 --single-line $MATRIX_PATH/$matrix | grep "^Library:";
-done;
-done;
+invoke_solvers

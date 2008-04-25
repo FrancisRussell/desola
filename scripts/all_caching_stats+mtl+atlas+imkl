@@ -1,9 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
-./cached_stats | tee -a cached_stats.txt &&
-./fused_stats | tee -a fused_stats.txt &&
-./contraction_stats | tee -a contraction_stats.txt &&
-./liveness_stats | tee -a liveness_stats.txt &&
+./desolin_stats | tee -a desolin_stats.txt &&
 ./mtl_stats | tee -a mtl_stats.txt &&
 ./atlas_stats | tee -a atlas_stats.txt &&
 ./imkl_stats | tee -a imkl_stats.txt

@@ -3,15 +3,15 @@
 iterationspec="Iterations:[^0-9]256"
 for solver in identity_bicg identity_bicgstab identity_cgs identity_qmr identity_tfqmr; do
 echo "#Solver: $solver"
-for matsize in 500 1000 1500 2000 2500 3000 3500 4000 4500 5000; do
+for matsize in $(grep -Eo "Matrix Size: [0-9]*[^0-9]" "$1" | sed "s/Matrix Size: //" | sort -n | uniq); do
 
 #Size
 echo -n "$matsize "
 #Desolin Timing Columns
-for linespec in "Solver:[^a-zA-Z]*$solver[^a-zA-Z]*Library: desolin.*Matrix Size:[^0-9]$matsize[^0-9].*Code_cache:[^a-zA-Z]On.*Fusion:[^a-zA-Z]Off.*Contraction:[^a-zA-Z]Off.*Liveness:[^a-zA-Z]Off" \
-                "Solver:[^a-zA-Z]*$solver[^a-zA-Z]*Library: desolin.*Matrix Size:[^0-9]$matsize[^0-9].*Code_cache:[^a-zA-Z]On.*Fusion:[^a-zA-Z]On.*Contraction:[^a-zA-Z]Off.*Liveness:[^a-zA-Z]Off" \
-		"Solver:[^a-zA-Z]*$solver[^a-zA-Z]*Library: desolin.*Matrix Size:[^0-9]$matsize[^0-9].*Code_cache:[^a-zA-Z]On.*Fusion:[^a-zA-Z]On.*Contraction:[^a-zA-Z]On.*Liveness:[^a-zA-Z]Off" \
-		"Solver:[^a-zA-Z]*$solver[^a-zA-Z]*Library: desolin.*Matrix Size:[^0-9]$matsize[^0-9].*Code_cache:[^a-zA-Z]On.*Fusion:[^a-zA-Z]On.*Contraction:[^a-zA-Z]On.*Liveness:[^a-zA-Z]On"; do
+for linespec in "Solver: $solver[^a-zA-Z]*Library: desolin.*Matrix Size: $matsize[^0-9].*Code_cache: On.*Fusion: Off.*Contraction: Off.*Liveness: Off" \
+                "Solver: $solver[^a-zA-Z]*Library: desolin.*Matrix Size: $matsize[^0-9].*Code_cache: On.*Fusion: On.*Contraction: Off.*Liveness: Off" \
+		"Solver: $solver[^a-zA-Z]*Library: desolin.*Matrix Size: $matsize[^0-9].*Code_cache: On.*Fusion: On.*Contraction: On.*Liveness: Off" \
+		"Solver: $solver[^a-zA-Z]*Library: desolin.*Matrix Size: $matsize[^0-9].*Code_cache: On.*Fusion: On.*Contraction: On.*Liveness: On"; do
 # Average Evaluation Time
 grep -E "$linespec" "$1" | grep -E "$iterationspec" | clm 29 | average | tr "\n" " "
 # Average Compile Time
@@ -19,16 +19,16 @@ grep -E "$linespec" "$1" | grep -E "$iterationspec" | clm 25 | average | tr "\n"
 done;
 
 #MTL Timing Column
-grep -E "Solver:[^a-zA-Z]$solver[^a-zA-Z]*Library:[^a-zA-Z]MTL.*Matrix Size:[^0-9]$matsize[^0-9]" "$1" | grep -E "$iterationspec" | clm 15 | average | tr "\n" " "
+grep -E "Solver: $solver[^a-zA-Z]*Library: MTL.*Matrix Size: $matsize[^0-9]" "$1" | grep -E "$iterationspec" | clm 15 | average | tr "\n" " "
 
 #ATLAS Timing Column
-grep -E "Solver:[^a-zA-Z]$solver[^a-zA-Z]*Library:[^a-zA-Z]ATLAS.*Matrix Size:[^0-9]$matsize[^0-9]" "$1" | grep -E "$iterationspec" | clm 15 | average | tr "\n" " "
+grep -E "Solver: $solver[^a-zA-Z]*Library: ATLAS.*Matrix Size: $matsize[^0-9]" "$1" | grep -E "$iterationspec" | clm 15 | average | tr "\n" " "
 
 #IMKL Timing Column
-grep -E "Solver:[^a-zA-Z]$solver[^a-zA-Z]*Library:[^a-zA-Z]IMKL.*Matrix Size:[^0-9]$matsize[^0-9]" "$1" | grep -E "$iterationspec" | clm 15 | average | tr "\n" " "
+grep -E "Solver: $solver[^a-zA-Z]*Library: IMKL.*Matrix Size: $matsize[^0-9]" "$1" | grep -E "$iterationspec" | clm 15 | average | tr "\n" " "
 
 #FLOPs Column
-grep -E "Solver:[^a-zA-Z]*$solver[^a-zA-Z]*Library: desolin.*Matrix Size:[^0-9]$matsize[^0-9].*Code_cache:[^a-zA-Z]On.*Fusion:[^a-zA-Z]On.*Contraction:[^a-zA-Z]On.*Liveness:[^a-zA-Z]Off" "$1" | grep -E "$iterationspec" | clm 31 | head -n1 | tr "\n" " "
+grep -E "Solver: $solver[^a-zA-Z]*Library: desolin.*Matrix Size: $matsize[^0-9].*Code_cache: On.*Fusion: On.*Contraction: On.*Liveness: Off" "$1" | grep -E "$iterationspec" | clm 31 | head -n1 | tr "\n" " "
 
 # End of column newline
 echo 

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+. ./solver_invoker
+
+SOLVER_PATH="../itl-tests"
+MATRIX_PATH="../benchmark-matrices"
+SOLVERS="identity_bicg identity_bicgstab identity_cgs identity_qmr identity_tfqmr"
+MATRICES=$(find ${MATRIX_PATH} -name "*.rua")
+
+for OPTIONS in "--code-caching=true --loop-fusion=false --array-contraction=false --liveness-analysis=false" \
+               "--code-caching=true --loop-fusion=true  --array-contraction=false --liveness-analysis=false" \
+               "--code-caching=true --loop-fusion=true  --array-contraction=true  --liveness-analysis=false" \
+               "--code-caching=true --loop-fusion=true  --array-contraction=true  --liveness-analysis=true";
+do
+  SOLVER_OPTIONS="--enable-icc ${OPTIONS}";
+  invoke_solvers;
+done

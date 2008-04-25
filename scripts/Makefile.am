@@ -1,1 +1,1 @@
-EXTRA_DIST = all_caching_stats+mtl+atlas+imkl atlas_stats cached_stats contraction_stats fused_stats generate_benchmark_matrices generate_gnuplot_data imkl_stats liveness_stats mtl_stats uncached_stats
+EXTRA_DIST = all_caching_stats+mtl+atlas+imkl atlas_stats desolin_stats generate_benchmark_matrices generate_gnuplot_data imkl_stats mtl_stats solver_invoker uncached_stats
