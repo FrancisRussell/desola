@@ -2,9 +2,11 @@
 #define DESOLIN_IMKL_BLAS_WRAPPERS_HPP
 
 #include <vector>
-#include <map>
 #include <cassert>
 #include <cstddef>
+#include <algorithm>
+#include <boost/tuple/tuple.hpp>
+#include <boost/tuple/tuple_comparison.hpp>
 #include "blas_wrappers.hpp"
 
 namespace desolin
@@ -31,31 +33,45 @@ public:
   template<typename StreamType>
   explicit BLASCRSMatrix(StreamType& stream) : rows(stream.nrows()), cols(stream.ncols())
   {
-    std::vector< std::map<std::size_t, T> > matrixData(rows);
+    std::vector< boost::tuple<std::size_t, std::size_t, T> > matrixData;
+    matrixData.reserve(stream.nnz());
 
     while(!stream.eof())
     {
       mtl::entry2<double> entry;
       stream >> entry;
       assert(entry.row >=0 && entry.col >=0);
-      matrixData[entry.row][ entry.col] = entry.value;
+      assert(entry.row < static_cast<int>(rows) && entry.col < static_cast<int>(cols));
+      matrixData.push_back(boost::make_tuple(entry.row, entry.col, entry.value));
     }
+
+    std::sort(matrixData.begin(), matrixData.end());
 
     row_ptr.reserve(rows+1);
     col_ind.reserve(stream.nnz());
     val.reserve(stream.nnz());
 
-    for(std::size_t row=0; row<rows; ++row)
+    std::size_t currentRow = 0;
+    row_ptr.push_back(0);
+
+    for(std::size_t index=0; index<matrixData.size(); ++index)
     {
-      row_ptr.push_back(val.size());
-      const std::map<std::size_t, T>& mr(matrixData[row]);
-      for(typename std::map<std::size_t, T>::const_iterator colIter(mr.begin()); colIter!=mr.end(); ++colIter)
+      const boost::tuple<std::size_t, std::size_t, T>& entry(matrixData[index]);
+
+      while(currentRow < boost::get<0>(entry))
       {
-        col_ind.push_back(colIter->first);
-        val.push_back(colIter->second);
+        row_ptr.push_back(val.size());
+        ++currentRow;
       }
+      
+      col_ind.push_back(boost::get<1>(entry));
+      val.push_back(boost::get<2>(entry));
     }
     row_ptr.push_back(val.size());
+
+    assert(row_ptr.size() == rows + 1);
+    assert(static_cast<int>(col_ind.size()) == stream.nnz());
+    assert(static_cast<int>(val.size()) == stream.nnz());
   }
 
   inline size_type nnz() const

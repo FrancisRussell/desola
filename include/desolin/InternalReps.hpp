@@ -19,9 +19,12 @@
 #define DESOLIN_INTERNAL_REPS_HPP
 
 #include <cassert>
-#include <map>
 #include <vector>
+#include <cstddef>
+#include <algorithm>
 #include <desolin/Desolin_fwd.hpp>
+#include <boost/tuple/tuple.hpp>
+#include <boost/tuple/tuple_comparison.hpp>
 #include <desolin/file-access/mtl_entry.hpp>
 
 namespace desolin
@@ -264,34 +267,47 @@ public:
   template<typename StreamType>
   explicit CRSMatrix(StreamType& stream) : InternalMatrix<T_element>(true, stream.nrows(), stream.ncols())
   {
-    std::vector< std::map<std::size_t, T_element> > matrixData(this->getRowCount());
+    std::vector< boost::tuple<std::size_t, std::size_t, T_element> > matrixData;
+    matrixData.reserve(stream.nnz());
 
     while(!stream.eof())
     {
       entry2<double> entry;
       stream >> entry;
       assert(entry.row >= 0 && entry.col >=0);
-      assert(entry.row < this->getRowCount() && entry.col < this->getColCount());
-      matrixData[entry.row][entry.col] = entry.value;
+      assert(entry.row < static_cast<int>(this->getRowCount()) && entry.col < static_cast<int>(this->getColCount()));
+      matrixData.push_back(boost::make_tuple(entry.row, entry.col, entry.value));
     }
+
+    std::sort(matrixData.begin(), matrixData.end());
 
     row_ptr.reserve(this->getRowCount() + 1);
     col_ind.reserve(stream.nnz());
     val.reserve(stream.nnz());
 
-    for(std::size_t row=0; row<this->getRowCount(); ++row)
+    std::size_t currentRow = 0;
+    row_ptr.push_back(0);
+
+    for(std::size_t index=0; index<matrixData.size(); ++index)
     {
-      row_ptr.push_back(val.size());
-      const std::map<std::size_t, T_element>& mr(matrixData[row]);
-      for(typename std::map<std::size_t, T_element>::const_iterator colIter(mr.begin()); colIter!=mr.end(); ++colIter)
+      const boost::tuple<std::size_t, std::size_t, T_element>& entry(matrixData[index]);
+
+      while(currentRow < boost::get<0>(entry))
       {
-        col_ind.push_back(colIter->first);
-        val.push_back(colIter->second);
+        row_ptr.push_back(val.size());
+        ++currentRow;
       }
+      
+      col_ind.push_back(boost::get<1>(entry));
+      val.push_back(boost::get<2>(entry));
     }
     row_ptr.push_back(val.size());
+
+    assert(row_ptr.size() == this->getRowCount() + 1);
+    assert(static_cast<int>(col_ind.size()) == stream.nnz());
+    assert(static_cast<int>(val.size()) == stream.nnz());
   }
- 
+
   virtual void allocate()
   {
     if(!this->allocated)
