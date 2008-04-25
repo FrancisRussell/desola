@@ -1,6 +1,6 @@
 #!/bin/bash
 
-./desolin_stats | tee -a desolin_stats.txt &&
-./mtl_stats | tee -a mtl_stats.txt &&
-./atlas_stats | tee -a atlas_stats.txt &&
-./imkl_stats | tee -a imkl_stats.txt
+./desolin_stats &&
+./mtl_stats &&
+./atlas_stats &&
+./imkl_stats
