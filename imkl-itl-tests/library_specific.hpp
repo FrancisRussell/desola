@@ -44,7 +44,7 @@ inline std::size_t nnz(const desolin::blas_wrappers::BLASGeneralMatrix<T>& m)
   return m.nrows() * m.ncols();
 }
 
-void library_init()
+void library_init(SolverOptions& options)
 {
   mkl_set_num_threads(1);
 }

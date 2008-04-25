@@ -4,6 +4,8 @@
 #include <cassert>
 #include <desolin/Desolin.hpp>
 #include <desolin/itl_interface.hpp>
+#include <sys/time.h>
+#include <sys/resource.h>
 #include "solver_options.hpp"
 #include "statistics_generator.hpp"
 
@@ -28,8 +30,24 @@ inline std::size_t nnz(const Matrix& m)
   return m.nnz();
 }
 
-void library_init()
+void library_init(const SolverOptions& options)
 {
+  // Increase maximum stack size because of size of vectors in runtime generated
+  // code
+
+  if (options.useSparse())
+  {
+    int result;
+    rlimit limits;
+
+    result = getrlimit(RLIMIT_STACK, &limits);
+    assert(result == 0);
+
+    limits.rlim_cur = limits.rlim_max;
+
+    result = setrlimit(RLIMIT_STACK, &limits);
+    assert(result == 0);
+  }
 }
 
 namespace 

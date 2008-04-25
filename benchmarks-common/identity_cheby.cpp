@@ -53,11 +53,10 @@ void solver(const SolverOptions& options, MatrixType& A, VectorType& x, VectorTy
 
 int main (int argc, char* argv[]) 
 {
-  library_init();
-
   SolverOptions options("Unsymmetric matrix in Harwell-Boeing format");
   options.processOptions(argc, argv);
         
+  library_init(options);
   invokeSolver(options);
 
   return EXIT_SUCCESS;

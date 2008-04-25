@@ -80,7 +80,7 @@ void invokeSolver(const SolverOptions& options)
   }
 }
 
-void library_init()
+void library_init(SolverOptions& options)
 {
 }
 
