@@ -17,7 +17,7 @@ void populate(MatrixType& matrix, const std::size_t bandwidth, const double dens
   // Place random values with appropriate bandwidth
   for(std::size_t row=0; row<matrix.size1(); ++row)
   {
-    for(std::size_t col=std::max(0u, row-bandwidth); col<std::min(matrix.size2(), row+bandwidth+1); ++col)
+    for(std::size_t col=std::max(static_cast<std::size_t>(0), row-bandwidth); col<std::min(matrix.size2(), row+bandwidth+1); ++col)
     {
       if (drand48 () < density)
       {
