@@ -12,8 +12,8 @@
 #include <stdlib.h>
 #include <cassert>
 #include <iostream>
+#include <desolin/iohb/iohb.h>
 #include "mtl_complex.hpp"
-#include "iohb.h"
 #include "mtl_entry.hpp"
 
 namespace desolin {

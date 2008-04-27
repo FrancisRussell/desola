@@ -1,10 +1,10 @@
 #ifndef DESOLIN_BLAS_WRAPPERS_HPP
 #define DESOLIN_BLAS_WRAPPERS_HPP
 
-#include<vector>
-#include<cstddef>
-#include<mtl/harwell_boeing_stream.h>
-#include<mtl/entry.h>
+#include <vector>
+#include <cstddef>
+#include <desolin/file-access/mtl_harwell_boeing_stream.hpp>
+#include <desolin/file-access/mtl_entry.hpp>
 
 namespace desolin
 {
@@ -75,7 +75,7 @@ public:
   {
     while(!str.eof())
     {
-      mtl::entry2<double> entry;
+      desolin::entry2<double> entry;
       str >> entry;
       values[ncols()*entry.row + entry.col] = entry.value;
     }

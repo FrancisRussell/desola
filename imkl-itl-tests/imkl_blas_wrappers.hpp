@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <boost/tuple/tuple.hpp>
 #include <boost/tuple/tuple_comparison.hpp>
+#include <desolin/file-access/mtl_entry.hpp>
 #include "blas_wrappers.hpp"
 
 namespace desolin
@@ -38,7 +39,7 @@ public:
 
     while(!stream.eof())
     {
-      mtl::entry2<double> entry;
+      desolin::entry2<double> entry;
       stream >> entry;
       assert(entry.row >=0 && entry.col >=0);
       assert(entry.row < static_cast<int>(rows) && entry.col < static_cast<int>(cols));

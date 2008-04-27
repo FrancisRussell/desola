@@ -11,7 +11,7 @@
 #include <string.h>
 #include <malloc.h>
 #include <ctype.h>
-#include <desolin/file-access/mmio.h>
+#include <mmio.h>
 
 int mm_is_valid(MM_typecode matcode)
 {

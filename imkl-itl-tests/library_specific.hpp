@@ -4,8 +4,8 @@
 #include <cassert>
 #include "solver_options.hpp"
 #include "statistics_generator.hpp"
-#include "mtl/harwell_boeing_stream.h"
-#include "mtl/matrix_market_stream.h"
+#include <desolin/file-access/mtl_harwell_boeing_stream.hpp>
+#include <desolin/file-access/mtl_matrix_market_stream.hpp>
 
 extern "C" 
 {
@@ -83,12 +83,12 @@ void invokeSolver(const SolverOptions& options)
 {
   if (options.fileIsHB())
   {
-    mtl::harwell_boeing_stream<double> stream(const_cast<char*>(options.getFile().c_str()));
+    desolin::harwell_boeing_stream<double> stream(const_cast<char*>(options.getFile().c_str()));
     invokeSolver(options, stream);
   }
   else if (options.fileIsMM())
   {
-    mtl::matrix_market_stream<double> stream(const_cast<char*>(options.getFile().c_str()));
+    desolin::matrix_market_stream<double> stream(const_cast<char*>(options.getFile().c_str()));
     invokeSolver(options, stream);
   }
   else

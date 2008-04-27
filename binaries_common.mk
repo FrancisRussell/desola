@@ -2,4 +2,6 @@
 # that need to be linked against the Desolin library.
 
 AM_CPPFLAGS=-I$(top_srcdir)/include
-LDADD=$(top_srcdir)/lib/libdesolin.la
+
+DESOLIN_LIB = -L$(top_srcdir)/lib/ -ldesolin
+DESOLIN_IOHB_LIB = -L$(top_srcdir)/lib/ -ldesolin-iohb

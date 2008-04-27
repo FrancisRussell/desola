@@ -214,7 +214,7 @@ Fri Aug 15 16:29:47 EDT 1997
 #endif
 /*---------------------------------------------------------------------*/
 
-#include<desolin/file-access/iohb.h>
+#include<iohb.h>
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
