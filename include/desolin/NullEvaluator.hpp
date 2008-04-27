@@ -41,7 +41,7 @@ private:
   std::vector<Literal<vector, T_element>*> vectorLiterals;
   std::vector<Literal<matrix, T_element>*> matrixLiterals;
   
-  template<ExprType exprType>
+  template<typename exprType>
   void addMappings(std::vector<Literal<exprType, T_element>*>& literals)
   {
     for(typename std::vector<Literal<exprType, T_element>*>::const_iterator iterator = literals.begin(); iterator!=literals.end(); ++iterator)

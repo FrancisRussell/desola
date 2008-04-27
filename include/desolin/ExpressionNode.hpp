@@ -145,19 +145,19 @@ protected:
   virtual void update(ExprNode<vector, T_element>& previous, ExprNode<vector, T_element>& next) = 0;
   virtual void update(ExprNode<matrix, T_element>& previous, ExprNode<matrix, T_element>& next) = 0;
 
-  template<ExprType exprType>
+  template<typename exprType>
   static void updateVariable(const Variable<T_element>* variable, ExprNode<exprType, T_element>& previous, ExprNode<exprType, T_element>& next)
   {
     variable->update(previous, next);
   }
 
-  template<ExprType exprType>
+  template<typename exprType>
   static void updateExpressionNode(ExpressionNode<T_element>* const expressionNode, ExprNode<exprType, T_element>& previous, ExprNode<exprType, T_element>& next)
   {
     expressionNode->update(previous, next);
   }
   
-  template<ExprType exprType>
+  template<typename exprType>
   void internalReplace(ExprNode<exprType, T_element>& previous, ExprNode<exprType, T_element>& next)
   {
     // This method should only be called by a subclass of ExpressionNode with itself as the "previous" parameter

@@ -27,7 +27,7 @@ namespace desolin
 namespace detail
 {
 
-template<ExprType exprType, typename T_element>
+template<typename exprType, typename T_element>
 class PScalarPiecewise : public PBinOp<exprType, exprType, scalar, T_element>
 {
 private:

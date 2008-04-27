@@ -468,9 +468,9 @@ private:
   {
     switch(op)
     {
-      case tg_multiply: return left.mul(right);
-      case tg_divide: return left.div(right);
-      case tg_assign: return right;
+      case tg_piecewise_multiply: return left.mul(right);
+      case tg_piecewise_divide: return left.div(right);
+      case tg_piecewise_assign: return right;
       default: throw TGInvalidOperationError("Unrecognised TaskGraph Evaluator ScalarPiecewise Operation");
     }
   }

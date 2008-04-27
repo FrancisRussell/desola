@@ -33,7 +33,7 @@ namespace desolin
 namespace detail
 {
 
-template<TGExprType exprType, typename T_element>
+template<typename exprType, typename T_element>
 class TGElementGet : public TGUnOp<tg_scalar, exprType, T_element>
 {
 private:
@@ -64,7 +64,7 @@ public:
   }
 };
 
-template<TGExprType exprType, typename T_element>
+template<typename exprType, typename T_element>
 class TGElementSet : public TGUnOp<exprType, exprType, T_element>
 {
 private:

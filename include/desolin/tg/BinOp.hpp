@@ -29,7 +29,7 @@ namespace desolin
 namespace detail
 {
 
-template<TGExprType resultType, TGExprType leftType, TGExprType rightType, typename T_element>
+template<typename resultType, typename leftType, typename rightType, typename T_element>
 class TGBinOp : public TGExprNode<resultType, T_element>
 {
 private:

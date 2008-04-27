@@ -28,7 +28,7 @@ namespace desolin
 namespace detail
 {
 
-template<ExprType resultType, ExprType leftType, ExprType rightType, typename T_element>
+template<typename resultType, typename leftType, typename rightType, typename T_element>
 class PBinOp : public PExprNode<resultType, T_element>
 {
 private:

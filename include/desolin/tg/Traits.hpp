@@ -26,7 +26,7 @@ namespace desolin
 namespace detail
 {
 
-template<ExprType exprType, typename T_element>
+template<typename exprType, typename T_element>
 struct ExprTGTraits
 {
 };  
@@ -34,7 +34,7 @@ struct ExprTGTraits
 template<typename T_element>
 struct ExprTGTraits<scalar, T_element>
 {
-  static const TGExprType tgExprType = tg_scalar;
+  typedef tg_scalar tgExprType;
   typedef TGScalarGen<T_element> internalRepCreator;
   typedef TGScalar<T_element> internalRep;
   typedef TGConventionalScalar<T_element> conventionalStorage;
@@ -43,7 +43,7 @@ struct ExprTGTraits<scalar, T_element>
 template<typename T_element>
 struct ExprTGTraits<vector, T_element>
 { 
-  static const TGExprType tgExprType = tg_vector;
+  typedef tg_vector tgExprType;
   typedef TGVectorGen<T_element> internalRepCreator;
   typedef TGVector<T_element> internalRep;
   typedef TGConventionalVector<T_element> conventionalStorage;
@@ -52,14 +52,14 @@ struct ExprTGTraits<vector, T_element>
 template<typename T_element>
 struct ExprTGTraits<matrix, T_element>
 {   
-  static const TGExprType tgExprType = tg_matrix;
+  typedef tg_matrix tgExprType;
   typedef TGMatrixGen<T_element> internalRepCreator;
   typedef TGMatrix<T_element> internalRep;
   typedef TGConventionalMatrix<T_element> conventionalStorage;
 };
 
 
-template<TGExprType exprType, typename T_elementType>
+template<typename exprType, typename T_elementType>
 class TGInternalType
 {
 };

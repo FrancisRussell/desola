@@ -41,14 +41,14 @@ private:
   const std::map<const PExpressionNode<T_element>*, int> nodeNumberings;
   std::size_t hash;
  
-  template<ExprType exprType>
+  template<typename exprType>
   inline std::size_t hashExprNode(const PExprNode<exprType, T_element>& node) const
   {
     const char* nodeTypeString = typeid(node).name();
     return boost::hash_range(nodeTypeString, nodeTypeString+strlen(nodeTypeString));
   }
 
-  template<ExprType resultType, ExprType exprType>
+  template<typename resultType, typename exprType>
   std::size_t hashUnOp(const PUnOp<resultType, exprType, T_element>& unop) const
   {
     std::size_t seed = hashExprNode(unop);
@@ -58,7 +58,7 @@ private:
     return seed;
   }
 
-  template<ExprType resultType, ExprType leftType, ExprType rightType>
+  template<typename resultType, typename leftType, typename rightType>
   std::size_t hashBinOp(const PBinOp<resultType, leftType, rightType, T_element>& binop) const
   {
     std::size_t seed = hashExprNode(binop);
@@ -71,7 +71,7 @@ private:
     return seed;
   }
 
-  template<ExprType exprType>
+  template<typename exprType>
   std::size_t hashElementSet(const PElementSet<exprType, T_element>& node) const
   {
     std::size_t seed = hashUnOp(node);
@@ -87,7 +87,7 @@ private:
     return seed;
   }
 
-  template<ExprType exprType>
+  template<typename exprType>
   std::size_t hashPairwise(const PPairwise<exprType, T_element>& node) const
   {
     std::size_t seed = hashBinOp(node);
@@ -95,7 +95,7 @@ private:
     return seed;
   }
 
-  template<ExprType exprType>
+  template<typename exprType>
   std::size_t hashScalarPiecewise(const PScalarPiecewise<exprType, T_element>& node) const
   {
     std::size_t seed = hashBinOp(node);

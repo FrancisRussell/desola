@@ -94,13 +94,13 @@ private:
   std::map< ExprNode<vector, T_element>*, Literal<vector, T_element>* > vectorMap;
   std::map< ExprNode<matrix, T_element>*, Literal<matrix, T_element>* > matrixMap;
   
-  template<ExprType exprType>
+  template<typename exprType>
   static void freeLiteral(const std::pair<const ExprNode<exprType, T_element>*, Literal<exprType, T_element>*>& pair)
   {
     pair.second->deleteIfUnused();
   }
 	
-  template<ExprType exprType>
+  template<typename exprType>
   inline static void freeLiteralsHelper(const std::map<ExprNode<exprType, T_element>*, Literal<exprType, T_element>*> map)
   {
     std::for_each(map.begin(), map.end(), boost::bind(freeLiteral<exprType>, _1));
@@ -113,13 +113,13 @@ private:
     freeLiteralsHelper(matrixMap);
   }
 
-  template<ExprType exprType>
+  template<typename exprType>
   static void allocateLiteral(const std::pair<const ExprNode<exprType, T_element>*, Literal<exprType, T_element>*>& pair)
   {
     pair.second->getValue().allocate();
   }
 
-  template<ExprType exprType>
+  template<typename exprType>
   static void allocateLiteralsHelper(const std::map<ExprNode<exprType, T_element>*, Literal<exprType, T_element>*> map)
   {
     std::for_each(map.begin(), map.end(), boost::bind(allocateLiteral<exprType>, _1));

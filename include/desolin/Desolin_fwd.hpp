@@ -24,20 +24,18 @@ namespace desolin
 namespace detail
 {
 
-// Enums used for template parameters
-
 enum EvaluationDirective
 {
   EVALUATE,
   NO_EVALUATE
 };
 
-enum ExprType
-{
-  scalar,
-  vector,
-  matrix
-};
+// Types used for template parameters
+
+// Expression Types
+struct scalar {};
+struct vector {};
+struct matrix {};
 
 enum PairwiseOp
 {
@@ -49,26 +47,26 @@ enum PairwiseOp
 
 enum ScalarPiecewiseOp
 {
-  multiply,
-  divide,
-  assign
+  piecewise_multiply,
+  piecewise_divide,
+  piecewise_assign
 };
 
 // Common
-template<ExprType exprType> class ElementIndex;
-template<ExprType exprType, typename T_element> struct ExprTraits;
+template<typename exprType> class ElementIndex;
+template<typename exprType, typename T_element> struct ExprTraits;
 
 // Expression Tree
 template<typename T_element> class ExpressionGraph;
 template<typename T_element> class ExpressionNode;
-template<ExprType exprType, typename T_element> class ExprNode;
-template<ExprType resultType, ExprType exprType, typename T_element> class UnOp;
-template<ExprType resultType, ExprType leftType, ExprType rightType, typename T_element> class BinOp;
-template<ExprType exprType, typename T_element> class Literal;
-template<ExprType exprType, typename T_element> class ElementGet;
-template<ExprType exprType, typename T_element> class ElementSet;
-template<ExprType exprType, typename T_element> class Pairwise;
-template<ExprType exprType, typename T_element> class ScalarPiecewise;
+template<typename exprType, typename T_element> class ExprNode;
+template<typename resultType, typename exprType, typename T_element> class UnOp;
+template<typename resultType, typename leftType, typename rightType, typename T_element> class BinOp;
+template<typename exprType, typename T_element> class Literal;
+template<typename exprType, typename T_element> class ElementGet;
+template<typename exprType, typename T_element> class ElementSet;
+template<typename exprType, typename T_element> class Pairwise;
+template<typename exprType, typename T_element> class ScalarPiecewise;
 template<typename T_element> class MatrixMult;
 template<typename T_element> class MatrixVectorMult;
 template<typename T_element> class TransposeMatrixVectorMult;
@@ -76,7 +74,7 @@ template<typename T_element> class VectorDot;
 template<typename T_element> class VectorCross;
 template<typename T_element> class VectorTwoNorm;
 template<typename T_element> class MatrixTranspose;
-template<ExprType exprType, typename T_element> class Negate;
+template<typename exprType, typename T_element> class Negate;
 template<typename T_element> class Absolute;
 template<typename T_element> class SquareRoot;
 
@@ -110,7 +108,7 @@ template<typename T_element> class NullEvaluatorFactory;
 
 // External Interface
 template<typename T_element> class Variable;
-template<ExprType expressionType, typename T_element> class Var;
+template<typename expressionType, typename T_element> class Var;
 
 // Caching
 class Cache;
@@ -132,7 +130,7 @@ template <class T> class matrix_market_stream;
 template<typename T_element> class Vector;
 template<typename T_element> class Matrix;
 template<typename T_element> class Scalar;
-template<detail::ExprType exprType, typename T_element> class ScalarElement;
+template<typename exprType, typename T_element> class ScalarElement;
 
 
 //Exceptions

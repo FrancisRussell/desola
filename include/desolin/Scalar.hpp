@@ -31,7 +31,7 @@ public:
   friend class Matrix<T_element>;
   friend class Vector<T_element>;
 
-  static const detail::ExprType expressionType = detail::scalar;
+  typedef detail::scalar expressionType;
   
   Scalar()
   {
@@ -88,25 +88,25 @@ public:
   friend const Scalar operator*(const Scalar& left, const Scalar& right)
   {
     using namespace detail;
-    return Scalar(*new ScalarPiecewise<scalar, T_element>(multiply, left.getExpr(), right.getExpr()));
+    return Scalar(*new ScalarPiecewise<scalar, T_element>(piecewise_multiply, left.getExpr(), right.getExpr()));
   }
 
   const Vector<T_element> operator*(const Vector<T_element>& right) const
   {
     using namespace detail;
-    return Vector<T_element>(*new ScalarPiecewise<vector, T_element>(multiply, this->getExpr(), right.getExpr()));
+    return Vector<T_element>(*new ScalarPiecewise<vector, T_element>(piecewise_multiply, this->getExpr(), right.getExpr()));
   }
 
   const Matrix<T_element> operator*(const Matrix<T_element>& right) const
   {
     using namespace detail;
-    return Matrix<T_element>(*new ScalarPiecewise<matrix, T_element>(multiply, this->getExpr(), right.getExpr()));
+    return Matrix<T_element>(*new ScalarPiecewise<matrix, T_element>(piecewise_multiply, this->getExpr(), right.getExpr()));
   }
 
   friend const Scalar operator/(const Scalar& left, const Scalar& right)
   {
     using namespace detail;
-    return Scalar(*new ScalarPiecewise<scalar, T_element>(divide, left.getExpr(), right.getExpr()));
+    return Scalar(*new ScalarPiecewise<scalar, T_element>(piecewise_divide, left.getExpr(), right.getExpr()));
   }
 
   bool operator==(const Scalar& right) const
@@ -171,7 +171,7 @@ protected:
   virtual void internal_update(detail::ExprNode<detail::matrix, T_element>& previous, detail::ExprNode<detail::matrix, T_element>& next) const {}
 };
 
-template<detail::ExprType exprType, typename T_element>
+template<typename exprType, typename T_element>
 class ScalarElement : public Scalar<T_element>
 {
 private:

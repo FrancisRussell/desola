@@ -32,7 +32,7 @@ namespace desolin
 namespace detail
 {
 
-template<ExprType exprType, typename T_element>
+template<typename exprType, typename T_element>
 class ElementGet : public UnOp<scalar, exprType, T_element>
 {
 private:
@@ -69,7 +69,7 @@ public:
   }
 };
 
-template<ExprType exprType, typename T_element>
+template<typename exprType, typename T_element>
 class ElementSet : public UnOp<exprType, exprType, T_element>
 {
 private:

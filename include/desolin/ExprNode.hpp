@@ -35,7 +35,7 @@ namespace desolin
 namespace detail
 {
 
-template<ExprType exprType, typename T_elementType>
+template<typename exprType, typename T_elementType>
 class ExprNode : public ExpressionNode<T_elementType>
 {
   // Should never be instantiated
@@ -166,11 +166,11 @@ public:
   }
 };
 
-template<ExprType exprType>
+template<typename exprType>
 class ElementIndex
 {
   // Should never be instantiated
-  BOOST_STATIC_ASSERT(exprType!=exprType);
+  BOOST_STATIC_ASSERT(sizeof(exprType) == 0);
 };
 
 template<>
@@ -252,7 +252,7 @@ std::size_t hash_value(const ElementIndex<matrix>& index)
   return seed;
 }
 
-template<ExprType exprType>
+template<typename exprType>
 struct ExprDimensions
 {
 };

@@ -28,7 +28,7 @@ namespace desolin
 namespace detail
 {
 
-template<ExprType resultType, ExprType exprType, typename T_element>
+template<typename resultType, typename exprType, typename T_element>
 class PUnOp : public PExprNode<resultType, T_element>
 {
 private:
@@ -58,7 +58,7 @@ public:
   }
 };
 
-template<ExprType exprType, typename T_element>
+template<typename exprType, typename T_element>
 class PNegate : public PUnOp<exprType, exprType, T_element>
 {
 public:

@@ -78,7 +78,7 @@ private:
     return *(matrixMap.find(&expr)->second);	
   }
 
-  template<ExprType exprType>
+  template<typename exprType>
   std::vector<PExprNode<scalar, T_element>*> getAssignments(ElementSet<exprType, T_element>& expr) const 
   {
     const std::map<ElementIndex<exprType>, ExprNode<scalar, T_element>*> exprAssignments(expr.getAssignments());

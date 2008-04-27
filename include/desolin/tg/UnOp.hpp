@@ -29,7 +29,7 @@ namespace desolin
 namespace detail
 {
 
-template<TGExprType resultType, TGExprType exprType, typename T_element>
+template<typename resultType, typename exprType, typename T_element>
 class TGUnOp : public TGExprNode<resultType, T_element>
 {
 private:
@@ -61,7 +61,7 @@ public:
   }
 };
 
-template<TGExprType exprType, typename T_element>
+template<typename exprType, typename T_element>
 class TGNegate : public TGUnOp<exprType, exprType, T_element>
 {
 public:

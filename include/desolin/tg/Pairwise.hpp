@@ -27,7 +27,7 @@ namespace desolin
 namespace detail
 {
 
-template<TGExprType exprType, typename T_element>
+template<typename exprType, typename T_element>
 class TGPairwise : public TGBinOp<exprType, exprType, exprType, T_element>
 {
 private:

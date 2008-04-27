@@ -41,7 +41,7 @@ private:
   const std::map<const TGExpressionNode<T_element>*, int> nodeNumberings;
   std::size_t hash;
 
-  template<TGExprType exprType>
+  template<typename exprType>
   inline std::size_t hashExprNode(const TGExprNode<exprType, T_element>& node) const
   {
     const char* nodeTypeString = typeid(node).name();
@@ -50,7 +50,7 @@ private:
     return seed;
   }
   
-  template<TGExprType resultType, TGExprType exprType>
+  template<typename resultType, typename exprType>
   std::size_t hashUnOp(const TGUnOp<resultType, exprType, T_element>& unop) const
   {
     std::size_t seed = hashExprNode(unop);
@@ -60,7 +60,7 @@ private:
     return seed;
   }
 
-  template<TGExprType resultType, TGExprType leftType, TGExprType rightType>
+  template<typename resultType, typename leftType, typename rightType>
   std::size_t hashBinOp(const TGBinOp<resultType, leftType, rightType, T_element>& binop) const
   {
     std::size_t seed = hashExprNode(binop);
@@ -73,7 +73,7 @@ private:
     return seed;
   }
 
-  template<TGExprType exprType>
+  template<typename exprType>
   std::size_t hashElementGet(const TGElementGet<exprType, T_element>& node) const
   {
     std::size_t seed = hashUnOp(node);
@@ -81,7 +81,7 @@ private:
     return seed;
   }
 
-  template<TGExprType exprType>
+  template<typename exprType>
   std::size_t hashSingleElementSet(const std::pair<const TGElementIndex<exprType>, const TGExprNode<tg_scalar, T_element>*>& pair) const
   {
     std::size_t seed = boost::hash< TGElementIndex<exprType> >()(pair.first);
@@ -91,7 +91,7 @@ private:
     return seed;
   }
   
-  template<TGExprType exprType>
+  template<typename exprType>
   std::size_t hashElementSet(const TGElementSet<exprType, T_element>& node) const
   {
     std::size_t seed = hashUnOp(node);
@@ -105,7 +105,7 @@ private:
     return seed;
   }
 
-  template<TGExprType exprType>
+  template<typename exprType>
   std::size_t hashPairwise(const TGPairwise<exprType, T_element>& node) const
   {
     std::size_t seed = hashBinOp(node);
@@ -113,7 +113,7 @@ private:
     return seed;
   }
 
-  template<TGExprType exprType>
+  template<typename exprType>
   std::size_t hashScalarPiecewise(const TGScalarPiecewise<exprType, T_element>& node) const
   {
     std::size_t seed = hashBinOp(node);

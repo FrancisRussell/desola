@@ -33,7 +33,7 @@ namespace desolin
 namespace detail
 {
 
-template<TGExprType exprType>
+template<typename exprType>
 class TGElementIndex
 {
 };
@@ -155,7 +155,7 @@ public:
   }
 };
 
-template<TGExprType exprType, typename T_element>
+template<typename exprType, typename T_element>
 class TGExprNode : public TGExpressionNode<T_element>
 {
 private:

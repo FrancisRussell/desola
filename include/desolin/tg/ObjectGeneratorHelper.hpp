@@ -18,7 +18,6 @@
 #ifndef DESOLIN_TG_OBJECT_GENERATOR_HELPER_HPP
 #define DESOLIN_TG_OBJECT_GENERATOR_HELPER_HPP
 
-#include <boost/shared_ptr.hpp>
 #include <map>
 #include <set>
 #include <TaskGraph>
@@ -30,14 +29,14 @@ namespace desolin
 namespace detail
 {
 
-template<ExprType exprType, typename T_element>
+template<typename exprType, typename T_element>
 class TGObjectGeneratorHelper
 {
 private:
   TGObjectGeneratorHelper(const TGObjectGeneratorHelper&);
   TGObjectGeneratorHelper& operator=(const TGObjectGeneratorHelper&);
    
-  static const TGExprType tgExprType = ExprTGTraits<exprType, T_element>::tgExprType;
+  typedef typename ExprTGTraits<exprType, T_element>::tgExprType tgExprType;
   std::map<ExprNode<exprType, T_element>*, TGExprNode<tgExprType, T_element>*> nodeMap;
   TGEvaluator<T_element>& evaluator;
 	 

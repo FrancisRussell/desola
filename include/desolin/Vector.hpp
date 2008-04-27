@@ -34,8 +34,7 @@ public:
   // Typedefs for ITL
   typedef Scalar<T_element> value_type;
   typedef std::size_t size_type;
-
-  static const detail::ExprType expressionType = detail::vector;
+  typedef detail::vector expressionType;
     
   Vector()
   {
@@ -70,7 +69,7 @@ public:
   const Vector& operator=(const Scalar<T_element>& right)
   {
     using namespace detail;
-    setExpr(*new ScalarPiecewise<vector, T_element>(assign, this->getExpr(), right.getExpr()));
+    setExpr(*new ScalarPiecewise<vector, T_element>(piecewise_assign, this->getExpr(), right.getExpr()));
     return *this;
   }
 
@@ -95,13 +94,13 @@ public:
   const Vector operator*(const Scalar<T_element>& right) const
   {
     using namespace detail;
-    return Vector(*new ScalarPiecewise<vector, T_element>(multiply, this->getExpr(), right.getExpr()));
+    return Vector(*new ScalarPiecewise<vector, T_element>(piecewise_multiply, this->getExpr(), right.getExpr()));
   }
 
   const Vector operator/(const Scalar<T_element>& right) const
   {
     using namespace detail;
-    return Vector(*new ScalarPiecewise<vector, T_element>(divide, this->getExpr(), right.getExpr()));
+    return Vector(*new ScalarPiecewise<vector, T_element>(piecewise_divide, this->getExpr(), right.getExpr()));
   }
 	 
   const Scalar<T_element> dot(const Vector& right) const

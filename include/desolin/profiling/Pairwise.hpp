@@ -27,7 +27,7 @@ namespace desolin
 namespace detail
 {
 
-template<ExprType exprType, typename T_element>
+template<typename exprType, typename T_element>
 class PPairwise : public PBinOp<exprType, exprType, exprType, T_element>
 {
 private:

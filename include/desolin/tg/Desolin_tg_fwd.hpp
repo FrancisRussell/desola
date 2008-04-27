@@ -23,13 +23,12 @@ namespace desolin
 
 namespace detail
 {
-// Enums used for template parameters
-enum TGExprType
-{
-  tg_scalar,
-  tg_vector,
-  tg_matrix
-};
+
+// Types used for template parameters
+
+struct tg_scalar {};
+struct tg_vector {};
+struct tg_matrix {};
 
 enum TGPairwiseOp
 {
@@ -41,9 +40,9 @@ enum TGPairwiseOp
 
 enum TGScalarPiecewiseOp
 {
-  tg_multiply,
-  tg_divide,
-  tg_assign
+  tg_piecewise_multiply,
+  tg_piecewise_divide,
+  tg_piecewise_assign
 };
 
 // Common
@@ -51,20 +50,20 @@ class NameGenerator;
 class ParameterHolder;
 class TGInvalidOperationError;
 
-template<ExprType exprType, typename T_element> struct ExprTGTraits;
-template<TGExprType exprType, typename T_elementType> class TGInternalType;
-template<TGExprType exprType> class TGElementIndex;
+template<typename exprType, typename T_element> struct ExprTGTraits;
+template<typename exprType, typename T_elementType> class TGInternalType;
+template<typename exprType> class TGElementIndex;
 
 // TaskGraph Evaluator Expression Tree
 template<typename T_element> class TGExpressionNode;
-template<TGExprType resultType, TGExprType leftType, TGExprType rightType, typename T_element> class TGBinOp;
-template<TGExprType resultType, TGExprType exprType, typename T_element> class TGUnOp;
+template<typename resultType, typename leftType, typename rightType, typename T_element> class TGBinOp;
+template<typename resultType, typename exprType, typename T_element> class TGUnOp;
 template<typename T_element> class TGExpressionNodeVisitor;
 template<typename T_element> class TGHashingVisitor;
 template<typename T_element> class TGEqualityCheckingVisitor;
-template<TGExprType exprType, typename T_element> class TGElementGet;
-template<TGExprType exprType, typename T_element> class TGElementSet;
-template<TGExprType exprType, typename T_element> class TGLiteral;
+template<typename exprType, typename T_element> class TGElementGet;
+template<typename exprType, typename T_element> class TGElementSet;
+template<typename exprType, typename T_element> class TGLiteral;
 template<typename T_element> class TGMatrixMult;
 template<typename T_element> class TGMatrixVectorMult;
 template<typename T_element> class TGTransposeMatrixVectorMult;
@@ -72,9 +71,9 @@ template<typename T_element> class TGVectorDot;
 template<typename T_element> class TGVectorCross;
 template<typename T_element> class TGVectorTwoNorm;
 template<typename T_element> class TGMatrixTranspose;
-template<TGExprType exprType, typename T_element> class TGPairwise;
-template<TGExprType exprType, typename T_element> class TGScalarPiecewise;
-template<TGExprType exprType, typename T_element> class TGNegate;
+template<typename exprType, typename T_element> class TGPairwise;
+template<typename exprType, typename T_element> class TGScalarPiecewise;
+template<typename exprType, typename T_element> class TGNegate;
 template<typename T_element> class TGAbsolute;
 template<typename T_element> class TGSquareRoot;
 
@@ -84,7 +83,7 @@ template<typename T_element> class TGEvaluator;
 template<typename T_element> class TGEvaluatorFactory;
 template<typename T_element> class TGExpressionGraph;
 template<typename T_element> class TGObjectGenerator;
-template<ExprType exprType, typename T_element> class TGObjectGeneratorHelper;
+template<typename exprType, typename T_element> class TGObjectGeneratorHelper;
 
 // TaskGraph Evaluator Expression Manipulation Objects and Storage Representation
 template<typename T_elementType> class TGScalar;

@@ -26,7 +26,7 @@ namespace desolin
 namespace detail
 {
 
-template<TGExprType exprType, typename T_element>
+template<typename exprType, typename T_element>
 class TGScalarPiecewise : public TGBinOp<exprType, exprType, tg_scalar, T_element>
 {
 private:

@@ -72,7 +72,7 @@ public:
   }
 };
 
-template<ExprType exprType, typename T_element>
+template<typename exprType, typename T_element>
 class PExprNode : public PExpressionNode<T_element>
 {
 public:

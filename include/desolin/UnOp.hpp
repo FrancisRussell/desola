@@ -30,7 +30,7 @@ namespace desolin
 namespace detail
 {
 
-template<ExprType resultType, ExprType exprType, typename T_element>
+template<typename resultType, typename exprType, typename T_element>
 class UnOp : public ExprNode<resultType, T_element>
 {
 private:
@@ -79,7 +79,7 @@ public:
   }
 };
 
-template<ExprType exprType, typename T_element>
+template<typename exprType, typename T_element>
 class Negate : public UnOp<exprType, exprType, T_element>
 {
 public:

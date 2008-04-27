@@ -28,7 +28,7 @@ namespace desolin
 namespace detail
 {
 
-template<ExprType exprType, typename T_element>
+template<typename exprType, typename T_element>
 class PElementGet : public PUnOp<scalar, exprType, T_element>
 {
 public:
@@ -47,7 +47,7 @@ public:
   }  
 };
 
-template<ExprType exprType, typename T_element>
+template<typename exprType, typename T_element>
 class PElementSet : public PUnOp<exprType, exprType, T_element>
 {
 private:

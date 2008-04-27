@@ -54,7 +54,7 @@ protected:
   virtual ~Variable() {}
 };
 
-template<ExprType expressionType, typename T_element>
+template<typename expressionType, typename T_element>
 class Var : public Variable<T_element>
 {
 private:

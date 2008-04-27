@@ -30,7 +30,7 @@ namespace desolin
 namespace detail
 {
 
-template<ExprType exprType, typename T_element>
+template<typename exprType, typename T_element>
 class Pairwise : public BinOp<exprType, exprType, exprType, T_element>
 {
 private:

@@ -45,10 +45,10 @@ private:
   {
     switch(op)
     {
-      case multiply: return tg_multiply;
-      case divide: return tg_divide;
-      case assign: return tg_assign;
-      default: throw TGInvalidOperationError("Unrecognised DesoLin ScalarPiecewise Operation");
+      case piecewise_multiply: return tg_piecewise_multiply;
+      case piecewise_divide: return tg_piecewise_divide;
+      case piecewise_assign: return tg_piecewise_assign;
+      default: throw TGInvalidOperationError("Unrecognised Desolin ScalarPiecewise Operation");
     }
   }
 
@@ -60,7 +60,7 @@ private:
       case pair_sub: return tg_pair_sub;
       case pair_mul: return tg_pair_mul;
       case pair_div: return tg_pair_div;
-      default: throw TGInvalidOperationError("Unrecognised DesoLin Pairwise Operation");
+      default: throw TGInvalidOperationError("Unrecognised Desolin Pairwise Operation");
     }
   }
 

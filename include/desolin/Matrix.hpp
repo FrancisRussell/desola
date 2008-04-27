@@ -35,7 +35,7 @@ public:
   typedef Scalar<T_element> value_type;
   typedef std::size_t size_type;
 	
-  static const detail::ExprType expressionType = detail::matrix;
+  typedef detail::matrix expressionType;
 
   static Matrix loadDense(harwell_boeing_stream<T_element>& stream)
   {
@@ -96,7 +96,7 @@ public:
   const Matrix& operator=(const Scalar<T_element>& right)
   {
     using namespace detail;
-    setExpr(*new ScalarPiecewise<matrix, T_element>(assign, this->getExpr(), right.getExpr()));
+    setExpr(*new ScalarPiecewise<matrix, T_element>(piecewise_assign, this->getExpr(), right.getExpr()));
     return *this;
   }
 
@@ -122,13 +122,13 @@ public:
   const Matrix operator*(const Scalar<T_element>& right) const
   {
     using namespace detail;
-    return Matrix(*new ScalarPiecewise<matrix, T_element>(multiply, this->getExpr(), right.getExpr()));
+    return Matrix(*new ScalarPiecewise<matrix, T_element>(piecewise_multiply, this->getExpr(), right.getExpr()));
   }
 
   const Matrix operator/(const Scalar<T_element>& right) const
   {
     using namespace detail;
-    return Matrix(*new ScalarPiecewise<matrix, T_element>(divide, this->getExpr(), right.getExpr()));
+    return Matrix(*new ScalarPiecewise<matrix, T_element>(piecewise_divide, this->getExpr(), right.getExpr()));
   }      
 
   const Matrix operator*(const Matrix& right) const
