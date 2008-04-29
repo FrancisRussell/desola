@@ -32,22 +32,6 @@ inline std::size_t nnz(const Matrix& m)
 
 void library_init(const SolverOptions& options)
 {
-  // Increase maximum stack size because of size of vectors in runtime generated
-  // code
-
-  if (options.useSparse())
-  {
-    int result;
-    rlimit limits;
-
-    result = getrlimit(RLIMIT_STACK, &limits);
-    assert(result == 0);
-
-    limits.rlim_cur = limits.rlim_max;
-
-    result = setrlimit(RLIMIT_STACK, &limits);
-    assert(result == 0);
-  }
 }
 
 namespace 

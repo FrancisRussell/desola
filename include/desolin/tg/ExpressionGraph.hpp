@@ -143,6 +143,8 @@ public:
       taskGraphObject->applyOptimisation("array_contraction");
     }
 
+    taskGraphObject->applyOptimisation("malloc_large_arrays");
+
     taskGraphObject->compile(getTaskCompiler(), true);	
 
     gettimeofday(&time, NULL);
