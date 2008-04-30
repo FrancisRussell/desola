@@ -82,7 +82,7 @@ public:
 namespace
 {
   template<typename exprType, typename T_element>
-  class GetSize
+  class GetNegateSize
   {
   public:
     Maybe<double> operator()(const ExprNode<exprType, T_element>& e) const
@@ -93,10 +93,10 @@ namespace
   };
 
   template<typename T_element>
-  class GetSize<matrix, T_element>
+  class GetNegateSize<matrix, T_element>
   {
   public:
-    Maybe<double> getSize(const ExprNode<matrix, T_element>& e)
+    Maybe<double> operator()(const ExprNode<matrix, T_element>& e)
     {
       return e.nnz();
     }
@@ -118,7 +118,7 @@ public:
 
   virtual Maybe<double> getFlops() const
   {
-    return GetSize(this->getOperand());
+    return GetNegateSize<exprType, T_element>()(this->getOperand());
   }
 };
 

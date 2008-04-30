@@ -30,7 +30,7 @@ namespace detail
 namespace
 {
   template<typename exprType, typename T_element>
-  class GetSize
+  class GetScalarPiecewiseSize
   {
   public:
     Maybe<double> operator()(const ExprNode<exprType, T_element>& e) const
@@ -41,7 +41,7 @@ namespace
   };
 
   template<typename T_element>
-  class GetSize<matrix, T_element>
+  class GetScalarPiecewiseSize<matrix, T_element>
   {
   public:
     Maybe<double> getSize(const ExprNode<matrix, T_element>& e)
@@ -74,7 +74,7 @@ public:
 
   virtual Maybe<double> getFlops() const
   {
-    return GetSize<exprType, T_element>()(this->getLeft());
+    return GetScalarPiecewiseSize<exprType, T_element>()(this->getLeft());
   }
 };
 
