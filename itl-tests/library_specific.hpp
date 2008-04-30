@@ -27,7 +27,10 @@ inline std::size_t num_cols(const Matrix& m)
 template<typename Matrix>
 inline std::size_t nnz(const Matrix& m)
 {
-  return m.nnz();
+  const desolin::Maybe<std::size_t> n(m.nnz());
+
+  assert(n.hasValue());
+  return n.value();
 }
 
 void library_init(const SolverOptions& options)

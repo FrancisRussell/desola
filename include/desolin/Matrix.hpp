@@ -79,7 +79,7 @@ public:
     return this->getExpr().getColCount();
   }
 
-  const size_type nnz() const
+  const Maybe<size_type> nnz() const
   {
     this->getExpr().evaluate();
     return this->getExpr().nnz();

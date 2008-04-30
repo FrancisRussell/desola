@@ -127,6 +127,7 @@ template <class T> class harwell_boeing_stream;
 template <class T> class matrix_market_stream;
 
 // External Interface
+template<typename T> class Maybe;
 template<typename T_element> class Vector;
 template<typename T_element> class Matrix;
 template<typename T_element> class Scalar;

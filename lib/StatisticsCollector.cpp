@@ -16,6 +16,7 @@
 /****************************************************************************/
 
 #include <desolin/StatisticsCollector.hpp>
+#include <desolin/Maybe.hpp>
 
 namespace desolin
 {
@@ -61,19 +62,19 @@ void StatisticsCollector::resetCompileCount()
   compileCount=0;
 }
 
-double StatisticsCollector::getFlops() const
+Maybe<double> StatisticsCollector::getFlops() const
 {
   return flops;
 }
 
-void StatisticsCollector::addFlops(const double f)
+void StatisticsCollector::addFlops(const Maybe<double>& f)
 {
   flops+=f;
 }
 
 void StatisticsCollector::resetFlops()
 {
-  flops=0.0;
+  flops = Maybe<double>(0.0);
 }
 
 }

@@ -30,6 +30,31 @@ namespace desolin
 namespace detail
 {
 
+namespace
+{
+  template<typename exprType, typename T_element>
+  class GetPairwiseFlops
+  {
+  public:
+    Maybe<double> operator()(const ExprNode<exprType, T_element>& a, const ExprNode<exprType, T_element>& b) const
+    {
+      const boost::array<std::size_t, ExprDimensions<exprType>::dims> dimensions(a.getDims());
+      const double result = std::accumulate(dimensions.begin(), dimensions.end(), 1.0, std::multiplies<double>());
+      return Maybe<double>(result);
+    }
+  };
+
+  template<typename T_element>
+  class GetPairwiseFlops<matrix, T_element>
+  {
+  public:
+    Maybe<double> operator()(const ExprNode<matrix, T_element>& a, const ExprNode<matrix, T_element>& b) const
+    {
+      return Maybe<double>(Nothing());
+    }
+  };
+}
+
 template<typename exprType, typename T_element>
 class Pairwise : public BinOp<exprType, exprType, exprType, T_element>
 {
@@ -55,9 +80,9 @@ public:
     v.visit(*this);
   }
 
-  virtual double getFlops() const
+  virtual Maybe<double> getFlops() const
   {
-    return std::accumulate(this->dimensions.begin(), this->dimensions.end(), 1.0, std::multiplies<double>());
+    return GetPairwiseFlops<exprType, T_element>()(this->getLeft(), this->getRight());
   }
 };
 

@@ -78,7 +78,7 @@ public:
     return value->getElementValue();
   }
 
-  virtual double getFlops() const
+  virtual Maybe<double> getFlops() const
   {
     return 0.0;
   }
@@ -131,7 +131,7 @@ public:
     return value->getElementValue(index);
   }
 
-  virtual double getFlops() const
+  virtual Maybe<double> getFlops() const
   {
     return 0.0;
   }
@@ -184,12 +184,12 @@ public:
     return value->getElementValue(index);
   }
 
-  virtual double getFlops() const
+  virtual Maybe<double> getFlops() const
   {
     return 0.0;
   }
 
-  virtual std::size_t nnz() const
+  virtual Maybe<std::size_t> nnz() const
   {
     return value->nnz();
   }

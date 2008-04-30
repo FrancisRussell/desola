@@ -25,6 +25,7 @@
 // See http://www.josuttis.com/cppcode
 #include "boost_array.hpp"
 
+#include "Maybe.hpp"
 #include "Cache.hpp"
 #include "ConfigurationManager.hpp"
 #include "StatisticsCollector.hpp"

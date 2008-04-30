@@ -27,6 +27,30 @@ namespace desolin
 namespace detail
 {
 
+namespace
+{
+  template<typename exprType, typename T_element>
+  class GetSize
+  {
+  public:
+    Maybe<double> operator()(const ExprNode<exprType, T_element>& e) const
+    {
+      const boost::array<std::size_t, ExprDimensions<exprType>::dims> dimensions(e.getDims());
+      return std::accumulate(dimensions.begin(), dimensions.end(), 1.0, std::multiplies<double>());
+    }
+  };
+
+  template<typename T_element>
+  class GetSize<matrix, T_element>
+  {
+  public:
+    Maybe<double> getSize(const ExprNode<matrix, T_element>& e)
+    {
+      return e.nnz();
+    }
+  };
+}
+
 template<typename exprType, typename T_element>
 class ScalarPiecewise : public BinOp<exprType, exprType, scalar, T_element>
 {
@@ -48,9 +72,9 @@ public:
     v.visit(*this);
   }
 
-  virtual double getFlops() const
+  virtual Maybe<double> getFlops() const
   {
-    return std::accumulate(this->dimensions.begin(), this->dimensions.end(), 1.0, std::multiplies<double>());
+    return GetSize<exprType, T_element>()(this->getLeft());
   }
 };
 

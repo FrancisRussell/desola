@@ -117,7 +117,7 @@ public:
   {
   }
 
-  virtual double getFlops() const = 0;
+  virtual Maybe<double> getFlops() const = 0;
 
   void setEvaluationDirective(const EvaluationDirective d)
   {

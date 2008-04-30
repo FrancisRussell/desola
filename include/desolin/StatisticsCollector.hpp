@@ -18,6 +18,9 @@
 #ifndef DESOLIN_STATISTICS_COLLECTOR
 #define DESOLIN_STATISTICS_COLLECTOR
 
+#include "Desolin_fwd.hpp"
+#include "Maybe.hpp"
+
 namespace desolin
 {
 	
@@ -26,7 +29,7 @@ class StatisticsCollector
 private:
   double compileTime;
   int compileCount;
-  double flops;
+  Maybe<double> flops;
 	
   StatisticsCollector(const StatisticsCollector&);
   StatisticsCollector& operator=(const StatisticsCollector&);
@@ -45,8 +48,8 @@ public:
   void incrementCompileCount();
   void resetCompileCount();
 
-  double getFlops() const;
-  void addFlops(const double flops);
+  Maybe<double> getFlops() const;
+  void addFlops(const Maybe<double>& flops);
   void resetFlops();
 };
 

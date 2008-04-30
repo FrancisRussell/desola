@@ -73,7 +73,7 @@ private:
     }
   }
 
-  static double accumulateFlops(const double flops, const ExpressionNode<T_element>* const node)
+  static Maybe<double> accumulateFlops(const Maybe<double>& flops, const ExpressionNode<T_element>* const node)
   {
     return flops + node->getFlops();
   }
@@ -121,9 +121,9 @@ public:
     std::for_each(exprVector.begin(), exprVector.end(), setDefaultAnnotation);
   }
 
-  double getFlops() const
+  Maybe<double> getFlops() const
   {
-    return std::accumulate(exprVector.begin(), exprVector.end(), 0.0, accumulateFlops);
+    return std::accumulate(exprVector.begin(), exprVector.end(), Maybe<double>(0.0), accumulateFlops);
   }
    
   boost::shared_ptr<EvaluationStrategy<T_element> > createEvaluationStrategy()

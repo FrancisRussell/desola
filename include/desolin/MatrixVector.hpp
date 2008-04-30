@@ -48,9 +48,9 @@ public:
     v.visit(*this);
   }
 
-  virtual double getFlops() const
+  virtual Maybe<double> getFlops() const
   {
-    return 2.0 * this->getLeft().getColCount() * this->getRowCount() * this->getColCount();
+    return this->getLeft().nnz() * this->getRight().getColCount() * 2.0;
   }
 };
 
@@ -74,9 +74,9 @@ public:
     v.visit(*this);
   }
 
-  virtual double getFlops() const
+  virtual Maybe<double> getFlops() const
   {
-    return 2.0 * this->getLeft().getColCount() * this->getLeft().getRowCount();
+    return this->getLeft().nnz() * 2.0;
   }
 };
 
@@ -100,9 +100,9 @@ public:
     v.visit(*this);
   }
 
-  virtual double getFlops() const
+  virtual Maybe<double> getFlops() const
   {
-    return 2.0 * this->getLeft().getColCount() * this->getLeft().getRowCount();
+    return this->getLeft().nnz() * 2.0;
   }
 };
 
@@ -126,7 +126,7 @@ public:
     v.visit(*this);
   }
 
-  virtual double getFlops() const
+  virtual Maybe<double> getFlops() const
   {
     return 2.0 * this->getLeft().getRowCount() - 1.0;
   }
@@ -151,7 +151,7 @@ public:
     v.visit(*this);
   }
   
-  virtual double getFlops() const
+  virtual Maybe<double> getFlops() const
   {
     return 3.0 * this->getRowCount();
   }
@@ -170,7 +170,7 @@ public:
     v.visit(*this);
   }
 
-  virtual double getFlops() const
+  virtual Maybe<double> getFlops() const
   {
     // n multiplies + (n-1) additions + 1 sqrt
     return 2.0 * this->getOperand().getRowCount();
@@ -197,7 +197,7 @@ public:
     v.visit(*this);
   }
 
-  virtual double getFlops() const
+  virtual Maybe<double> getFlops() const
   {
     return 0.0;
   }

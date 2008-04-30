@@ -143,10 +143,9 @@ public:
     return dimensions[1];
   }
 
-  virtual std::size_t nnz() const
+  virtual Maybe<std::size_t> nnz() const
   {
-    assert(false);
-    return 0;
+    return Nothing();
   }
 
   virtual void accept(ExpressionNodeTypeVisitor<T_elementType>& visitor)

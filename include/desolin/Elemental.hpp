@@ -63,7 +63,7 @@ public:
     return this->getOperand().getElementValue(index);
   }
 
-  virtual double getFlops() const
+  virtual Maybe<double> getFlops() const
   {
     return 0.0;
   }
@@ -121,7 +121,7 @@ public:
     }
   }
 
-  virtual double getFlops() const
+  virtual Maybe<double> getFlops() const
   {
     return 0.0;
   }
