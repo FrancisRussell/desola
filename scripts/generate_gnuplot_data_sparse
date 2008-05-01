@@ -7,7 +7,7 @@ for nnz in $(grep -Eo "NNZ: [0-9]*$" "$1" | sed "s/NNZ: //" | sort -n | uniq); d
 
 #Size
 echo -n "${nnz} "
-grep -E "NNZ: [0-9]*$" "$1" | grep -o "Matrix Size: [0-9]*[^0-9]" | sed "s/Matrix Size: //" | head -n1 | tr "\t\n" "  "
+grep -E "NNZ: ${nnz}$" "$1" | grep -o "Matrix Size: [0-9]*[^0-9]" | sed "s/Matrix Size: //" | head -n1 | tr "\t\n" "  "
 
 #Desolin Timing Columns
 for linespec in "Solver: $solver[^a-zA-Z]*Library: desolin.*Code_cache: On.*Fusion: Off.*Contraction: Off.*Liveness: Off.*NNZ: ${nnz}$" \
