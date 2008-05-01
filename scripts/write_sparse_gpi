@@ -1,0 +1,37 @@
+#!/bin/bash
+
+solver_mappings=$(cat $1 | grep "^[A-Za-z]" | awk '{print $1 "=" $2}' | nl -v0 -s=)
+
+for solver_mapping in $solver_mappings; do
+  index=$(echo ${solver_mapping} | sed -r "s/(.*)=.*=.*/\1/")
+  solver=$(echo ${solver_mapping} | sed -r "s/.*=(.*)=.*/\1/")
+  matrix=$(echo ${solver_mapping} | sed -r "s/.*=.*=(.*)/\1/")
+  nnz=$(cat $1 | grep "${matrix}[^A-Za-z0-9]" | head -n1 | clm 3)
+  rows=$(cat $1 | grep "${matrix}[^A-Za-z0-9]" | head -n1 | clm 4)
+  nnz_per_row=$(echo "scale=10; ${nnz}/${rows}" | bc)
+
+  name_prefix="${solver}_${matrix}"
+  output_file="${name_prefix}.gpi"
+
+  echo "set terminal postscript color solid" > ${output_file}
+  echo "set title\"${solver} for matrix ${matrix} (nnz=${nnz}, rows=${rows}, nnz/row=${nnz_per_row})\"" >> ${output_file}
+  echo "set xrange [0:12]" >> ${output_file}
+  echo "set yrange [0:]" >> ${output_file}
+  echo "set xlabel \"Benchmark Versions\"" >> ${output_file}
+  echo "set ylabel \"Time (seconds)\"" >> ${output_file}
+  echo "set key right top" >> ${output_file}
+  echo "set ytics nomirror" >> ${output_file}
+  echo "set boxwidth 0.5" >> ${output_file}
+  echo "set output \"${name_prefix}.ps\"" >> ${output_file}
+
+  echo "plot \"$1\" using (1):5  index ${index} ti \"desolin inc. cmp\" with boxes fill solid,\\" >> ${output_file}
+  echo "\"$1\" using (1):(\$5-\$6)  index ${index} ti \"desolin\" with boxes fill solid,\\" >> ${output_file}
+  echo "\"$1\" using (2):7  index ${index} ti \"desolin + fusion inc. cmp.\" with boxes fill solid,\\" >> ${output_file}
+  echo "\"$1\" using (2):(\$7-\$8)  index ${index} ti \"desolin + fusion\" with boxes fill solid,\\" >> ${output_file}
+  echo "\"$1\" using (3):9  index ${index} ti \"desolin + fusion, contraction inc. cmp.\" with boxes fill solid,\\" >> ${output_file}
+  echo "\"$1\" using (3):(\$9-\$10)  index ${index} ti \"desolin + fusion, contraction\" with boxes fill solid,\\" >> ${output_file}
+  echo "\"$1\" using (4):11  index ${index} ti \"desolin + fusion, contraction, liveness inc. cmp.\" with boxes fill solid,\\" >> ${output_file}
+  echo "\"$1\" using (4):(\$11-\$12)  index ${index} ti \"desolin + fusion, contraction, liveness\" with boxes fill solid,\\" >> ${output_file}
+  echo "\"$1\" using (5):(\$13)  index ${index} ti \"MTL\" with boxes fill solid,\\" >> ${output_file}
+  echo "\"$1\" using (6):(\$14)  index ${index} ti \"IMKL\" with boxes fill solid" >> ${output_file}
+done

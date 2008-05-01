@@ -2,10 +2,12 @@
 
 iterationspec="Iterations:[^0-9]256"
 for solver in identity_bicg identity_bicgstab identity_cgs identity_qmr identity_tfqmr; do
-echo "#Solver: $solver"
+
 for nnz in $(grep -Eo "NNZ: [0-9]*$" "$1" | sed "s/NNZ: //" | sort -n | uniq); do
 
 #Size
+echo -n "${solver}  "
+grep -E "NNZ: ${nnz}$" "$1" | grep -o "Matrix: [A-Za-z0-9_]*\.[A-Za-z]*[^A-Za-z]" | sed -r "s/Matrix: ([A-Za-z0-9_]*)\..*/\1/" | head -n1 | tr "\t\n" "  "
 echo -n "${nnz} "
 grep -E "NNZ: ${nnz}$" "$1" | grep -o "Matrix Size: [0-9]*[^0-9]" | sed "s/Matrix Size: //" | head -n1 | tr "\t\n" "  "
 
@@ -31,10 +33,9 @@ grep -E "Solver: $solver[^a-zA-Z]*Library: desolin.*Code_cache: On.*Fusion: On.*
 
 # End of column newline
 echo 
-done;
+# Another 2 newlines to separate datasets
+echo; echo
 
-#End of Solver
-echo
-echo
+done;
 
 done;
