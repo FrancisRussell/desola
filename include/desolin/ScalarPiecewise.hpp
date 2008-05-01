@@ -46,7 +46,7 @@ namespace
   public:
     Maybe<double> getSize(const ExprNode<matrix, T_element>& e)
     {
-      return e.nnz();
+      return Maybe<double>(e.nnz());
     }
   };
 }

@@ -50,7 +50,7 @@ public:
 
   virtual Maybe<double> getFlops() const
   {
-    return this->getLeft().nnz() * this->getRight().getColCount() * 2.0;
+    return Maybe<double>(this->getLeft().nnz()) * this->getRight().getColCount() * 2.0;
   }
 };
 
@@ -76,7 +76,7 @@ public:
 
   virtual Maybe<double> getFlops() const
   {
-    return this->getLeft().nnz() * 2.0;
+    return Maybe<double>(this->getLeft().nnz()) * 2.0;
   }
 };
 
@@ -102,7 +102,7 @@ public:
 
   virtual Maybe<double> getFlops() const
   {
-    return this->getLeft().nnz() * 2.0;
+    return Maybe<double>(this->getLeft().nnz()) * 2.0;
   }
 };
 

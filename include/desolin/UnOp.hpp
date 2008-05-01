@@ -98,7 +98,7 @@ namespace
   public:
     Maybe<double> operator()(const ExprNode<matrix, T_element>& e)
     {
-      return e.nnz();
+      return Maybe<double>(e.nnz());
     }
   };
 }
