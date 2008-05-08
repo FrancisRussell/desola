@@ -620,18 +620,40 @@ public:
   virtual void iterateSparse(NameGenerator& generator, MatrixIterationCallback& callback) const
   {
     using namespace tg;
+    const bool useSingleForImplementation = false;
 
-    tVarNamed(unsigned, valPtr, generator.getName("valPtr").c_str());
-    tVarNamed(unsigned, currentRow, generator.getName("currentRow").c_str());
-
-    currentRow = 0u;
-
-    tFor(valPtr, 0u, nnz-1)
+    if (useSingleForImplementation)
     {
-      tWhile((*row_ptr)[currentRow+1] == valPtr)
-        ++currentRow;
+      tVarNamed(unsigned, valPtr, generator.getName("valPtr").c_str());
+      tVarNamed(unsigned, currentRow, generator.getName("currentRow").c_str());
 
-      callback(generator, currentRow, (*col_ind)[valPtr], TGScalarExpr<T_element>((*val)[valPtr]));
+      currentRow = 0u;
+
+      tFor(valPtr, 0u, nnz-1)
+      {
+        tWhile((*row_ptr)[currentRow+1] == valPtr)
+          ++currentRow;
+
+        callback(generator, currentRow, (*col_ind)[valPtr], TGScalarExpr<T_element>((*val)[valPtr]));
+      }
+    }
+    else
+    {
+      tVarNamed(unsigned, row, generator.getName("row").c_str());
+      tVarNamed(unsigned, valPtr, generator.getName("valPtr").c_str());
+      tVarNamed(unsigned, valPtrStart, generator.getName("valPtrStart").c_str());
+      tVarNamed(unsigned, valPtrEnd, generator.getName("valPtrEnd").c_str());
+
+      tFor(row, 0u, rows-1)
+      {
+        valPtrStart = (*row_ptr)[row];
+        valPtrEnd = (*row_ptr)[row+1]-1;
+
+        tFor(valPtr, valPtrStart, valPtrEnd)
+        {
+          callback(generator, row, (*col_ind)[valPtr], TGScalarExpr<T_element>((*val)[valPtr]));
+        }
+      }
     }
   }
 
