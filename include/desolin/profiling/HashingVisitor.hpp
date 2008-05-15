@@ -105,7 +105,7 @@ private:
   
 public:
 
-  PHashingVisitor(const std::map<const PExpressionNode<T_element>*, int>& numberings) : nodeNumberings(numberings)
+  PHashingVisitor(const std::map<const PExpressionNode<T_element>*, int>& numberings) : nodeNumberings(numberings), hash(0)
   {
   }
   
@@ -186,32 +186,32 @@ public:
 
   virtual void visit(PPairwise<scalar, T_element>& e)
   {
-    boost::hash_combine(hash, hashBinOp(e));
+    boost::hash_combine(hash, hashPairwise(e));
   }
   
   virtual void visit(PPairwise<vector, T_element>& e)
   {
-    boost::hash_combine(hash, hashBinOp(e));
+    boost::hash_combine(hash, hashPairwise(e));
   }
   
   virtual void visit(PPairwise<matrix, T_element>& e) 
   {
-    boost::hash_combine(hash, hashBinOp(e));
+    boost::hash_combine(hash, hashPairwise(e));
   }
 
   virtual void visit(PScalarPiecewise<scalar, T_element>& e)
   {
-    boost::hash_combine(hash, hashBinOp(e));
+    boost::hash_combine(hash, hashScalarPiecewise(e));
   }
   
   virtual void visit(PScalarPiecewise<vector, T_element>& e) 
   {
-    boost::hash_combine(hash, hashBinOp(e));
+    boost::hash_combine(hash, hashScalarPiecewise(e));
   }
   
   virtual void visit(PScalarPiecewise<matrix, T_element>& e)
   {
-    boost::hash_combine(hash, hashBinOp(e));
+    boost::hash_combine(hash, hashScalarPiecewise(e));
   }
 
   virtual void visit(PNegate<scalar, T_element>& e)
