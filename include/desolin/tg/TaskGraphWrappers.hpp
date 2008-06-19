@@ -69,9 +69,9 @@ private:
   const bool param;
   const std::string name;
   unsigned dims[dimensions];
-  boost::scoped_ptr< tg::TaskArray<dimensions> > var;
+  boost::scoped_ptr< tg::TaskArray<dimensions, T> > var;
 
-  tg::TaskArray<dimensions> construct() const
+  tg::TaskArray<dimensions, T> construct() const
   {
     unsigned mutableDims[dimensions];
     std::copy(&dims[0], &dims[dimensions], &mutableDims[0]);
@@ -113,18 +113,18 @@ public:
   {
     if (var.get() == NULL)
     {
-      boost::scoped_ptr< tg::TaskArray<dimensions> > constructed(new tg::TaskArray<dimensions>(construct()));
+      boost::scoped_ptr< tg::TaskArray<dimensions, T> > constructed(new tg::TaskArray<dimensions, T>(construct()));
       var.swap(constructed);
     }
   }
 
-  tg::TaskArray<dimensions>& operator*()
+  tg::TaskArray<dimensions, T>& operator*()
   {
     assert(var.get() != NULL);
     return *var;
   }
 
-  const tg::TaskArray<dimensions>& operator*() const
+  const tg::TaskArray<dimensions, T>& operator*() const
   {
     assert(var.get() != NULL);
     return *var;
