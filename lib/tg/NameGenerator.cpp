@@ -19,6 +19,7 @@
 #include <desolin/tg/NameGenerator.hpp>
 #include <cstring>
 #include <cmath>
+#include <climits>
 #include <cstdlib>
 #include <string>
 #include <algorithm>
