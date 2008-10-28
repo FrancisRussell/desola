@@ -26,6 +26,7 @@
 #include <sys/time.h>
 #include <TaskGraph>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
+#include "HighLevelFuser.hpp"
 #include <boost/ptr_container/ptr_vector.hpp>
 #include <boost/scoped_ptr.hpp>
 
@@ -85,6 +86,12 @@ public:
   const inline int size() const
   {
     return exprVector.size();
+  }
+
+  void performHighLevelFusion()
+  {
+    HighLevelFuser<T_element> fuser(*this);
+    fuser.execute();
   }
 
   void generateCode()

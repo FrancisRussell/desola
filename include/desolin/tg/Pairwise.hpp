@@ -36,8 +36,8 @@ private:
 public:  
   TGPairwise(typename TGInternalType<exprType, T_element>::type* internal, 
 		  const TGPairwiseOp o,
-		  TGOutputReference<exprType, T_element>& l, 
-		  TGOutputReference<exprType, T_element>& r) : TGBinOp<exprType, exprType, exprType, T_element>(internal, l, r), op(o)
+		  const TGOutputReference<exprType, T_element>& l, 
+		  const TGOutputReference<exprType, T_element>& r) : TGBinOp<exprType, exprType, exprType, T_element>(internal, l, r), op(o)
   {
   }
 

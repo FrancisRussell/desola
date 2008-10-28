@@ -204,34 +204,13 @@ public:
       result.setExpression(i, TGScalarExpr<T_element>());
     }
 
-    typename TGMatrix<T_element>::MatrixIterationCallback kernel
-      = boost::bind(matrixVectorMultKernel, _1, boost::ref(vector), boost::ref(result), _2, _3, _4);
+    typename TGMatrix<T_element>::MatrixIterationCallback kernel = e.isTranspose() ?
+      boost::bind(transposeMatrixVectorMultKernel, _1, boost::ref(vector), boost::ref(result), _2, _3, _4) :
+      boost::bind(matrixVectorMultKernel, _1, boost::ref(vector), boost::ref(result), _2, _3, _4);
 
     matrix.iterateSparse(generator, kernel);
   }
 
-  virtual void visit(TGTransposeMatrixVectorMult<T_element>& e)
-  {
-    using namespace tg;
-
-    TGVector<T_element>& result(e.getInternal());
-    TGMatrix<T_element>& matrix(e.getLeft().getInternal());
-    TGVector<T_element>& vector(e.getRight().getInternal());
-
-    tVarNamed(unsigned, i, getIndexName().c_str());
-    tVarNamed(unsigned, j, getIndexName().c_str());
-
-    tFor(j, 0u, matrix.getRows()-1)
-    {
-      result.setExpression(j, TGScalarExpr<T_element>());
-    }
-
-    typename TGMatrix<T_element>::MatrixIterationCallback kernel = 
-      boost::bind(transposeMatrixVectorMultKernel, _1, boost::ref(vector), boost::ref(result), _2, _3, _4);
-
-    matrix.iterateSparse(generator, kernel);
-  }
- 
   virtual void visit(TGVectorDot<T_element>& e)
   {
     using namespace tg;

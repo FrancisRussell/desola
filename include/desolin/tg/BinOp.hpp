@@ -44,7 +44,8 @@ public:
            TGExpressionNode<T_element>::isEqual(right, node.right, mappings);
   }
   
-  TGBinOp(typename TGInternalType<resultType, T_element>::type* internal, TGOutputReference<leftType, T_element>& l, TGOutputReference<rightType, T_element>& r) : TGExprNode<resultType, T_element>(internal), left(l), right(r)
+  TGBinOp(typename TGInternalType<resultType, T_element>::type* internal, const TGOutputReference<leftType,T_element>& l, 
+    const TGOutputReference<rightType, T_element>& r) : TGExprNode<resultType, T_element>(internal), left(l), right(r)
   {
     this->dependencies.insert(left.getExpressionNode());
     this->dependencies.insert(right.getExpressionNode());

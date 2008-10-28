@@ -36,8 +36,8 @@ public:
   }
   
   TGMatrixMult(TGMatrix<T_element>* internal, 
-		  TGOutputReference<tg_matrix, T_element>& left, TGOutputReference<tg_matrix, 
-		  T_element>& right) : TGBinOp<tg_matrix, tg_matrix, tg_matrix, T_element>(internal, left, right)
+	       const TGOutputReference<tg_matrix, T_element>& left, TGOutputReference<tg_matrix, 
+	       T_element>& right) : TGBinOp<tg_matrix, tg_matrix, tg_matrix, T_element>(internal, left, right)
   {
   }
 
@@ -50,16 +50,26 @@ public:
 template<typename T_element>
 class TGMatrixVectorMult : public TGBinOp<tg_vector, tg_matrix, tg_vector, T_element>
 {
+private:
+  const bool transpose;
+
 public:
   bool isEqual(const TGMatrixVectorMult& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
   {
-    return TGBinOp<tg_vector, tg_matrix, tg_vector, T_element>::isEqual(node, mappings);
+    return TGBinOp<tg_vector, tg_matrix, tg_vector, T_element>::isEqual(node, mappings) &&
+           transpose == node.transpose;
   }
   
   TGMatrixVectorMult(TGVector<T_element>* internal, 
-		  TGOutputReference<tg_matrix, T_element>& left, 
-		  TGOutputReference<tg_vector, T_element>& right) : TGBinOp<tg_vector, tg_matrix, tg_vector, T_element>(internal, left, right)
+		  const TGOutputReference<tg_matrix, T_element>& left, 
+		  const TGOutputReference<tg_vector, T_element>& right, const bool _transpose) : TGBinOp<tg_vector, tg_matrix, tg_vector, T_element>(internal, left, right),
+                  transpose(_transpose)
   {
+  }
+
+  inline bool isTranspose() const
+  {
+    return transpose;
   }
 
   void accept(TGExpressionNodeVisitor<T_element>& v)
@@ -69,17 +79,24 @@ public:
 };
 
 template<typename T_element>
-class TGTransposeMatrixVectorMult : public TGBinOp<tg_vector, tg_matrix, tg_vector, T_element>
+class TGMatrixMultiVectorMult : public TGExpressionNode<T_element>
 {
 public:
-  bool isEqual(const TGTransposeMatrixVectorMult& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
-  {
-    return TGBinOp<tg_vector, tg_matrix, tg_vector, T_element>::isEqual(node, mappings);
-  }
+  typedef boost::tuple<TGOutputReference<tg_vector, T_element>, TGVector<T_element>*, bool> multiply_params;
 
-  TGTransposeMatrixVectorMult(TGVector<T_element>* internal,
-                              TGOutputReference<tg_matrix, T_element>& left,
-			      TGOutputReference<tg_vector, T_element>& right) : TGBinOp<tg_vector, tg_matrix, tg_vector, T_element>(internal, left, right)
+private:
+  const TGOutputReference<tg_matrix, T_element> matrix;
+  const std::vector<multiply_params>& multiplies;
+
+public:
+  bool isEqual(const TGMatrixMultiVectorMult& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
+  {
+    //FIXME: Implement me!
+    return true;
+  }
+  
+  TGMatrixMultiVectorMult(const TGOutputReference<tg_matrix, T_element>& _matrix, 
+    const std::vector<multiply_params>& _multiplies) : matrix(_matrix), multiplies(_multiplies)
   {
   }
 
@@ -87,7 +104,13 @@ public:
   {
     v.visit(*this);
   }
+
+  virtual ~TGMatrixMultiVectorMult()
+  {
+    //TODO: Clean up internal representations
+  }
 };
+
 
 
 template<typename T_element>
@@ -100,8 +123,8 @@ public:
   }
   
   TGVectorDot(TGScalar<T_element>* internal, 
-		  TGOutputReference<tg_vector, T_element>& left, 
-		  TGOutputReference<tg_vector, T_element>& right) : TGBinOp<tg_scalar, tg_vector, tg_vector, T_element>(internal, left, right)
+		  const TGOutputReference<tg_vector, T_element>& left, 
+		  const TGOutputReference<tg_vector, T_element>& right) : TGBinOp<tg_scalar, tg_vector, tg_vector, T_element>(internal, left, right)
   {
   }
 
@@ -121,8 +144,8 @@ public:
   }
   
   TGVectorCross(TGVector<T_element>* internal, 
-		  TGOutputReference<tg_vector, T_element>& left, 
-		  TGOutputReference<tg_vector, T_element>& right) : TGBinOp<tg_vector, tg_vector, tg_vector, T_element>(internal, left, right)
+		  const TGOutputReference<tg_vector, T_element>& left, 
+		  const TGOutputReference<tg_vector, T_element>& right) : TGBinOp<tg_vector, tg_vector, tg_vector, T_element>(internal, left, right)
   {
   }
 
@@ -142,7 +165,7 @@ public:
   }
 
   TGVectorTwoNorm(TGScalar<T_element>* internal, 
-		  TGOutputReference<tg_vector, T_element>& left) : TGUnOp<tg_scalar, tg_vector, T_element>(internal, left)
+		  const TGOutputReference<tg_vector, T_element>& left) : TGUnOp<tg_scalar, tg_vector, T_element>(internal, left)
   {
   }
 
@@ -162,7 +185,7 @@ public:
   }
   
   TGMatrixTranspose(TGMatrix<T_element>* internal,
-		  TGOutputReference<tg_matrix, T_element>& matrix) : TGUnOp<tg_matrix, tg_matrix, T_element>(internal, matrix)
+		    const TGOutputReference<tg_matrix, T_element>& matrix) : TGUnOp<tg_matrix, tg_matrix, T_element>(internal, matrix)
   {
   }
 

@@ -35,8 +35,8 @@ private:
 public:  
   TGScalarPiecewise(typename TGInternalType<exprType, T_element>::type* internal,
 		  const TGScalarPiecewiseOp o,
-		  TGOutputReference<exprType, T_element>& operand,
-		  TGOutputReference<tg_scalar, T_element>& s) : TGBinOp<exprType, exprType, tg_scalar, T_element>(internal, operand, s), op(o)
+		  const TGOutputReference<exprType, T_element>& operand,
+		  const TGOutputReference<tg_scalar, T_element>& s) : TGBinOp<exprType, exprType, tg_scalar, T_element>(internal, operand, s), op(o)
   {
   }
 

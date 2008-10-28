@@ -47,7 +47,7 @@ public:
   }
   
   TGElementGet(typename TGInternalType<tg_scalar, T_element>::type* internal, 
-		  TGOutputReference<exprType, T_element>& o, 
+		  const TGOutputReference<exprType, T_element>& o, 
 		  const TGElementIndex<exprType> i) :  TGUnOp<tg_scalar, exprType, T_element>(internal, o), 
 								     index(i)
   {
@@ -101,7 +101,7 @@ public:
   
 public:
   TGElementSet(typename TGInternalType<exprType, T_element>::type* internal,
-	       TGOutputReference<exprType, T_element>& o,
+	       const TGOutputReference<exprType, T_element>& o,
 	       const std::map<TGElementIndex<exprType>, TGOutputReference<tg_scalar, T_element> >& a) : TGUnOp<exprType, exprType, T_element>(internal, o), assignments(a)
   {
     std::for_each(assignments.begin(), assignments.end(), boost::bind(&TGElementSet::registerDependency, this, _1));

@@ -108,12 +108,6 @@ public:
     checkMatch(e);
   }
 
-  virtual void visit(TGTransposeMatrixVectorMult<T_element>& e)
-  {
-    checkMatch(e);
-  }
-  
-  
   virtual void visit(TGVectorDot<T_element>& e)
   {
     checkMatch(e);

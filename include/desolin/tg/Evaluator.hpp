@@ -118,6 +118,7 @@ public:
     }
     else
     {
+      graph->performHighLevelFusion();
       graph->generateCode();
       graph->compile();
       cachedGraphMap[hash] = graph;
