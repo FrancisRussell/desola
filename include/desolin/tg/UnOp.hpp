@@ -33,31 +33,28 @@ template<typename resultType, typename exprType, typename T_element>
 class TGUnOp : public TGExprNode<resultType, T_element>
 {
 private:
-  TGExprNode<exprType, T_element>* expr;
+  TGOutputReference<exprType, T_element> expr;
 
 public:
   bool isEqual(const TGUnOp& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
   {
-    const typename std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>::const_iterator nodeMappingIter(mappings.find(expr));
-    assert(nodeMappingIter != mappings.end());
-
-    return TGExprNode<resultType, T_element>::isEqual(node, mappings) && 
-           nodeMappingIter->second == node.expr;
+    return TGExprNode<resultType, T_element>::isEqual(node, mappings) &&
+           TGExpressionNode<T_element>::isEqual(expr, node.expr, mappings);
   }
     
-  TGUnOp(typename TGInternalType<resultType, T_element>::type* internal, TGExprNode<exprType, T_element>& e) : TGExprNode<resultType, T_element>(internal), expr(&e)
+  TGUnOp(typename TGInternalType<resultType, T_element>::type* internal, TGOutputReference<exprType, T_element>& e) : TGExprNode<resultType, T_element>(internal), expr(e)
   {
-    this->dependencies.insert(expr);
+    this->dependencies.insert(expr.getExpressionNode());
   }
 
-  inline TGExprNode<exprType, T_element>& getOperand()
+  inline TGOutputReference<exprType, T_element> getOperand()
   {
-    return *expr;
+    return expr;
   }
 
-  inline const TGExprNode<exprType, T_element>& getOperand() const
+  inline const TGOutputReference<exprType, T_element> getOperand() const
   {
-    return *expr;
+    return expr;
   }
 };
 
@@ -65,7 +62,7 @@ template<typename exprType, typename T_element>
 class TGNegate : public TGUnOp<exprType, exprType, T_element>
 {
 public:
-  TGNegate(typename TGInternalType<exprType, T_element>::type* internal, TGExprNode<exprType, T_element>& e) : TGUnOp<exprType, exprType, T_element>(internal, e)
+  TGNegate(typename TGInternalType<exprType, T_element>::type* internal, TGOutputReference<exprType, T_element>& e) : TGUnOp<exprType, exprType, T_element>(internal, e)
   {
   }
 
@@ -84,7 +81,7 @@ template<typename T_element>
 class TGAbsolute : public TGUnOp<tg_scalar, tg_scalar, T_element>
 {
 public:
-  TGAbsolute(typename TGInternalType<tg_scalar, T_element>::type* internal, TGExprNode<tg_scalar, T_element>& e) : TGUnOp<tg_scalar, tg_scalar, T_element>(internal, e)
+  TGAbsolute(typename TGInternalType<tg_scalar, T_element>::type* internal, TGOutputReference<tg_scalar, T_element>& e) : TGUnOp<tg_scalar, tg_scalar, T_element>(internal, e)
   {
   }
 
@@ -103,7 +100,7 @@ template<typename T_element>
 class TGSquareRoot : public TGUnOp<tg_scalar, tg_scalar, T_element>
 {
 public:
-  TGSquareRoot(typename TGInternalType<tg_scalar, T_element>::type* internal, TGExprNode<tg_scalar, T_element>& e) : TGUnOp<tg_scalar, tg_scalar, T_element>(internal, e)
+  TGSquareRoot(typename TGInternalType<tg_scalar, T_element>::type* internal, TGOutputReference<tg_scalar, T_element>& e) : TGUnOp<tg_scalar, tg_scalar, T_element>(internal, e)
   {
   }
 

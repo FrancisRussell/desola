@@ -42,6 +42,19 @@ private:
   std::size_t hash;
 
   template<typename exprType>
+  inline std::size_t hashOutputReference(const TGOutputReference<exprType, T_element>& ref) const
+  {
+    const typename std::map<const TGExpressionNode<T_element>*, int>::const_iterator nodeNumbering 
+      = nodeNumberings.find(ref.getExpressionNode());
+    assert(nodeNumbering != nodeNumberings.end());
+
+    std::size_t seed = boost::hash<int>()(nodeNumbering->second);
+    boost::hash_combine(seed, ref.getIndex());
+
+    return seed;
+  }
+
+  template<typename exprType>
   inline std::size_t hashExprNode(const TGExprNode<exprType, T_element>& node) const
   {
     const char* nodeTypeString = typeid(node).name();
@@ -54,9 +67,7 @@ private:
   std::size_t hashUnOp(const TGUnOp<resultType, exprType, T_element>& unop) const
   {
     std::size_t seed = hashExprNode(unop);
-    const typename std::map<const TGExpressionNode<T_element>*, int>::const_iterator operand = nodeNumberings.find(&unop.getOperand());
-    assert(operand != nodeNumberings.end());
-    boost::hash_combine(seed, operand->second);
+    boost::hash_combine(seed, hashOutputReference(unop.getOperand()));
     return seed;
   }
 
@@ -64,12 +75,8 @@ private:
   std::size_t hashBinOp(const TGBinOp<resultType, leftType, rightType, T_element>& binop) const
   {
     std::size_t seed = hashExprNode(binop);
-    const typename std::map<const TGExpressionNode<T_element>*, int>::const_iterator left = nodeNumberings.find(&binop.getLeft());
-    const typename std::map<const TGExpressionNode<T_element>*, int>::const_iterator right = nodeNumberings.find(&binop.getRight());
-    assert(left != nodeNumberings.end());
-    assert(right != nodeNumberings.end());
-    boost::hash_combine(seed, left->second);
-    boost::hash_combine(seed, right->second);
+    boost::hash_combine(seed, hashOutputReference(binop.getLeft()));
+    boost::hash_combine(seed, hashOutputReference(binop.getRight()));
     return seed;
   }
 
@@ -82,12 +89,10 @@ private:
   }
 
   template<typename exprType>
-  std::size_t hashSingleElementSet(const std::pair<const TGElementIndex<exprType>, const TGExprNode<tg_scalar, T_element>*>& pair) const
+  std::size_t hashSingleElementSet(const std::pair<const TGElementIndex<exprType>, const TGOutputReference<tg_scalar, T_element> >& pair) const
   {
     std::size_t seed = boost::hash< TGElementIndex<exprType> >()(pair.first);
-    const typename std::map<const TGExpressionNode<T_element>*, int>::const_iterator element = nodeNumberings.find(pair.second);
-    assert(element != nodeNumberings.end());
-    boost::hash_combine(seed, element->second);
+    boost::hash_combine(seed, hashOutputReference(pair.second));
     return seed;
   }
   
@@ -95,7 +100,7 @@ private:
   std::size_t hashElementSet(const TGElementSet<exprType, T_element>& node) const
   {
     std::size_t seed = hashUnOp(node);
-    typedef std::map<TGElementIndex<exprType>, const TGExprNode<tg_scalar, T_element>*> T_assignmentMap;
+    typedef std::map<TGElementIndex<exprType>, const TGOutputReference<tg_scalar, T_element> > T_assignmentMap;
     const T_assignmentMap assignments(node.getAssignments());
 
     for(typename T_assignmentMap::const_iterator i = assignments.begin(); i != assignments.end(); ++i)

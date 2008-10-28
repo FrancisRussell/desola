@@ -37,7 +37,8 @@ private:
   TGObjectGeneratorHelper& operator=(const TGObjectGeneratorHelper&);
    
   typedef typename ExprTGTraits<exprType, T_element>::tgExprType tgExprType;
-  std::map<ExprNode<exprType, T_element>*, TGExprNode<tgExprType, T_element>*> nodeMap;
+  typedef TGOutputReference<tgExprType, T_element> output_reference;
+  std::map<ExprNode<exprType, T_element>*, output_reference > nodeMap;
   TGEvaluator<T_element>& evaluator;
 	 
   // We use these getters instead of storing references to the graph and
@@ -69,19 +70,19 @@ public:
   void handleNode(ExprNode<exprType, T_element>& e, TGExprNode<tgExprType, T_element>* const tge)
   {
     getGraph().add(tge);
-    nodeMap[&e] = tge;
+    nodeMap.insert(std::make_pair(&e, output_reference(tge, 0)));
   }
 
   // Locates the TGExprNode corresponding to an ExprNode.
-  TGExprNode<tgExprType, T_element>& getTGExprNode(ExprNode<exprType, T_element>& e)
+  output_reference getTGExprNode(ExprNode<exprType, T_element>& e)
   {
-    const typename std::map<ExprNode<exprType, T_element>*, TGExprNode<tgExprType, T_element>*>::iterator nodeIterator(nodeMap.find(&e));
+    const typename std::map<ExprNode<exprType, T_element>*, output_reference>::iterator nodeIterator(nodeMap.find(&e));
     // Either find corresponding TGExprNode, or the ExprNode node has never been
     // encountered so we assume it will be evaluated by some other evaluator
     // and map it to a TGLiteral.
     if (nodeIterator != nodeMap.end())
     {
-      return *nodeIterator->second;
+      return nodeIterator->second;
     }
     else
     {
@@ -89,7 +90,10 @@ public:
       typename ExprTGTraits<exprType, T_element>::internalRepCreator creator(getGraph().getNameGenerator());
       literal->getValue().accept(creator);
       handleNode(e, new TGLiteral<tgExprType, T_element>(creator.getResult()));
-      return *nodeMap[&e];
+
+      const typename std::map<ExprNode<exprType, T_element>*, output_reference>::iterator newNodeIterator(nodeMap.find(&e));
+      assert(newNodeIterator != nodeMap.end());
+      return newNodeIterator->second;
     }
   }
 
@@ -112,13 +116,13 @@ public:
   // to a ParameterHolder.
   void addTaskGraphMappings(ParameterHolder& parameterHolder)
   {
-    for(typename std::map<ExprNode<exprType, T_element>*, TGExprNode<tgExprType, T_element>*>::iterator iterator=nodeMap.begin(); iterator!=nodeMap.end(); ++iterator)
+    for(typename std::map<ExprNode<exprType, T_element>*, TGOutputReference<tgExprType, T_element> >::iterator iterator=nodeMap.begin(); iterator!=nodeMap.end(); ++iterator)
     {
-      if (iterator->second->isParameter())
+      if (iterator->second.isParameter())
       {
          Literal<exprType, T_element>* const literal = getStrategy().getEvaluatedExpr(iterator->first);
          typename ExprTraits<exprType, T_element>::internalRep& internal = literal->getValue();
-         typename ExprTGTraits<exprType, T_element>::internalRep& tgInternal = (iterator->second)->getInternal();
+         typename ExprTGTraits<exprType, T_element>::internalRep& tgInternal = (iterator->second).getInternal();
          tgInternal.addParameterMappings(internal, parameterHolder);
       }
     }

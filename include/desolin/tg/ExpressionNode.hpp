@@ -25,6 +25,10 @@
 #include <cstddef>
 #include <boost/scoped_ptr.hpp>
 #include <boost/functional/hash.hpp>
+#include <boost/mpl/vector.hpp>
+#include <boost/mpl/transform.hpp>
+#include <boost/type_traits/add_const.hpp>  
+#include <boost/variant.hpp>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 
 namespace desolin
@@ -125,6 +129,47 @@ std::size_t hash_value(const TGElementIndex<tg_matrix>& index)
   return seed;
 }
 
+template<typename tgExprType, typename T_element>
+class TGOutputReference
+{
+private:
+  TGExpressionNode<T_element>* node;
+  std::size_t index;
+
+public:
+  TGOutputReference(TGExpressionNode<T_element>* const n, const std::size_t i) : node(n), index(i)
+  {
+  }
+
+  TGOutputReference(const TGOutputReference& ref) : node(ref.node), index(ref.index)
+  {
+  }
+
+  inline bool operator==(const TGOutputReference& ref) const
+  {
+    return node == ref.node && index == ref.index;
+  }
+
+  inline bool isParameter() const
+  {
+    return node->isParameter(index);
+  }
+
+  inline std::size_t getIndex() const
+  {
+    return index;
+  }
+
+  inline TGExpressionNode<T_element>* getExpressionNode() const
+  {
+    return node;
+  }
+
+  typename TGInternalType<tgExprType, T_element>::type& getInternal() const
+  {
+    return *boost::get<typename TGInternalType<tgExprType, T_element>::type*>(node->getInternal(index));
+  }
+};
 
 template<typename T_element>
 class TGExpressionNode
@@ -134,10 +179,30 @@ private:
   TGExpressionNode(const TGExpressionNode&);
   TGExpressionNode& operator=(const TGExpressionNode&);
 
+  typedef boost::mpl::vector<TGScalar<T_element>*, TGVector<T_element>*, TGMatrix<T_element>*> internal_types;
+  typedef typename boost::mpl::transform< internal_types, boost::add_const<boost::mpl::_1> >::type internal_types_const;
+
 protected:
   std::set<TGExpressionNode<T_element>*> dependencies;
 
+  template<typename exprType>
+  static inline bool isEqual(const TGOutputReference<exprType, T_element>& ref1, const TGOutputReference<exprType, T_element>& ref2, 
+    const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings)
+  {
+    if (ref1.getIndex() != ref2.getIndex())
+      return false;
+
+    typedef typename std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>::const_iterator NodeMappingIter;
+    const NodeMappingIter nodeMappingIter(mappings.find(ref1.getExpressionNode()));
+    assert(nodeMappingIter != mappings.end());
+
+    return nodeMappingIter->second == ref2.getExpressionNode();
+  }
+
 public:
+  typedef typename boost::make_variant_over<internal_types>::type internal_variant_type;
+  typedef typename boost::make_variant_over<internal_types_const>::type const_internal_variant_type;
+
   TGExpressionNode()
   {
   }
@@ -149,6 +214,9 @@ public:
   {
     return dependencies;
   }
+
+  virtual bool isParameter(const std::size_t index) const = 0;
+  virtual internal_variant_type getInternal(const std::size_t index) = 0;
 
   virtual ~TGExpressionNode()
   {
@@ -163,12 +231,15 @@ private:
   boost::scoped_ptr< T_internal > internal;
 
 public:
+  typedef typename TGExpressionNode<T_element>::internal_variant_type internal_variant_type;
+  typedef typename TGExpressionNode<T_element>::const_internal_variant_type const_internal_variant_type;
+
   inline bool isEqual(const TGExprNode& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
   {
     return internal->matches(*node.internal);
   }
   
-  TGExprNode(T_internal* i) : internal(i)
+  TGExprNode(T_internal* const i) : internal(i)
   {
   }
 
@@ -187,9 +258,28 @@ public:
     return *internal;
   }
 
-  inline bool isParameter() const
+  bool isParameter(const std::size_t index) const
   {
-    return internal->isParameter();
+    if (index == 0)
+    {
+      return internal->isParameter();
+    }
+    else
+    {
+      assert(false && "isParameter call for internal representation with index>0 for node with only one output.");
+    }
+  }
+
+  virtual internal_variant_type getInternal(const std::size_t index)
+  {
+    if (index == 0)
+    {
+      return internal_variant_type(internal.get());
+    }
+    else
+    {
+      assert(false && "getInternal call for internal representation with index>0 for node with only one output.");
+    }
   }
 };
 

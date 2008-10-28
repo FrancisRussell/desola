@@ -36,7 +36,7 @@ public:
   }
   
   TGMatrixMult(TGMatrix<T_element>* internal, 
-		  TGExprNode<tg_matrix, T_element>& left, TGExprNode<tg_matrix, 
+		  TGOutputReference<tg_matrix, T_element>& left, TGOutputReference<tg_matrix, 
 		  T_element>& right) : TGBinOp<tg_matrix, tg_matrix, tg_matrix, T_element>(internal, left, right)
   {
   }
@@ -57,8 +57,8 @@ public:
   }
   
   TGMatrixVectorMult(TGVector<T_element>* internal, 
-		  TGExprNode<tg_matrix, T_element>& left, 
-		  TGExprNode<tg_vector, T_element>& right) : TGBinOp<tg_vector, tg_matrix, tg_vector, T_element>(internal, left, right)
+		  TGOutputReference<tg_matrix, T_element>& left, 
+		  TGOutputReference<tg_vector, T_element>& right) : TGBinOp<tg_vector, tg_matrix, tg_vector, T_element>(internal, left, right)
   {
   }
 
@@ -78,8 +78,8 @@ public:
   }
 
   TGTransposeMatrixVectorMult(TGVector<T_element>* internal,
-                              TGExprNode<tg_matrix, T_element>& left,
-			      TGExprNode<tg_vector, T_element>& right) : TGBinOp<tg_vector, tg_matrix, tg_vector, T_element>(internal, left, right)
+                              TGOutputReference<tg_matrix, T_element>& left,
+			      TGOutputReference<tg_vector, T_element>& right) : TGBinOp<tg_vector, tg_matrix, tg_vector, T_element>(internal, left, right)
   {
   }
 
@@ -100,8 +100,8 @@ public:
   }
   
   TGVectorDot(TGScalar<T_element>* internal, 
-		  TGExprNode<tg_vector, T_element>& left, 
-		  TGExprNode<tg_vector, T_element>& right) : TGBinOp<tg_scalar, tg_vector, tg_vector, T_element>(internal, left, right)
+		  TGOutputReference<tg_vector, T_element>& left, 
+		  TGOutputReference<tg_vector, T_element>& right) : TGBinOp<tg_scalar, tg_vector, tg_vector, T_element>(internal, left, right)
   {
   }
 
@@ -121,8 +121,8 @@ public:
   }
   
   TGVectorCross(TGVector<T_element>* internal, 
-		  TGExprNode<tg_vector, T_element>& left, 
-		  TGExprNode<tg_vector, T_element>& right) : TGBinOp<tg_vector, tg_vector, tg_vector, T_element>(internal, left, right)
+		  TGOutputReference<tg_vector, T_element>& left, 
+		  TGOutputReference<tg_vector, T_element>& right) : TGBinOp<tg_vector, tg_vector, tg_vector, T_element>(internal, left, right)
   {
   }
 
@@ -142,7 +142,7 @@ public:
   }
 
   TGVectorTwoNorm(TGScalar<T_element>* internal, 
-		  TGExprNode<tg_vector, T_element>& left) : TGUnOp<tg_scalar, tg_vector, T_element>(internal, left)
+		  TGOutputReference<tg_vector, T_element>& left) : TGUnOp<tg_scalar, tg_vector, T_element>(internal, left)
   {
   }
 
@@ -162,7 +162,7 @@ public:
   }
   
   TGMatrixTranspose(TGMatrix<T_element>* internal,
-		  TGExprNode<tg_matrix, T_element>& matrix) : TGUnOp<tg_matrix, tg_matrix, T_element>(internal, matrix)
+		  TGOutputReference<tg_matrix, T_element>& matrix) : TGUnOp<tg_matrix, tg_matrix, T_element>(internal, matrix)
   {
   }
 

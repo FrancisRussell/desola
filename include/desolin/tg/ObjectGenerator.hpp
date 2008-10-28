@@ -79,7 +79,7 @@ public:
   void visit(ElementGet<vector, T_element>& e)
   {
     TGScalar<T_element>* internal = scalarHandler.createTGRep(e);
-    TGExprNode<tg_vector, T_element>& v = vectorHandler.getTGExprNode(e.getOperand());
+    TGOutputReference<tg_vector, T_element> v = vectorHandler.getTGExprNode(e.getOperand());
     TGElementIndex<tg_vector> index(e.getIndex());
     scalarHandler.handleNode(e, new TGElementGet<tg_vector, T_element>(internal, v, index));
   }
@@ -87,7 +87,7 @@ public:
   void visit(ElementGet<matrix, T_element>& e)
   {
     TGScalar<T_element>* internal = scalarHandler.createTGRep(e);
-    TGExprNode<tg_matrix, T_element>& m = matrixHandler.getTGExprNode(e.getOperand());
+    TGOutputReference<tg_matrix, T_element> m = matrixHandler.getTGExprNode(e.getOperand());
     TGElementIndex<tg_matrix> index(e.getIndex());
     scalarHandler.handleNode(e, new TGElementGet<tg_matrix, T_element>(internal, m, index));
   }
@@ -95,17 +95,17 @@ public:
   void visit(ElementSet<vector, T_element>& e)
   {
     TGVector<T_element>* internal = vectorHandler.createTGRep(e);
-    TGExprNode<tg_vector, T_element>& v = vectorHandler.getTGExprNode(e.getOperand());
+    TGOutputReference<tg_vector, T_element> v = vectorHandler.getTGExprNode(e.getOperand());
     
     const std::map<ElementIndex<vector>, ExprNode<scalar, T_element>*> assignments(e.getAssignments());
-    std::map<TGElementIndex<tg_vector>, TGExprNode<tg_scalar, T_element>*> tgAssignments;
+    std::map<TGElementIndex<tg_vector>, TGOutputReference<tg_scalar, T_element> > tgAssignments;
     
     typedef typename std::map<ElementIndex<vector>, ExprNode<scalar, T_element>*>::const_iterator Iterator;
     for(Iterator i = assignments.begin(); i != assignments.end(); ++i)
     {
       const TGElementIndex<tg_vector> index(i->first);
-      TGExprNode<tg_scalar, T_element>& s = scalarHandler.getTGExprNode(*(i->second));
-      tgAssignments[index] = &s;
+      TGOutputReference<tg_scalar, T_element> s = scalarHandler.getTGExprNode(*(i->second));
+      tgAssignments.insert(std::make_pair(index, s));
     }
     vectorHandler.handleNode(e, new TGElementSet<tg_vector, T_element>(internal, v, tgAssignments));
   }
@@ -113,17 +113,17 @@ public:
   void visit(ElementSet<matrix, T_element>& e)
   {
     TGMatrix<T_element>* internal = matrixHandler.createTGRep(e);
-    TGExprNode<tg_matrix, T_element>& v = matrixHandler.getTGExprNode(e.getOperand());
+    TGOutputReference<tg_matrix, T_element> v = matrixHandler.getTGExprNode(e.getOperand());
 		        
     const std::map<ElementIndex<matrix>, ExprNode<scalar, T_element>*> assignments(e.getAssignments());
-    std::map<TGElementIndex<tg_matrix>, TGExprNode<tg_scalar, T_element>*> tgAssignments;
+    std::map<TGElementIndex<tg_matrix>, TGOutputReference<tg_scalar, T_element> > tgAssignments;
 		        
     typedef typename std::map<ElementIndex<matrix>, ExprNode<scalar, T_element>*>::const_iterator Iterator;
     for(Iterator i = assignments.begin(); i != assignments.end(); ++i)
     {
       const TGElementIndex<tg_matrix> index(i->first);
-      TGExprNode<tg_scalar, T_element>& s = scalarHandler.getTGExprNode(*(i->second));
-      tgAssignments[index] = &s;
+      TGOutputReference<tg_scalar, T_element> s = scalarHandler.getTGExprNode(*(i->second));
+      tgAssignments.insert(std::make_pair(index, s));
     }
     matrixHandler.handleNode(e, new TGElementSet<tg_matrix, T_element>(internal, v, tgAssignments));
   }
@@ -146,54 +146,54 @@ public:
   void visit(MatrixMult<T_element>& e)
   {
     TGMatrix<T_element>* internal = matrixHandler.createTGRep(e);
-    TGExprNode<tg_matrix, T_element>& left = matrixHandler.getTGExprNode(e.getLeft());
-    TGExprNode<tg_matrix, T_element>& right = matrixHandler.getTGExprNode(e.getRight());
+    TGOutputReference<tg_matrix, T_element> left = matrixHandler.getTGExprNode(e.getLeft());
+    TGOutputReference<tg_matrix, T_element> right = matrixHandler.getTGExprNode(e.getRight());
     matrixHandler.handleNode(e, new TGMatrixMult<T_element>(internal, left, right));
   }
   
   void visit(MatrixVectorMult<T_element>& e)
   { 
     TGVector<T_element>* internal = vectorHandler.createTGRep(e);
-    TGExprNode<tg_matrix, T_element>& left = matrixHandler.getTGExprNode(e.getLeft());
-    TGExprNode<tg_vector, T_element>& right = vectorHandler.getTGExprNode(e.getRight());
+    TGOutputReference<tg_matrix, T_element> left = matrixHandler.getTGExprNode(e.getLeft());
+    TGOutputReference<tg_vector, T_element> right = vectorHandler.getTGExprNode(e.getRight());
     vectorHandler.handleNode(e, new TGMatrixVectorMult<T_element>(internal, left, right));
   }
 
   void visit(TransposeMatrixVectorMult<T_element>& e)
   {
     TGVector<T_element>* internal = vectorHandler.createTGRep(e);
-    TGExprNode<tg_matrix, T_element>& left = matrixHandler.getTGExprNode(e.getLeft());
-    TGExprNode<tg_vector, T_element>& right = vectorHandler.getTGExprNode(e.getRight());
+    TGOutputReference<tg_matrix, T_element> left = matrixHandler.getTGExprNode(e.getLeft());
+    TGOutputReference<tg_vector, T_element> right = vectorHandler.getTGExprNode(e.getRight());
     vectorHandler.handleNode(e, new TGTransposeMatrixVectorMult<T_element>(internal, left, right));		
   }
   
   void visit(VectorDot<T_element>& e)
   { 
     TGScalar<T_element>* internal = scalarHandler.createTGRep(e);
-    TGExprNode<tg_vector, T_element>& left = vectorHandler.getTGExprNode(e.getLeft());
-    TGExprNode<tg_vector, T_element>& right = vectorHandler.getTGExprNode(e.getRight());
+    TGOutputReference<tg_vector, T_element> left = vectorHandler.getTGExprNode(e.getLeft());
+    TGOutputReference<tg_vector, T_element> right = vectorHandler.getTGExprNode(e.getRight());
     scalarHandler.handleNode(e, new TGVectorDot<T_element>(internal, left, right));
   }
   
   void visit(VectorCross<T_element>& e)
   {
     TGVector<T_element>* internal = vectorHandler.createTGRep(e);
-    TGExprNode<tg_vector, T_element>& left = vectorHandler.getTGExprNode(e.getLeft());
-    TGExprNode<tg_vector, T_element>& right = vectorHandler.getTGExprNode(e.getRight());
+    TGOutputReference<tg_vector, T_element> left = vectorHandler.getTGExprNode(e.getLeft());
+    TGOutputReference<tg_vector, T_element> right = vectorHandler.getTGExprNode(e.getRight());
     vectorHandler.handleNode(e, new TGVectorCross<T_element>(internal, left, right));		
   }
 
   void visit(VectorTwoNorm<T_element>& e)
   {
     TGScalar<T_element>* internal = scalarHandler.createTGRep(e);
-    TGExprNode<tg_vector, T_element>& v = vectorHandler.getTGExprNode(e.getOperand());
+    TGOutputReference<tg_vector, T_element> v = vectorHandler.getTGExprNode(e.getOperand());
     scalarHandler.handleNode(e, new TGVectorTwoNorm<T_element>(internal, v));
   }
   
   void visit(MatrixTranspose<T_element>& e)
   {
     TGMatrix<T_element>* internal = matrixHandler.createTGRep(e);
-    TGExprNode<tg_matrix, T_element>& m = matrixHandler.getTGExprNode(e.getOperand());
+    TGOutputReference<tg_matrix, T_element> m = matrixHandler.getTGExprNode(e.getOperand());
     matrixHandler.handleNode(e, new TGMatrixTranspose<T_element>(internal, m));
   }
 
@@ -201,8 +201,8 @@ public:
   {
     TGPairwiseOp op = getTGPairwiseOp(e.getOperation()); 
     TGScalar<T_element>* internal = scalarHandler.createTGRep(e);
-    TGExprNode<tg_scalar, T_element>& left = scalarHandler.getTGExprNode(e.getLeft());
-    TGExprNode<tg_scalar, T_element>& right = scalarHandler.getTGExprNode(e.getRight());
+    TGOutputReference<tg_scalar, T_element> left = scalarHandler.getTGExprNode(e.getLeft());
+    TGOutputReference<tg_scalar, T_element> right = scalarHandler.getTGExprNode(e.getRight());
     scalarHandler.handleNode(e, new TGPairwise<tg_scalar, T_element>(internal, op, left, right));
   }
 
@@ -210,8 +210,8 @@ public:
   {
     TGPairwiseOp op = getTGPairwiseOp(e.getOperation());
     TGVector<T_element>* internal = vectorHandler.createTGRep(e);
-    TGExprNode<tg_vector, T_element>& left = vectorHandler.getTGExprNode(e.getLeft());
-    TGExprNode<tg_vector, T_element>& right = vectorHandler.getTGExprNode(e.getRight());
+    TGOutputReference<tg_vector, T_element> left = vectorHandler.getTGExprNode(e.getLeft());
+    TGOutputReference<tg_vector, T_element> right = vectorHandler.getTGExprNode(e.getRight());
     vectorHandler.handleNode(e, new TGPairwise<tg_vector, T_element>(internal, op, left, right));
   }
 
@@ -219,8 +219,8 @@ public:
   {
     TGPairwiseOp op = getTGPairwiseOp(e.getOperation());
     TGMatrix<T_element>* internal = matrixHandler.createTGRep(e);
-    TGExprNode<tg_matrix, T_element>& left = matrixHandler.getTGExprNode(e.getLeft());
-    TGExprNode<tg_matrix, T_element>& right = matrixHandler.getTGExprNode(e.getRight());
+    TGOutputReference<tg_matrix, T_element> left = matrixHandler.getTGExprNode(e.getLeft());
+    TGOutputReference<tg_matrix, T_element> right = matrixHandler.getTGExprNode(e.getRight());
     matrixHandler.handleNode(e, new TGPairwise<tg_matrix, T_element>(internal, op, left, right));
   }
 
@@ -228,8 +228,8 @@ public:
   {
     TGScalarPiecewiseOp op = getTGScalarPiecewiseOp(e.getOperation());
     TGScalar<T_element>* internal = scalarHandler.createTGRep(e);
-    TGExprNode<tg_scalar, T_element>& left = scalarHandler.getTGExprNode(e.getLeft());
-    TGExprNode<tg_scalar, T_element>& right = scalarHandler.getTGExprNode(e.getRight());
+    TGOutputReference<tg_scalar, T_element> left = scalarHandler.getTGExprNode(e.getLeft());
+    TGOutputReference<tg_scalar, T_element> right = scalarHandler.getTGExprNode(e.getRight());
     scalarHandler.handleNode(e, new TGScalarPiecewise<tg_scalar, T_element>(internal, op, left, right));
   }
 
@@ -237,8 +237,8 @@ public:
   {
     TGScalarPiecewiseOp op = getTGScalarPiecewiseOp(e.getOperation());
     TGVector<T_element>* internal = vectorHandler.createTGRep(e);
-    TGExprNode<tg_vector, T_element>& left = vectorHandler.getTGExprNode(e.getLeft());
-    TGExprNode<tg_scalar, T_element>& right = scalarHandler.getTGExprNode(e.getRight());
+    TGOutputReference<tg_vector, T_element> left = vectorHandler.getTGExprNode(e.getLeft());
+    TGOutputReference<tg_scalar, T_element> right = scalarHandler.getTGExprNode(e.getRight());
     vectorHandler.handleNode(e, new TGScalarPiecewise<tg_vector, T_element>(internal, op, left, right));
   }
 
@@ -246,43 +246,43 @@ public:
   {
     TGScalarPiecewiseOp op = getTGScalarPiecewiseOp(e.getOperation());
     TGMatrix<T_element>* internal = matrixHandler.createTGRep(e);
-    TGExprNode<tg_matrix, T_element>& left = matrixHandler.getTGExprNode(e.getLeft());
-    TGExprNode<tg_scalar, T_element>& right = scalarHandler.getTGExprNode(e.getRight());
+    TGOutputReference<tg_matrix, T_element> left = matrixHandler.getTGExprNode(e.getLeft());
+    TGOutputReference<tg_scalar, T_element> right = scalarHandler.getTGExprNode(e.getRight());
     matrixHandler.handleNode(e, new TGScalarPiecewise<tg_matrix, T_element>(internal, op, left, right));
   }
 
   void visit(Negate<scalar, T_element>& e)
   {
     TGScalar<T_element>* internal = scalarHandler.createTGRep(e); 
-    TGExprNode<tg_scalar, T_element>& operand = scalarHandler.getTGExprNode(e.getOperand());
+    TGOutputReference<tg_scalar, T_element> operand = scalarHandler.getTGExprNode(e.getOperand());
     scalarHandler.handleNode(e, new TGNegate<tg_scalar, T_element>(internal, operand));
   }
 
   void visit(Negate<vector, T_element>& e)
   {
     TGVector<T_element>* internal = vectorHandler.createTGRep(e);
-    TGExprNode<tg_vector, T_element>& operand = vectorHandler.getTGExprNode(e.getOperand());
+    TGOutputReference<tg_vector, T_element> operand = vectorHandler.getTGExprNode(e.getOperand());
     vectorHandler.handleNode(e, new TGNegate<tg_vector, T_element>(internal, operand));
   }
 
   void visit(Negate<matrix, T_element>& e)
   {
     TGMatrix<T_element>* internal = matrixHandler.createTGRep(e);
-    TGExprNode<tg_matrix, T_element>& operand = matrixHandler.getTGExprNode(e.getOperand());
+    TGOutputReference<tg_matrix, T_element> operand = matrixHandler.getTGExprNode(e.getOperand());
     matrixHandler.handleNode(e, new TGNegate<tg_matrix, T_element>(internal, operand));
   }
 
   void visit(Absolute<T_element>& e)
   {
     TGScalar<T_element>* internal = scalarHandler.createTGRep(e);
-    TGExprNode<tg_scalar, T_element>& operand = scalarHandler.getTGExprNode(e.getOperand());
+    TGOutputReference<tg_scalar, T_element> operand = scalarHandler.getTGExprNode(e.getOperand());
     scalarHandler.handleNode(e, new TGAbsolute<T_element>(internal, operand));
   }
 
   void visit(SquareRoot<T_element>& e)
   {
     TGScalar<T_element>* internal = scalarHandler.createTGRep(e);
-    TGExprNode<tg_scalar, T_element>& operand = scalarHandler.getTGExprNode(e.getOperand());
+    TGOutputReference<tg_scalar, T_element> operand = scalarHandler.getTGExprNode(e.getOperand());
     scalarHandler.handleNode(e, new TGSquareRoot<T_element>(internal, operand));
   }
 };

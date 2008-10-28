@@ -33,47 +33,41 @@ template<typename resultType, typename leftType, typename rightType, typename T_
 class TGBinOp : public TGExprNode<resultType, T_element>
 {
 private:
-  TGExprNode<leftType, T_element>* left;
-  TGExprNode<rightType, T_element>* right;
+  TGOutputReference<leftType, T_element> left;
+  TGOutputReference<rightType, T_element> right;
 
 public:
   bool isEqual(const TGBinOp& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
   {
-    const typename std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>::const_iterator leftIter(mappings.find(left));
-    const typename std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>::const_iterator rightIter(mappings.find(right));
-
-    assert(leftIter != mappings.end());
-    assert(rightIter != mappings.end());
-    
     return TGExprNode<resultType, T_element>::isEqual(node, mappings) && 
-	   leftIter->second == node.left &&
-	   rightIter->second == node.right;
+           TGExpressionNode<T_element>::isEqual(left, node.left, mappings) &&
+           TGExpressionNode<T_element>::isEqual(right, node.right, mappings);
   }
   
-  TGBinOp(typename TGInternalType<resultType, T_element>::type* internal, TGExprNode<leftType, T_element>& l, TGExprNode<rightType, T_element>& r) : TGExprNode<resultType, T_element>(internal), left(&l), right(&r)
+  TGBinOp(typename TGInternalType<resultType, T_element>::type* internal, TGOutputReference<leftType, T_element>& l, TGOutputReference<rightType, T_element>& r) : TGExprNode<resultType, T_element>(internal), left(l), right(r)
   {
-    this->dependencies.insert(left);
-    this->dependencies.insert(right);
+    this->dependencies.insert(left.getExpressionNode());
+    this->dependencies.insert(right.getExpressionNode());
   }
 
-  inline TGExprNode<leftType, T_element>& getLeft()
+  inline TGOutputReference<leftType, T_element> getLeft()
   {
-    return *left;
+    return left;
   }
 
-  inline const TGExprNode<leftType, T_element>& getLeft() const
+  inline const TGOutputReference<leftType, T_element> getLeft() const
   {
-    return *left;
+    return left;
   }
 
-  inline TGExprNode<rightType, T_element>& getRight()
+  inline TGOutputReference<rightType, T_element> getRight()
   {
-    return *right;
+    return right;
   }
 
-  inline const TGExprNode<rightType, T_element>& getRight() const
+  inline const TGOutputReference<rightType, T_element> getRight() const
   {
-    return *right;
+    return right;
   }
 };
 
