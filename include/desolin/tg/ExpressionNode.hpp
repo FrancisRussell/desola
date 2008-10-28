@@ -150,6 +150,13 @@ public:
     return node == ref.node && index == ref.index;
   }
 
+  bool operator<(const TGOutputReference& ref) const
+  {
+    if (node < ref.node) return true;
+    if (index < ref.index) return true;
+    return false;
+  }
+
   inline bool isParameter() const
   {
     return node->isParameter(index);

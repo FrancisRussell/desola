@@ -55,7 +55,9 @@ template<typename exprType, typename T_elementType> class TGInternalType;
 template<typename exprType> class TGElementIndex;
 
 // TaskGraph Evaluator Expression Tree
+template<typename tgExprType, typename T_element> class TGOutputReference;
 template<typename T_element> class TGExpressionNode;
+template<typename exprType, typename T_element> class TGExprNode;
 template<typename resultType, typename leftType, typename rightType, typename T_element> class TGBinOp;
 template<typename resultType, typename exprType, typename T_element> class TGUnOp;
 template<typename T_element> class TGExpressionNodeVisitor;

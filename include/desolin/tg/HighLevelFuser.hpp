@@ -1,7 +1,14 @@
 #ifndef DESOLIN_TG_HIGH_LEVEL_FUSER_HPP
 #define DESOLIN_TG_HIGH_LEVEL_FUSER_HPP
 
-#include<vector>
+#include "Desolin_tg_fwd.hpp"
+#include <utility>
+#include <set>
+#include <map>
+#include <vector>
+#include <algorithm>
+#include <iterator>
+#include <boost/foreach.hpp>
 
 namespace desolin
 {
@@ -65,6 +72,46 @@ class HighLevelFuser
 private:
   TGExpressionGraph<T_element>& graph;
 
+  static std::set<TGExpressionNode<T_element>*> getDependencies(TGExpressionNode<T_element>* const node)
+  {
+    std::set<TGExpressionNode<T_element>*> dependencies;
+    getDependenciesHelper(dependencies, node);
+    return dependencies;
+  }
+
+  static void getDependenciesHelper(std::set<TGExpressionNode<T_element>*>& dependencies,
+    TGExpressionNode<T_element>* const node)
+  {
+    BOOST_FOREACH(TGExpressionNode<T_element>* dependency, node->getDependencies())
+    {
+      if (dependencies.insert(dependency).second)
+        getDependenciesHelper(dependencies, dependency);
+    }
+  }
+
+  void attemptFusion(const std::set<TGMatrixVectorMult<T_element>*>& matVecMuls)
+  {
+    std::set<TGExpressionNode<T_element>*> combinedDependencies;
+
+    BOOST_FOREACH(TGMatrixVectorMult<T_element>* matVecMul, matVecMuls)
+    {
+      const std::set<TGExpressionNode<T_element>*> dependencies(getDependencies(matVecMul));
+      combinedDependencies.insert(dependencies.begin(), dependencies.end());
+    }
+
+    // If the combined set of dependencies of the matrix-vector multiplies do not contain any of the other
+    // matrix-vector multiplies, we consider it safe to fuse.
+    
+    std::set<TGMatrixVectorMult<T_element>*> intersection;
+    std::set_intersection(matVecMuls.begin(), matVecMuls.end(), combinedDependencies.begin(), combinedDependencies.end(), 
+      std::inserter(intersection, intersection.begin()));
+
+    if (intersection.empty())
+    {
+      std::cout << "High-level fusion is possible!" << std::endl;
+    }
+  }
+ 
 public:
   HighLevelFuser(TGExpressionGraph<T_element>& g) : graph(g)
   {
@@ -74,9 +121,21 @@ public:
   {
     MatrixVectorMultiplyFinder<T_element> finder;
     graph.accept(finder);
-
     const std::vector<TGMatrixVectorMult<T_element>*> multiplies(finder.getMultiplies());
-    std::cout << "Number of mat-vec muls: " << multiplies.size() << std::endl;
+
+    typedef std::map<TGOutputReference<tg_matrix, T_element>, std::set<TGMatrixVectorMult<T_element>*> > PotentialFusionMap;
+    PotentialFusionMap potentialFusions;
+
+    BOOST_FOREACH(TGMatrixVectorMult<T_element>* multiply, multiplies)
+    {
+      potentialFusions[multiply->getLeft()].insert(multiply);
+    }
+
+    BOOST_FOREACH(typename PotentialFusionMap::value_type& potentialFusion, potentialFusions)
+    {
+      if (potentialFusion.second.size() > 1) 
+        attemptFusion(potentialFusion.second);
+    }
   }
 };
 
