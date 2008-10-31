@@ -45,6 +45,9 @@ public:
     multiplies.push_back(&e);
   }
 
+  // We don't record these, we assume this pass is only run once
+  void visit(TGMatrixMultiVectorMult<T_element>& e) {}
+
   void visit(TGVectorDot<T_element>& e) {}
   void visit(TGVectorCross<T_element>& e) {}
   void visit(TGVectorTwoNorm<T_element>& e) {}
@@ -89,7 +92,7 @@ private:
     }
   }
 
-  void attemptFusion(const std::set<TGMatrixVectorMult<T_element>*>& matVecMuls)
+  void attemptFusion(const TGOutputReference<tg_matrix, T_element>& matrix, const std::set<TGMatrixVectorMult<T_element>*>& matVecMuls)
   {
     std::set<TGExpressionNode<T_element>*> combinedDependencies;
 
@@ -109,6 +112,22 @@ private:
     if (intersection.empty())
     {
       std::cout << "High-level fusion is possible!" << std::endl;
+      std::vector<typename TGMatrixMultiVectorMult<T_element>::multiply_params> multiNodeParams;
+      std::map<const TGMatrixVectorMult<T_element>*, std::size_t> remappingIndices;
+
+      BOOST_FOREACH(TGMatrixVectorMult<T_element>* matVecMul, matVecMuls)
+      {
+        // Note that releaseInternal() is called to avoid the TGMatrixMultiVectorMult object deleting the
+        // internal representation on destruction.
+        typename TGMatrixMultiVectorMult<T_element>::multiply_params matVecParams(matVecMul->getRight(), 
+          matVecMul->releaseInternal(), matVecMul->isTranspose());
+        multiNodeParams.push_back(matVecParams);
+      }
+
+      TGMatrixMultiVectorMult<T_element>* const multiMatVecMul = new TGMatrixMultiVectorMult<T_element>(matrix, multiNodeParams);
+
+      //TODO: Replace references in expression dag with references to new MatrixMultiVectorMult object
+      //TODO: Delete old MatrixVectorMult objects
     }
   }
  
@@ -134,7 +153,7 @@ public:
     BOOST_FOREACH(typename PotentialFusionMap::value_type& potentialFusion, potentialFusions)
     {
       if (potentialFusion.second.size() > 1) 
-        attemptFusion(potentialFusion.second);
+        attemptFusion(potentialFusion.first, potentialFusion.second);
     }
   }
 };

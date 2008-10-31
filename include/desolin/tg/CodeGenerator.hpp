@@ -210,6 +210,12 @@ public:
 
     matrix.iterateSparse(generator, kernel);
   }
+  
+  virtual void visit(TGMatrixMultiVectorMult<T_element>& e)
+  {
+    using namespace tg;
+    // FIXME: Implement me!
+  }
 
   virtual void visit(TGVectorDot<T_element>& e)
   {

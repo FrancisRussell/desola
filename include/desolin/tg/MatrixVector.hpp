@@ -18,6 +18,9 @@
 #ifndef DESOLIN_TG_MATRIX_VECTOR_HPP
 #define DESOLIN_TG_MATRIX_VECTOR_HPP
 
+#include <vector>
+#include <set>
+#include <boost/foreach.hpp>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 
 namespace desolin
@@ -83,6 +86,7 @@ class TGMatrixMultiVectorMult : public TGExpressionNode<T_element>
 {
 public:
   typedef boost::tuple<TGOutputReference<tg_vector, T_element>, TGVector<T_element>*, bool> multiply_params;
+  typedef typename TGExpressionNode<T_element>::internal_variant_type internal_variant_type;
 
 private:
   const TGOutputReference<tg_matrix, T_element> matrix;
@@ -91,7 +95,9 @@ private:
 public:
   bool isEqual(const TGMatrixMultiVectorMult& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
   {
-    //FIXME: Implement me!
+    const std::set<multiply_params> paramSet(multiplies.begin(), multiplies.end());
+
+    //FIXME: Implement me! Note, the multiplies could be in any order.
     return true;
   }
   
@@ -105,13 +111,34 @@ public:
     v.visit(*this);
   }
 
+  bool isParameter(const std::size_t index) const
+  {
+    assert(index < multiplies.size());
+    return boost::get<2>(multiplies[index]);
+  }
+
+  internal_variant_type getInternal(const std::size_t index)
+  {
+    assert(index < multiplies.size());
+    return internal_variant_type(boost::get<1>(multiplies[index]));
+  }
+
+  void createTaskGraphVariable()
+  {
+    BOOST_FOREACH(multiply_params paramTuple, multiplies)
+    {
+      boost::get<1>(paramTuple)->createTaskGraphVariable();
+    }
+  }
+
   virtual ~TGMatrixMultiVectorMult()
   {
-    //TODO: Clean up internal representations
+    BOOST_FOREACH(multiply_params paramTuple, multiplies)
+    {
+      delete boost::get<1>(paramTuple);
+    }
   }
 };
-
-
 
 template<typename T_element>
 class TGVectorDot : public TGBinOp<tg_scalar, tg_vector, tg_vector, T_element>

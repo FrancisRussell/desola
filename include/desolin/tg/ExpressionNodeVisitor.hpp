@@ -42,6 +42,7 @@ public:
 
   virtual void visit(TGMatrixMult<T_element>& e)=0;
   virtual void visit(TGMatrixVectorMult<T_element>& e)=0;
+  virtual void visit(TGMatrixMultiVectorMult<T_element>& e)=0;
   virtual void visit(TGVectorDot<T_element>& e)=0;
   virtual void visit(TGVectorCross<T_element>& e)=0;
   virtual void visit(TGVectorTwoNorm<T_element>& e)=0;

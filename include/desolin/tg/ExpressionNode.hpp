@@ -23,7 +23,7 @@
 #include <string>
 #include <cassert>
 #include <cstddef>
-#include <boost/scoped_ptr.hpp>
+#include <memory>
 #include <boost/functional/hash.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/transform.hpp>
@@ -235,7 +235,7 @@ class TGExprNode : public TGExpressionNode<T_element>
 {
 private:
   typedef typename TGInternalType<exprType, T_element>::type T_internal;
-  boost::scoped_ptr< T_internal > internal;
+  std::auto_ptr<T_internal> internal;
 
 public:
   typedef typename TGExpressionNode<T_element>::internal_variant_type internal_variant_type;
@@ -258,6 +258,11 @@ public:
   inline T_internal& getInternal()
   {
     return *internal;
+  }
+
+  T_internal* releaseInternal()
+  {
+    return internal.release();
   }
 
   inline const T_internal& getInternal() const

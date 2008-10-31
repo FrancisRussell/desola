@@ -108,6 +108,11 @@ public:
     checkMatch(e);
   }
 
+  virtual void visit(TGMatrixMultiVectorMult<T_element>& e)
+  {
+    checkMatch(e);
+  }
+
   virtual void visit(TGVectorDot<T_element>& e)
   {
     checkMatch(e);
