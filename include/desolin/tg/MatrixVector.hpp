@@ -89,8 +89,8 @@ public:
   typedef typename TGExpressionNode<T_element>::internal_variant_type internal_variant_type;
 
 private:
-  const TGOutputReference<tg_matrix, T_element> matrix;
-  const std::vector<multiply_params>& multiplies;
+  TGOutputReference<tg_matrix, T_element> matrix;
+  std::vector<multiply_params> multiplies;
 
 public:
   bool isEqual(const TGMatrixMultiVectorMult& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
@@ -138,6 +138,24 @@ public:
       delete boost::get<1>(paramTuple);
     }
   }
+
+  virtual void replaceDependency(const TGOutputReference<tg_scalar, T_element>& previous, TGOutputReference<tg_scalar, T_element>& next)
+  {
+  }
+
+  virtual void replaceDependency(const TGOutputReference<tg_vector, T_element>& previous, TGOutputReference<tg_vector, T_element>& next)
+  {
+    BOOST_FOREACH(multiply_params& paramTuple, multiplies)
+    {
+      ReplaceOutputReference<tg_vector, tg_vector, T_element>()(boost::get<0>(paramTuple), previous, next);
+    }
+  }
+
+  virtual void replaceDependency(const TGOutputReference<tg_matrix, T_element>& previous, TGOutputReference<tg_matrix, T_element>& next)
+  {
+    ReplaceOutputReference<tg_matrix, tg_matrix, T_element>()(matrix, previous, next);
+  }
+
 };
 
 template<typename T_element>

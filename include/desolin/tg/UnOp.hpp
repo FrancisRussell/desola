@@ -56,6 +56,21 @@ public:
   {
     return expr;
   }
+
+  virtual void replaceDependency(const TGOutputReference<tg_scalar, T_element>& previous, TGOutputReference<tg_scalar, T_element>& next)
+  {
+    ReplaceOutputReference<exprType, tg_scalar, T_element>()(expr, previous, next);
+  }
+
+  virtual void replaceDependency(const TGOutputReference<tg_vector, T_element>& previous, TGOutputReference<tg_vector, T_element>& next)
+  {
+    ReplaceOutputReference<exprType, tg_vector, T_element>()(expr, previous, next);
+  }
+
+  virtual void replaceDependency(const TGOutputReference<tg_matrix, T_element>& previous, TGOutputReference<tg_matrix, T_element>& next)
+  {
+    ReplaceOutputReference<exprType, tg_matrix, T_element>()(expr, previous, next);
+  }
 };
 
 template<typename exprType, typename T_element>

@@ -10,6 +10,11 @@
 #include <iterator>
 #include <boost/foreach.hpp>
 
+// Note that a number of vectors are used here when it seems like sets might be
+// more appropriate. This is because we require deterministic behaviour in order
+// to do recipe caching correctly. The alternative is to use an algorithm that
+// can do proper graph matching.
+
 namespace desolin
 {
 
@@ -92,7 +97,7 @@ private:
     }
   }
 
-  void attemptFusion(const TGOutputReference<tg_matrix, T_element>& matrix, const std::set<TGMatrixVectorMult<T_element>*>& matVecMuls)
+  void attemptFusion(const TGOutputReference<tg_matrix, T_element>& matrix, const std::vector<TGMatrixVectorMult<T_element>*>& matVecMuls)
   {
     std::set<TGExpressionNode<T_element>*> combinedDependencies;
 
@@ -105,8 +110,9 @@ private:
     // If the combined set of dependencies of the matrix-vector multiplies do not contain any of the other
     // matrix-vector multiplies, we consider it safe to fuse.
     
+    const std::set<TGMatrixVectorMult<T_element>*> matVecMulSet(matVecMuls.begin(), matVecMuls.end());
     std::set<TGMatrixVectorMult<T_element>*> intersection;
-    std::set_intersection(matVecMuls.begin(), matVecMuls.end(), combinedDependencies.begin(), combinedDependencies.end(), 
+    std::set_intersection(matVecMulSet.begin(), matVecMulSet.end(), combinedDependencies.begin(), combinedDependencies.end(), 
       std::inserter(intersection, intersection.begin()));
 
     if (intersection.empty())
@@ -140,14 +146,14 @@ public:
   {
     MatrixVectorMultiplyFinder<T_element> finder;
     graph.accept(finder);
-    const std::vector<TGMatrixVectorMult<T_element>*> multiplies(finder.getMultiplies());
 
-    typedef std::map<TGOutputReference<tg_matrix, T_element>, std::set<TGMatrixVectorMult<T_element>*> > PotentialFusionMap;
+    typedef std::map<TGOutputReference<tg_matrix, T_element>, std::vector<TGMatrixVectorMult<T_element>*> > PotentialFusionMap;
     PotentialFusionMap potentialFusions;
 
+    const std::vector<TGMatrixVectorMult<T_element>*> multiplies(finder.getMultiplies());
     BOOST_FOREACH(TGMatrixVectorMult<T_element>* multiply, multiplies)
     {
-      potentialFusions[multiply->getLeft()].insert(multiply);
+      potentialFusions[multiply->getLeft()].push_back(multiply);
     }
 
     BOOST_FOREACH(typename PotentialFusionMap::value_type& potentialFusion, potentialFusions)

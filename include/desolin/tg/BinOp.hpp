@@ -70,6 +70,24 @@ public:
   {
     return right;
   }
+
+  virtual void replaceDependency(const TGOutputReference<tg_scalar, T_element>& previous, TGOutputReference<tg_scalar, T_element>& next)
+  {
+    ReplaceOutputReference<leftType, tg_scalar, T_element>()(left, previous, next);
+    ReplaceOutputReference<rightType, tg_scalar, T_element>()(right, previous, next);
+  }
+
+  virtual void replaceDependency(const TGOutputReference<tg_vector, T_element>& previous, TGOutputReference<tg_vector, T_element>& next)
+  {
+    ReplaceOutputReference<leftType, tg_vector, T_element>()(left, previous, next);
+    ReplaceOutputReference<rightType, tg_vector, T_element>()(right, previous, next);
+  }
+
+  virtual void replaceDependency(const TGOutputReference<tg_matrix, T_element>& previous, TGOutputReference<tg_matrix, T_element>& next)
+  {
+    ReplaceOutputReference<leftType, tg_matrix, T_element>()(left, previous, next);
+    ReplaceOutputReference<rightType, tg_matrix, T_element>()(right, previous, next);
+  }
 };
 
 }

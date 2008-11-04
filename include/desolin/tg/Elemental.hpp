@@ -25,6 +25,7 @@
 #include <cassert>
 #include <boost/bind.hpp>
 #include <boost/ref.hpp>
+#include <boost/foreach.hpp>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 
 namespace desolin
@@ -67,8 +68,10 @@ public:
 template<typename exprType, typename T_element>
 class TGElementSet : public TGUnOp<exprType, exprType, T_element>
 {
+public:
+  typedef std::map<TGElementIndex<exprType>, TGOutputReference<tg_scalar, T_element> > AssignmentMap;
 private:
-  const std::map<TGElementIndex<exprType>, TGOutputReference<tg_scalar, T_element> > assignments;
+  AssignmentMap assignments;
 
   void registerDependency(const std::pair<const TGElementIndex<exprType>, TGOutputReference<tg_scalar, T_element> >& pair)
   {
@@ -79,6 +82,9 @@ public:
   bool isEqual(const TGElementSet& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
   {
     if (!TGUnOp<exprType, exprType, T_element>::isEqual(node, mappings))
+      return false;
+
+    if (assignments.size() != node.assignments.size())
       return false;
     
     typedef typename std::map<TGElementIndex<exprType>, TGOutputReference<tg_scalar, T_element> >::const_iterator ConstIterator;
@@ -99,10 +105,9 @@ public:
     return true;
   } 
   
-public:
   TGElementSet(typename TGInternalType<exprType, T_element>::type* internal,
 	       const TGOutputReference<exprType, T_element>& o,
-	       const std::map<TGElementIndex<exprType>, TGOutputReference<tg_scalar, T_element> >& a) : TGUnOp<exprType, exprType, T_element>(internal, o), assignments(a)
+	       const AssignmentMap& a) : TGUnOp<exprType, exprType, T_element>(internal, o), assignments(a)
   {
     std::for_each(assignments.begin(), assignments.end(), boost::bind(&TGElementSet::registerDependency, this, _1));
   }
@@ -120,6 +125,16 @@ public:
   virtual void accept(TGExpressionNodeVisitor<T_element>& v)
   {
     v.visit(*this);
+  }
+
+  virtual void replaceDependency(const TGOutputReference<tg_scalar, T_element>& previous, TGOutputReference<tg_scalar, T_element>& next)
+  {
+    TGUnOp<exprType, exprType, T_element>::replaceDependency(previous, next);
+    
+    BOOST_FOREACH(typename AssignmentMap::value_type& assignment, assignments)
+    {
+      ReplaceOutputReference<tg_scalar, tg_scalar, T_element>()(assignment.second, previous, next);
+    }
   }
 };
 

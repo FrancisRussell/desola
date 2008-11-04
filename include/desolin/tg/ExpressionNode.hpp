@@ -145,6 +145,13 @@ public:
   {
   }
 
+  TGOutputReference& operator=(const TGOutputReference& ref)
+  {
+    node = ref.node;
+    index = ref.index;
+    return *this;
+  }
+
   inline bool operator==(const TGOutputReference& ref) const
   {
     return node == ref.node && index == ref.index;
@@ -175,6 +182,29 @@ public:
   typename TGInternalType<tgExprType, T_element>::type& getInternal() const
   {
     return *boost::get<typename TGInternalType<tgExprType, T_element>::type*>(node->getInternal(index));
+  }
+};
+
+
+template<typename T_candidate, typename T_replacement, typename T_element>
+struct ReplaceOutputReference
+{
+  bool operator()(TGOutputReference<T_candidate, T_element>& ref, 
+    const TGOutputReference<T_replacement, T_element>& from, const TGOutputReference<T_replacement, T_element>& to)
+  {
+    return false;
+  }
+};
+
+template<typename T_replacement, typename T_element>
+struct ReplaceOutputReference<T_replacement, T_replacement, T_element>
+{
+  bool operator()(TGOutputReference<T_replacement, T_element>& ref, 
+    const TGOutputReference<T_replacement, T_element>& from, const TGOutputReference<T_replacement, T_element>& to)
+  {
+    const bool replace = (from == ref);
+    if (replace) ref = to;
+    return replace;
   }
 };
 
@@ -224,6 +254,10 @@ public:
 
   virtual bool isParameter(const std::size_t index) const = 0;
   virtual internal_variant_type getInternal(const std::size_t index) = 0;
+
+  virtual void replaceDependency(const TGOutputReference<tg_scalar, T_element>& previous, TGOutputReference<tg_scalar, T_element>& next) = 0;
+  virtual void replaceDependency(const TGOutputReference<tg_vector, T_element>& previous, TGOutputReference<tg_vector, T_element>& next) = 0;
+  virtual void replaceDependency(const TGOutputReference<tg_matrix, T_element>& previous, TGOutputReference<tg_matrix, T_element>& next) = 0;
 
   virtual ~TGExpressionNode()
   {
