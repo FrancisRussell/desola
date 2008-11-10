@@ -44,7 +44,6 @@ public:
     
   TGUnOp(typename TGInternalType<resultType, T_element>::type* internal, const TGOutputReference<exprType, T_element>& e) : TGExprNode<resultType, T_element>(internal), expr(e)
   {
-    this->dependencies.insert(expr.getExpressionNode());
   }
 
   inline TGOutputReference<exprType, T_element> getOperand()
@@ -55,6 +54,12 @@ public:
   inline const TGOutputReference<exprType, T_element> getOperand() const
   {
     return expr;
+  }
+
+  virtual std::set<TGExpressionNode<T_element>*> getDependencies() const
+  {
+    TGExpressionNode<T_element>* exprPtrs[]  = {expr.getExpressionNode()};
+    return std::set<TGExpressionNode<T_element>*>(exprPtrs, exprPtrs+1);
   }
 
   virtual void replaceDependency(const TGOutputReference<tg_scalar, T_element>& previous, TGOutputReference<tg_scalar, T_element>& next)

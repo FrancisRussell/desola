@@ -220,8 +220,6 @@ private:
   typedef typename boost::mpl::transform< internal_types, boost::add_const<boost::mpl::_1> >::type internal_types_const;
 
 protected:
-  std::set<TGExpressionNode<T_element>*> dependencies;
-
   template<typename exprType>
   static inline bool isEqual(const TGOutputReference<exprType, T_element>& ref1, const TGOutputReference<exprType, T_element>& ref2, 
     const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings)
@@ -247,11 +245,7 @@ public:
   virtual void accept(TGExpressionNodeVisitor<T_element>& visitor) = 0;
   virtual void createTaskGraphVariable() = 0;
 
-  std::set<TGExpressionNode<T_element>*> getDependencies() const
-  {
-    return dependencies;
-  }
-
+  virtual std::set<TGExpressionNode<T_element>*> getDependencies() const = 0;
   virtual bool isParameter(const std::size_t index) const = 0;
   virtual internal_variant_type getInternal(const std::size_t index) = 0;
 

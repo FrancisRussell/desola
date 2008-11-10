@@ -66,22 +66,28 @@ public:
 };
 
 template<typename exprType, typename T_element>
-class TGElementSet : public TGUnOp<exprType, exprType, T_element>
+class TGElementSet : public TGExprNode<exprType, T_element>
 {
 public:
   typedef std::map<TGElementIndex<exprType>, TGOutputReference<tg_scalar, T_element> > AssignmentMap;
+
 private:
+  TGOutputReference<exprType, T_element> expr;
   AssignmentMap assignments;
 
-  void registerDependency(const std::pair<const TGElementIndex<exprType>, TGOutputReference<tg_scalar, T_element> >& pair)
+  static void addDependency(std::set<TGExpressionNode<T_element>*>& dependencies,
+                            const std::pair<const TGElementIndex<exprType>, TGOutputReference<tg_scalar, T_element> >& pair)
   {
-    this->dependencies.insert(pair.second.getExpressionNode());
+    dependencies.insert(pair.second.getExpressionNode());
   }
 
 public:
   bool isEqual(const TGElementSet& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
   {
-    if (!TGUnOp<exprType, exprType, T_element>::isEqual(node, mappings))
+    if (!TGExprNode<exprType, T_element>::isEqual(node, mappings))
+      return false;
+    
+    if (!TGExpressionNode<T_element>::isEqual(expr, node.expr, mappings))
       return false;
 
     if (assignments.size() != node.assignments.size())
@@ -107,10 +113,20 @@ public:
   
   TGElementSet(typename TGInternalType<exprType, T_element>::type* internal,
 	       const TGOutputReference<exprType, T_element>& o,
-	       const AssignmentMap& a) : TGUnOp<exprType, exprType, T_element>(internal, o), assignments(a)
+	       const AssignmentMap& a) : TGExprNode<exprType, T_element>(internal), expr(o), assignments(a)
   {
-    std::for_each(assignments.begin(), assignments.end(), boost::bind(&TGElementSet::registerDependency, this, _1));
   }
+
+  inline TGOutputReference<exprType, T_element> getOperand()
+  {
+    return expr;
+  }
+
+  inline const TGOutputReference<exprType, T_element> getOperand() const
+  {
+    return expr;
+  }
+
 
   std::map<TGElementIndex<exprType>, TGOutputReference<tg_scalar, T_element> > getAssignments() 
   {
@@ -127,14 +143,32 @@ public:
     v.visit(*this);
   }
 
+  virtual std::set<TGExpressionNode<T_element>*> getDependencies() const
+  {
+    std::set<TGExpressionNode<T_element>*> dependencies;
+
+    std::for_each(assignments.begin(), assignments.end(), boost::bind(&TGElementSet::addDependency, dependencies, _1));
+    return dependencies;
+  }
+
   virtual void replaceDependency(const TGOutputReference<tg_scalar, T_element>& previous, TGOutputReference<tg_scalar, T_element>& next)
   {
-    TGUnOp<exprType, exprType, T_element>::replaceDependency(previous, next);
-    
+    ReplaceOutputReference<exprType, tg_scalar, T_element>()(expr, previous, next);
+
     BOOST_FOREACH(typename AssignmentMap::value_type& assignment, assignments)
     {
       ReplaceOutputReference<tg_scalar, tg_scalar, T_element>()(assignment.second, previous, next);
     }
+  }
+
+  virtual void replaceDependency(const TGOutputReference<tg_vector, T_element>& previous, TGOutputReference<tg_vector, T_element>& next)
+  {
+    ReplaceOutputReference<exprType, tg_vector, T_element>()(expr, previous, next);
+  }
+
+  virtual void replaceDependency(const TGOutputReference<tg_matrix, T_element>& previous, TGOutputReference<tg_matrix, T_element>& next)
+  {
+    ReplaceOutputReference<exprType, tg_matrix, T_element>()(expr, previous, next);
   }
 };
 

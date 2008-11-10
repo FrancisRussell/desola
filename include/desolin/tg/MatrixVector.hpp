@@ -131,6 +131,19 @@ public:
     }
   }
 
+  virtual std::set<TGExpressionNode<T_element>*> getDependencies() const
+  {
+    std::set<TGExpressionNode<T_element>*> dependencies;
+    dependencies.insert(matrix.getExpressionNode());
+
+    BOOST_FOREACH(const multiply_params& paramTuple, multiplies)
+    {
+      dependencies.insert(boost::get<0>(paramTuple).getExpressionNode());
+    }
+
+    return dependencies;
+  }
+
   virtual ~TGMatrixMultiVectorMult()
   {
     BOOST_FOREACH(multiply_params paramTuple, multiplies)
@@ -155,7 +168,6 @@ public:
   {
     ReplaceOutputReference<tg_matrix, tg_matrix, T_element>()(matrix, previous, next);
   }
-
 };
 
 template<typename T_element>

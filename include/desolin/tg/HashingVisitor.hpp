@@ -99,14 +99,15 @@ private:
   template<typename exprType>
   std::size_t hashElementSet(const TGElementSet<exprType, T_element>& node) const
   {
-    std::size_t seed = hashUnOp(node);
+    std::size_t seed = hashExprNode(node);
+    boost::hash_combine(seed, hashOutputReference(node.getOperand()));
+
     typedef std::map<TGElementIndex<exprType>, const TGOutputReference<tg_scalar, T_element> > T_assignmentMap;
     const T_assignmentMap assignments(node.getAssignments());
 
     for(typename T_assignmentMap::const_iterator i = assignments.begin(); i != assignments.end(); ++i)
-    {
       boost::hash_combine(seed, hashSingleElementSet(*i));
-    }
+
     return seed;
   }
 

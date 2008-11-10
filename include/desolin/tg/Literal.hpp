@@ -18,6 +18,7 @@
 #ifndef DESOLIN_TG_LITERAL_HPP
 #define DESOLIN_TG_LITERAL_HPP
 
+#include <set>
 #include <boost/shared_ptr.hpp>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 
@@ -44,6 +45,11 @@ public:
   void accept(TGExpressionNodeVisitor<T_element>& v)
   {
     v.visit(*this);
+  }
+
+  virtual std::set<TGExpressionNode<T_element>*> getDependencies() const
+  {
+    return std::set<TGExpressionNode<T_element>*>();
   }
 
   virtual void replaceDependency(const TGOutputReference<tg_scalar, T_element>& prev, TGOutputReference<tg_scalar, T_element>& next) {}
