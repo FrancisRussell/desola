@@ -249,7 +249,7 @@ public:
     {
       typename boost::ptr_vector< TGExpressionNode<T_element> >::auto_type node = exprVector.pop_back();
 
-      if (oldNodes.find(node.get()) != oldNodes.end())
+      if (oldNodes.find(node.get()) == oldNodes.end())
       {
         newExprVector.push_back(node.release());
       }
