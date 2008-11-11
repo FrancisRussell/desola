@@ -132,7 +132,14 @@ private:
 
       TGMatrixMultiVectorMult<T_element>* const multiMatVecMul = new TGMatrixMultiVectorMult<T_element>(matrix, multiNodeParams);
 
-      //TODO: Replace references in expression dag with references to new MatrixMultiVectorMult object
+      // Replace references to matrix-vector multiply nodes with new combined node
+      for(std::size_t index = 0; index < matVecMuls.size(); ++index)
+      {
+        const TGOutputReference<tg_vector, T_element> from(matVecMuls[index], 0);
+        TGOutputReference<tg_vector, T_element> to(multiMatVecMul, index);
+        graph.replaceDependency(from, to);
+      }
+      
       //TODO: Delete old MatrixVectorMult objects
     }
   }

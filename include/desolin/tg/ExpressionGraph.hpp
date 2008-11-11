@@ -27,6 +27,7 @@
 #include <TaskGraph>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 #include "HighLevelFuser.hpp"
+#include <boost/foreach.hpp>
 #include <boost/ptr_container/ptr_vector.hpp>
 #include <boost/scoped_ptr.hpp>
 
@@ -212,6 +213,34 @@ public:
       graph.cachedHash = hasher.getHash();
     }
     return graph.cachedHash;
+  }
+
+  void replaceDependency(const TGOutputReference<tg_scalar, T_element>& previous, TGOutputReference<tg_scalar, T_element>& next)
+  {
+    BOOST_FOREACH(TGExpressionNode<T_element>& node, exprVector)
+    {
+      node.replaceDependency(previous, next);
+    }
+  }
+
+  void replaceDependency(const TGOutputReference<tg_vector, T_element>& previous, TGOutputReference<tg_vector, T_element>& next)
+  {
+    BOOST_FOREACH(TGExpressionNode<T_element>& node, exprVector)
+    {
+      node.replaceDependency(previous, next);
+    }
+  }
+
+  void replaceDependency(const TGOutputReference<tg_matrix, T_element>& previous, TGOutputReference<tg_matrix, T_element>& next)
+  {
+    BOOST_FOREACH(TGExpressionNode<T_element>& node, exprVector)
+    {
+      node.replaceDependency(previous, next);
+    }
+  }
+
+  void replaceNodes(const std::set<TGExpressionNode<T_element>*>& oldNodes, TGExpressionNode<T_element>* newNode)
+  {
   }
 };
 
