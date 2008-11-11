@@ -254,9 +254,7 @@ public:
     typename TGMatrix<T_element>::MatrixIterationCallback kernel =
       boost::bind(matrixMultiVectorMultKernel, _1, boost::ref(vectors), _2, _3, _4);
 
-    //matrix.iterateSparse(generator, kernel);
-
-    // FIXME: Implement me!
+    matrix.iterateSparse(generator, kernel);
   }
 
   virtual void visit(TGVectorDot<T_element>& e)
