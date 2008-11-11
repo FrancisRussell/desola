@@ -179,7 +179,12 @@ public:
     return node;
   }
 
-  typename TGInternalType<tgExprType, T_element>::type& getInternal() const
+  const typename TGInternalType<tgExprType, T_element>::type& getInternal() const
+  {
+    return *boost::get<typename TGInternalType<tgExprType, T_element>::type*>(node->getInternal(index));
+  }
+
+  typename TGInternalType<tgExprType, T_element>::type& getInternal()
   {
     return *boost::get<typename TGInternalType<tgExprType, T_element>::type*>(node->getInternal(index));
   }
@@ -219,6 +224,21 @@ private:
   typedef boost::mpl::vector<TGScalar<T_element>*, TGVector<T_element>*, TGMatrix<T_element>*> internal_types;
   typedef typename boost::mpl::transform< internal_types, boost::add_const<boost::mpl::_1> >::type internal_types_const;
 
+  struct InternalTypeComparator : public boost::static_visitor<bool>
+  {
+    template<typename T>
+    inline bool operator()(const T* const  a, const T* const b) const
+    {
+      return a->matches(*b);
+    }
+
+    template<typename T1, typename T2>
+    inline bool operator()(const T1* const  a, const T2* const b) const
+    {
+      return false;
+    }
+  };
+
 protected:
   template<typename exprType>
   static inline bool isEqual(const TGOutputReference<exprType, T_element>& ref1, const TGOutputReference<exprType, T_element>& ref2, 
@@ -241,13 +261,32 @@ public:
   TGExpressionNode()
   {
   }
+
+  bool isEqual(const TGExpressionNode& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
+  {
+    const std::size_t numOutputs = getNumOutputs();
+
+    if (numOutputs != node.getNumOutputs())
+      return false;
+
+    for(std::size_t index=0; index < numOutputs; ++index)
+    {
+      const bool equal = boost::apply_visitor(InternalTypeComparator(), getInternal(index), node.getInternal(index));
+      if (!equal)
+        return false;
+    }
+
+    return true;
+  }
   
   virtual void accept(TGExpressionNodeVisitor<T_element>& visitor) = 0;
   virtual void createTaskGraphVariable() = 0;
 
   virtual std::set<TGExpressionNode<T_element>*> getDependencies() const = 0;
+  virtual std::size_t getNumOutputs() const = 0;
   virtual bool isParameter(const std::size_t index) const = 0;
   virtual internal_variant_type getInternal(const std::size_t index) = 0;
+  virtual const internal_variant_type getInternal(const std::size_t index) const = 0;
 
   virtual void replaceDependency(const TGOutputReference<tg_scalar, T_element>& previous, TGOutputReference<tg_scalar, T_element>& next) = 0;
   virtual void replaceDependency(const TGOutputReference<tg_vector, T_element>& previous, TGOutputReference<tg_vector, T_element>& next) = 0;
@@ -271,7 +310,7 @@ public:
 
   inline bool isEqual(const TGExprNode& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
   {
-    return internal->matches(*node.internal);
+    return TGExpressionNode<T_element>::isEqual(node, mappings);
   }
   
   TGExprNode(T_internal* const i) : internal(i)
@@ -298,6 +337,11 @@ public:
     return *internal;
   }
 
+  virtual std::size_t getNumOutputs() const
+  {
+    return 1;
+  }
+
   bool isParameter(const std::size_t index) const
   {
     if (index == 0)
@@ -321,6 +365,19 @@ public:
       assert(false && "getInternal call for internal representation with index>0 for node with only one output.");
     }
   }
+
+  virtual const internal_variant_type getInternal(const std::size_t index) const
+  {
+    if (index == 0)
+    {
+      return internal_variant_type(internal.get());
+    }
+    else
+    {
+      assert(false && "getInternal call for internal representation with index>0 for node with only one output.");
+    }
+  }
+
 };
 
 }

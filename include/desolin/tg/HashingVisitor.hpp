@@ -25,6 +25,7 @@
 #include <cstring>
 #include <string>
 #include <map>
+#include <boost/variant.hpp>
 #include <boost/functional/hash.hpp>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 
@@ -33,6 +34,15 @@ namespace desolin
 
 namespace detail
 {
+
+struct InternalRepresentationHashGetter : public boost::static_visitor<int>
+{
+  template<typename T>
+  std::size_t operator()(const T* const t) const
+  {
+    return t->hashValue();
+  }
+};
 
 template<typename T_element>
 class TGHashingVisitor : public TGExpressionNodeVisitor<T_element>
@@ -54,13 +64,23 @@ private:
     return seed;
   }
 
+  inline std::size_t hashExpressionNode(const TGExpressionNode<T_element>& node) const
+  {
+    const char* nodeTypeString = typeid(node).name();
+    const std::size_t numOutputs = node.getNumOutputs();
+
+    std::size_t seed = boost::hash_range(nodeTypeString, nodeTypeString+strlen(nodeTypeString));
+    boost::hash_combine(seed, numOutputs);
+
+    for(std::size_t index=0; index<numOutputs; ++index)
+      boost::hash_combine(seed, boost::apply_visitor(InternalRepresentationHashGetter(), node.getInternal(index)));
+    return seed;
+  }
+
   template<typename exprType>
   inline std::size_t hashExprNode(const TGExprNode<exprType, T_element>& node) const
   {
-    const char* nodeTypeString = typeid(node).name();
-    std::size_t seed = boost::hash_range(nodeTypeString, nodeTypeString+strlen(nodeTypeString));
-    boost::hash_combine(seed, node.getInternal().hashValue());
-    return seed;
+    return hashExpressionNode(node);
   }
   
   template<typename resultType, typename exprType>
@@ -185,7 +205,17 @@ public:
 
   virtual void visit(TGMatrixMultiVectorMult<T_element>& e)
   {
-    //FIXME: Implement me!
+    boost::hash_combine(hash, hashExpressionNode(e));
+    boost::hash_combine(hash, hashOutputReference(e.getMatrix()));
+
+    const std::size_t numVectors = e.getNumVectors();
+    boost::hash_combine(hash, numVectors);
+
+    for(std::size_t index = 0; index<numVectors; ++index)
+    {
+      boost::hash_combine(hash, e.isTranspose(index));
+      boost::hash_combine(hash, hashOutputReference(e.getVector(index)));
+    }
   }
 
   virtual void visit(TGVectorDot<T_element>& e)

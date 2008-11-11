@@ -95,9 +95,23 @@ private:
 public:
   bool isEqual(const TGMatrixMultiVectorMult& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
   {
-    const std::set<multiply_params> paramSet(multiplies.begin(), multiplies.end());
+    if (!TGExpressionNode<T_element>::isEqual(node, mappings))
+      return false;
 
-    //FIXME: Implement me! Note, the multiplies could be in any order.
+    const std::size_t numMultiplies = multiplies.size();
+
+    if (numMultiplies != node.multiplies.size())
+      return false;
+
+    for(std::size_t index=0; index < numMultiplies; ++index)
+    {
+      if (!TGExpressionNode<T_element>::isEqual(boost::get<0>(multiplies[index]), boost::get<0>(node.multiplies[index]), mappings))
+        return false;
+
+      if (boost::get<2>(multiplies[index]) != boost::get<2>(node.multiplies[index]))
+        return false;
+    }
+
     return true;
   }
   
@@ -111,13 +125,54 @@ public:
     v.visit(*this);
   }
 
-  bool isParameter(const std::size_t index) const
+  inline TGOutputReference<tg_matrix, T_element> getMatrix()
   {
-    assert(index < multiplies.size());
+    return matrix;
+  }
+
+  inline const TGOutputReference<tg_matrix, T_element> getMatrix() const
+  {
+    return matrix;
+  }
+
+  inline TGOutputReference<tg_vector, T_element> getVector(const std::size_t index)
+  {
+    return boost::get<0>(multiplies[index]);
+  }
+
+  inline const TGOutputReference<tg_vector, T_element> getVector(const std::size_t index) const
+  {
+    return boost::get<0>(multiplies[index]);
+  }
+
+  inline bool isTranspose(const std::size_t index) const
+  {
     return boost::get<2>(multiplies[index]);
   }
 
+  std::size_t getNumVectors() const
+  {
+    return multiplies.size();
+  }
+
+  virtual std::size_t getNumOutputs() const
+  {
+    return multiplies.size();
+  }
+
+  bool isParameter(const std::size_t index) const
+  {
+    assert(index < multiplies.size());
+    return boost::get<1>(multiplies[index])->isParameter();
+  }
+
   internal_variant_type getInternal(const std::size_t index)
+  {
+    assert(index < multiplies.size());
+    return internal_variant_type(boost::get<1>(multiplies[index]));
+  }
+
+  const internal_variant_type getInternal(const std::size_t index) const
   {
     assert(index < multiplies.size());
     return internal_variant_type(boost::get<1>(multiplies[index]));
