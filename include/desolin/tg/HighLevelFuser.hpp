@@ -110,14 +110,13 @@ private:
     // If the combined set of dependencies of the matrix-vector multiplies do not contain any of the other
     // matrix-vector multiplies, we consider it safe to fuse.
     
-    const std::set<TGMatrixVectorMult<T_element>*> matVecMulSet(matVecMuls.begin(), matVecMuls.end());
-    std::set<TGMatrixVectorMult<T_element>*> intersection;
+    const std::set<TGExpressionNode<T_element>*> matVecMulSet(matVecMuls.begin(), matVecMuls.end());
+    std::set<TGExpressionNode<T_element>*> intersection;
     std::set_intersection(matVecMulSet.begin(), matVecMulSet.end(), combinedDependencies.begin(), combinedDependencies.end(), 
       std::inserter(intersection, intersection.begin()));
 
     if (intersection.empty())
     {
-      std::cout << "High-level fusion is possible!" << std::endl;
       std::vector<typename TGMatrixMultiVectorMult<T_element>::multiply_params> multiNodeParams;
       std::map<const TGMatrixVectorMult<T_element>*, std::size_t> remappingIndices;
 
@@ -139,8 +138,8 @@ private:
         TGOutputReference<tg_vector, T_element> to(multiMatVecMul, index);
         graph.replaceDependency(from, to);
       }
-      
-      //TODO: Delete old MatrixVectorMult objects
+
+      graph.replaceNodes(matVecMulSet, multiMatVecMul);
     }
   }
  

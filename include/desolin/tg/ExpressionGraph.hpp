@@ -23,6 +23,7 @@
 #include <cstddef>
 #include <cassert>
 #include <map>
+#include <memory>
 #include <sys/time.h>
 #include <TaskGraph>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
@@ -241,6 +242,32 @@ public:
 
   void replaceNodes(const std::set<TGExpressionNode<T_element>*>& oldNodes, TGExpressionNode<T_element>* newNode)
   {
+    boost::ptr_vector< TGExpressionNode<T_element> > newExprVector;
+    bool firstMatch = true;
+  
+    while(!exprVector.empty())
+    {
+      typename boost::ptr_vector< TGExpressionNode<T_element> >::auto_type node = exprVector.pop_back();
+
+      if (oldNodes.find(node.get()) != oldNodes.end())
+      {
+        newExprVector.push_back(node.release());
+      }
+      else
+      {
+        // We replace the final matching node in the list with the new node.
+        // This should keep the topological sort valid without having to completely
+        // re-sort the DAG.
+        if (firstMatch)
+          newExprVector.push_back(newNode);
+
+        firstMatch = false;
+      }
+    }
+
+    // There doesn't seem to be an efficient way to reverse a ptr_vector
+    while(!newExprVector.empty())
+      exprVector.push_back(newExprVector.pop_back().release());
   }
 };
 
