@@ -20,7 +20,9 @@
 
 #include <map>
 #include <set>
+#include <utility>
 #include <TaskGraph>
+#include <boost/foreach.hpp>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 
 namespace desolin
@@ -37,9 +39,12 @@ private:
   TGObjectGeneratorHelper& operator=(const TGObjectGeneratorHelper&);
    
   typedef typename ExprTGTraits<exprType, T_element>::tgExprType tgExprType;
+  typedef typename ExprTGTraits<exprType, T_element>::internalRep tgInternalRepType;
   typedef TGOutputReference<tgExprType, T_element> output_reference;
-  std::map<ExprNode<exprType, T_element>*, output_reference > nodeMap;
+
   TGEvaluator<T_element>& evaluator;
+  std::map<ExprNode<exprType, T_element>*, output_reference > nodeMap;
+  std::map<Literal<exprType, T_element>*, tgInternalRepType*> irMap;
 	 
   // We use these getters instead of storing references to the graph and
   // strategy because at the time EvaluationHandler is constructed, the
@@ -89,7 +94,9 @@ public:
       Literal<exprType, T_element>* const literal = getStrategy().getEvaluatedExpr(&e);
       typename ExprTGTraits<exprType, T_element>::internalRepCreator creator(getGraph().getNameGenerator());
       literal->getValue().accept(creator);
-      handleNode(e, new TGLiteral<tgExprType, T_element>(creator.getResult()));
+      tgInternalRepType* const tgInternalRep = creator.getResult();
+      handleNode(e, new TGLiteral<tgExprType, T_element>(tgInternalRep));
+      irMap.insert(std::make_pair(literal, tgInternalRep));
 
       const typename std::map<ExprNode<exprType, T_element>*, output_reference>::iterator newNodeIterator(nodeMap.find(&e));
       assert(newNodeIterator != nodeMap.end());
@@ -103,11 +110,12 @@ public:
   typename ExprTGTraits<exprType, T_element>::internalRep* createTGRep(ExprNode<exprType, T_element>& e) 
   {
     const bool saveResult = getStrategy().mustEvaluate(evaluator, e) || e.getEvaluationDirective()==EVALUATE;
-    typename ExprTGTraits<exprType, T_element>::internalRep* const tgInternalRep = createTGInternalRep(saveResult, e);
+    tgInternalRepType* const tgInternalRep = createTGInternalRep(saveResult, e);
     if (saveResult)
     {
       Literal<exprType, T_element>* const evaluatedExpr = new Literal<exprType, T_element>(tgInternalRep->createInternalRep());
       getStrategy().addEvaluatedExprMapping(&e, evaluatedExpr);
+      irMap.insert(std::make_pair(evaluatedExpr, tgInternalRep));
     }
     return tgInternalRep;			 
   }
@@ -116,14 +124,13 @@ public:
   // to a ParameterHolder.
   void addTaskGraphMappings(ParameterHolder& parameterHolder)
   {
-    for(typename std::map<ExprNode<exprType, T_element>*, TGOutputReference<tgExprType, T_element> >::iterator iterator=nodeMap.begin(); iterator!=nodeMap.end(); ++iterator)
+    for(typename std::map<Literal<exprType, T_element>*, tgInternalRepType*>::iterator irMappingIter=irMap.begin(); irMappingIter!=irMap.end(); ++irMappingIter)
     {
-      if (iterator->second.isParameter())
+      if (irMappingIter->second->isParameter())
       {
-         Literal<exprType, T_element>* const literal = getStrategy().getEvaluatedExpr(iterator->first);
-         typename ExprTraits<exprType, T_element>::internalRep& internal = literal->getValue();
-         typename ExprTGTraits<exprType, T_element>::internalRep& tgInternal = (iterator->second).getInternal();
-         tgInternal.addParameterMappings(internal, parameterHolder);
+         typename ExprTraits<exprType, T_element>::internalRep& internal = irMappingIter->first->getValue();
+         tgInternalRepType* const tgInternal = irMappingIter->second;
+         tgInternal->addParameterMappings(internal, parameterHolder);
       }
     }
   }

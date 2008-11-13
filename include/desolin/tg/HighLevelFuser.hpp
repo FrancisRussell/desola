@@ -118,7 +118,6 @@ private:
     if (intersection.empty())
     {
       std::vector<typename TGMatrixMultiVectorMult<T_element>::multiply_params> multiNodeParams;
-      std::map<const TGMatrixVectorMult<T_element>*, std::size_t> remappingIndices;
 
       BOOST_FOREACH(TGMatrixVectorMult<T_element>* matVecMul, matVecMuls)
       {

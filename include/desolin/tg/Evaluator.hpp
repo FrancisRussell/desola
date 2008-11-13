@@ -103,6 +103,9 @@ public:
     assert(!evaluated); 
     evaluated = true;
 
+    // We perform this optimisation here because it needs to be done before hashing/equality comparisons
+    graph->performHighLevelFusion();
+
     const std::size_t hash = boost::hash< TGExpressionGraph<T_element> >()(*graph);
     typename TGCache<T_element>::T_cachedGraphMap& cachedGraphMap(graphCache.getCachedGraphs());
     const typename TGCache<T_element>::T_cachedGraphMap::iterator cachedGraphIterator = cachedGraphMap.find(hash);
@@ -118,7 +121,6 @@ public:
     }
     else
     {
-      graph->performHighLevelFusion();
       graph->generateCode();
       graph->compile();
       cachedGraphMap[hash] = graph;

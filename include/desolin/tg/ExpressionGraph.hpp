@@ -45,7 +45,7 @@ private:
   TGExpressionGraph(const TGExpressionGraph&);
   TGExpressionGraph& operator=(const TGExpressionGraph&);
   
-  boost::ptr_vector< TGExpressionNode<T_element> >  exprVector;
+  boost::ptr_vector< TGExpressionNode<T_element> > exprVector;
   boost::scoped_ptr<tg::tuTaskGraph> taskGraphObject;
   NameGenerator generator;
 
