@@ -21,10 +21,6 @@
 // Uncomment next line to disable asserts
 // #define NDEBUG
 
-// Boost STL compliant array with partial specialisation for size 0
-// See http://www.josuttis.com/cppcode
-#include "boost_array.hpp"
-
 #include "Maybe.hpp"
 #include "Cache.hpp"
 #include "ConfigurationManager.hpp"
