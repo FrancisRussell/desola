@@ -79,6 +79,24 @@ class HighLevelFuser
 private:
   TGExpressionGraph<T_element>& graph;
 
+  // Determines if two sorted ranges are disjoint
+  template<typename InputIterator1, typename InputIterator2>
+  bool sets_disjoint(InputIterator1 first1, InputIterator1 last1,
+                     InputIterator2 first2, InputIterator2 last2)
+  {
+    while(first1 != last1 && first2 != last2)
+    {
+      if (*first1 < *first2)
+        ++first1;
+      else if (*first2 < *first1)
+        ++first2;
+      else
+        return false;
+    }
+
+    return true;
+  }
+
   static std::set<TGExpressionNode<T_element>*> getDependencies(TGExpressionNode<T_element>* const node)
   {
     std::set<TGExpressionNode<T_element>*> dependencies;
@@ -110,11 +128,8 @@ private:
     // matrix-vector multiplies, we consider it safe to fuse.
     
     const std::set<TGExpressionNode<T_element>*> matVecMulSet(matVecMuls.begin(), matVecMuls.end());
-    std::set<TGExpressionNode<T_element>*> intersection;
-    std::set_intersection(matVecMulSet.begin(), matVecMulSet.end(), combinedDependencies.begin(), combinedDependencies.end(), 
-      std::inserter(intersection, intersection.begin()));
 
-    if (intersection.empty())
+    if (sets_disjoint(matVecMulSet.begin(), matVecMulSet.end(), combinedDependencies.begin(), combinedDependencies.end()))
     {
       std::vector<typename TGMatrixMultiVectorMult<T_element>::multiply_params> multiNodeParams;
 
