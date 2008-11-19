@@ -28,7 +28,6 @@
 #include <boost/tuple/tuple.hpp>
 #include <TaskGraph>
 #include "Desolin_tg_fwd.hpp"
-#include "Objects.hpp"
 
 //NOTE: The storage for the results is uninitialized, so make sure that
 //      setExpression is used before calling addExpression on any result

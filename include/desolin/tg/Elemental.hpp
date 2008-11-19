@@ -24,7 +24,6 @@
 #include <vector>
 #include <cassert>
 #include <boost/bind.hpp>
-#include <boost/ref.hpp>
 #include <boost/foreach.hpp>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 

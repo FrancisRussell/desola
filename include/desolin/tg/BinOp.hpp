@@ -18,7 +18,6 @@
 #ifndef DESOLIN_TG_BINOP_HPP
 #define DESOLIN_TG_BINOP_HPP
 
-#include <set>
 #include <map>
 #include <cassert>
 #include <desolin/tg/Desolin_tg_fwd.hpp>

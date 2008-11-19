@@ -18,7 +18,7 @@
 #ifndef DESOLIN_TG_LITERAL_HPP
 #define DESOLIN_TG_LITERAL_HPP
 
-#include <set>
+#include <map>
 #include <boost/shared_ptr.hpp>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 

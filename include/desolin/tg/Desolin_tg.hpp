@@ -40,5 +40,6 @@
 #include "CodeGenerator.hpp"
 #include "ObjectGenerator.hpp"
 #include "ObjectGeneratorHelper.hpp"
+#include "HighLevelFuser.hpp"
 
 #endif

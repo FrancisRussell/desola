@@ -29,7 +29,6 @@
 #include <utility>
 #include <TaskGraph>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
-#include "HighLevelFuser.hpp"
 #include <boost/foreach.hpp>
 #include <boost/scoped_ptr.hpp>
 #include <boost/bind.hpp>
@@ -73,10 +72,12 @@ private:
     }
   };
 
-  std::vector<TGExpressionNode<T_element>*> getTopologicalSort(const std::vector<TGExpressionNode<T_element>*>& leaves)
+  std::vector<TGExpressionNode<T_element>*> getTopologicalSort() const
   {
+    const std::vector<TGExpressionNode<T_element>*> leaves(getLeaves(exprVector));
     std::vector<TGExpressionNode<T_element>*> nodes;
     std::set<TGExpressionNode<T_element>*> visited; 
+    nodes.reserve(exprVector.size());
 
     typedef std::back_insert_iterator< std::vector<TGExpressionNode<T_element>*> > OutputIterator;
     OutputIterator out(nodes);
@@ -95,6 +96,18 @@ private:
     }
   }
 
+  static std::vector<TGExpressionNode<T_element>*> getLeaves(const std::vector<TGExpressionNode<T_element>*>& nodes)
+  {
+    std::vector<TGExpressionNode<T_element>*> leaves;
+
+    BOOST_FOREACH(TGExpressionNode<T_element>* node, nodes)
+    {
+      if (node->numReverseDependencies() == 0)
+        leaves.push_back(node);
+    }
+
+    return leaves;
+  }
 
 public:
   TGExpressionGraph() : taskGraphObject(NULL), isHashCached(false)
@@ -289,17 +302,8 @@ public:
 
   void sort()
   {
-    std::vector<TGExpressionNode<T_element>*> leaves;
 
-    BOOST_FOREACH(TGExpressionNode<T_element>* node, exprVector)
-    {
-      if (node->numReverseDependencies() == 0)
-      {
-        leaves.push_back(node);
-      }
-    }
-
-    std::vector<TGExpressionNode<T_element>*> newExprVector(getTopologicalSort(leaves));
+    std::vector<TGExpressionNode<T_element>*> newExprVector(getTopologicalSort());
     exprVector.swap(newExprVector);
   }
 

@@ -19,7 +19,6 @@
 #define DESOLIN_TG_OBJECT_GENERATOR_HELPER_HPP
 
 #include <map>
-#include <set>
 #include <utility>
 #include <TaskGraph>
 #include <boost/foreach.hpp>

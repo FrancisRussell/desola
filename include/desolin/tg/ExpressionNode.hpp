@@ -18,9 +18,7 @@
 #ifndef DESOLIN_TG_EXPRESSION_NODE_HPP
 #define DESOLIN_TG_EXPRESSION_NODE_HPP
 
-#include <set>
 #include <map>
-#include <string>
 #include <cassert>
 #include <cstddef>
 #include <memory>

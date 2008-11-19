@@ -19,8 +19,10 @@
 #define DESOLIN_TG_MATRIX_VECTOR_HPP
 
 #include <vector>
-#include <set>
+#include <map>
+#include <cstddef>
 #include <boost/foreach.hpp>
+#include <boost/variant.hpp>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 
 namespace desolin

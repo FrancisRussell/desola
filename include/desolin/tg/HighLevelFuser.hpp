@@ -2,7 +2,6 @@
 #define DESOLIN_TG_HIGH_LEVEL_FUSER_HPP
 
 #include "Desolin_tg_fwd.hpp"
-#include <utility>
 #include <set>
 #include <map>
 #include <vector>

@@ -23,7 +23,6 @@
 #include <cassert>
 #include <cstddef>
 #include <cstring>
-#include <string>
 #include <map>
 #include <boost/variant.hpp>
 #include <boost/functional/hash.hpp>

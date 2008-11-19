@@ -78,6 +78,13 @@ template<typename exprType, typename T_element> class TGNegate;
 template<typename T_element> class TGAbsolute;
 template<typename T_element> class TGSquareRoot;
 
+// Helper class for typesafe dependency replacement
+template<typename tgExprType, typename T_element> class TGOutputReference;
+
+// High-level fuser classes
+template<typename T_element> class MatrixVectorMultiplyFinder;
+template<typename T_element> class HighLevelFuser;
+
 // TaskGraph Evaluator Expression Tree Evaluation
 template<typename T_element> class TGCodeGenerator;
 template<typename T_element> class TGEvaluator;

@@ -18,6 +18,7 @@
 #ifndef DESOLIN_TG_SCALAR_PIECEWISE_HPP
 #define DESOLIN_TG_SCALAR_PIECEWISE_HPP
 
+#include <map>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 
 namespace desolin
