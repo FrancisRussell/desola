@@ -29,6 +29,7 @@
 #include <boost/mpl/transform.hpp>
 #include <boost/type_traits/add_const.hpp>  
 #include <boost/variant.hpp>
+#include <boost/foreach.hpp>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 
 namespace desolin
@@ -223,6 +224,8 @@ private:
 
   typedef boost::mpl::vector<TGScalar<T_element>*, TGVector<T_element>*, TGMatrix<T_element>*> internal_types;
   typedef typename boost::mpl::transform< internal_types, boost::add_const<boost::mpl::_1> >::type internal_types_const;
+  std::vector<TGExpressionNode<T_element>*> dependencies;
+  std::vector<TGExpressionNode<T_element>*> reverseDependencies;
 
   struct InternalTypeComparator : public boost::static_visitor<bool>
   {
@@ -254,6 +257,53 @@ protected:
     return nodeMappingIter->second == ref2.getExpressionNode();
   }
 
+  void registerDependency(TGExpressionNode<T_element>* const dependency)
+  {
+    assert(dependency != NULL);
+    dependencies.push_back(dependency);
+    dependency->registerReverseDependency(this);
+  }
+
+  void registerReverseDependency(TGExpressionNode<T_element>* const revDependency)
+  {
+    assert(revDependency != NULL);
+    reverseDependencies.push_back(revDependency);
+  }
+
+  void unregisterReverseDependency(TGExpressionNode<T_element>* const revDependency)
+  {
+    assert(revDependency != NULL);
+    const typename std::vector<TGExpressionNode<T_element>*>::iterator location = 
+      std::find(reverseDependencies.begin(), reverseDependencies.end(), revDependency);
+    assert(location != reverseDependencies.end());
+    reverseDependencies.erase(location);
+  }
+
+  template<typename exprType>
+  void alterDependencyGeneral(const TGOutputReference<exprType, T_element>& previous, TGOutputReference<exprType, T_element>& next)
+  {
+    // Unlike in the general expression node class, this needs to replace all dependencies on a given node,
+    // not just the first one. This is because the node replacement is not being handled by the node being
+    // replaced, and this method won't be called multiple times if we have more than one dependency on the
+    // node being replaced.
+    
+    for(typename std::vector<TGExpressionNode<T_element>*>::iterator depIter = dependencies.begin(); depIter != dependencies.end(); ++depIter)
+    {
+      if (previous.getExpressionNode() == *depIter)
+      {
+        *depIter = next.getExpressionNode();
+        next.getExpressionNode()->registerReverseDependency(this);
+        previous.getExpressionNode()->unregisterReverseDependency(this);
+      }
+    }
+
+    alterDependencyImpl(previous, next);
+  }
+
+  virtual void alterDependencyImpl(const TGOutputReference<tg_scalar, T_element>& previous, TGOutputReference<tg_scalar, T_element>& next) = 0;
+  virtual void alterDependencyImpl(const TGOutputReference<tg_vector, T_element>& previous, TGOutputReference<tg_vector, T_element>& next) = 0;
+  virtual void alterDependencyImpl(const TGOutputReference<tg_matrix, T_element>& previous, TGOutputReference<tg_matrix, T_element>& next) = 0;
+
 public:
   typedef typename boost::make_variant_over<internal_types>::type internal_variant_type;
   typedef typename boost::make_variant_over<internal_types_const>::type const_internal_variant_type;
@@ -282,18 +332,45 @@ public:
   virtual void accept(TGExpressionNodeVisitor<T_element>& visitor) = 0;
   virtual void createTaskGraphVariable() = 0;
 
-  virtual std::set<TGExpressionNode<T_element>*> getDependencies() const = 0;
+  std::vector<TGExpressionNode<T_element>*> getDependencies() const
+  {
+    return dependencies;
+  }
+
+  std::vector<TGExpressionNode<T_element>*> getReverseDependencies() const
+  {
+    return reverseDependencies;
+  }
+
   virtual std::size_t getNumOutputs() const = 0;
   virtual bool isParameter(const std::size_t index) const = 0;
   virtual internal_variant_type getInternal(const std::size_t index) = 0;
   virtual const internal_variant_type getInternal(const std::size_t index) const = 0;
 
-  virtual void replaceDependency(const TGOutputReference<tg_scalar, T_element>& previous, TGOutputReference<tg_scalar, T_element>& next) = 0;
-  virtual void replaceDependency(const TGOutputReference<tg_vector, T_element>& previous, TGOutputReference<tg_vector, T_element>& next) = 0;
-  virtual void replaceDependency(const TGOutputReference<tg_matrix, T_element>& previous, TGOutputReference<tg_matrix, T_element>& next) = 0;
+  void alterDependency(const TGOutputReference<tg_scalar, T_element>& previous, TGOutputReference<tg_scalar, T_element>& next)
+  {
+    alterDependencyGeneral(previous, next);
+  }
+
+  void alterDependency(const TGOutputReference<tg_vector, T_element>& previous, TGOutputReference<tg_vector, T_element>& next)
+  {
+    alterDependencyGeneral(previous, next);
+  }
+
+  void alterDependency(const TGOutputReference<tg_matrix, T_element>& previous, TGOutputReference<tg_matrix, T_element>& next)
+  {
+    alterDependencyGeneral(previous, next);
+  }
 
   virtual ~TGExpressionNode()
   {
+    // We shouldn't have anything depending on this node
+    assert(reverseDependencies.empty());
+
+    BOOST_FOREACH(TGExpressionNode<T_element>* dep, dependencies)
+    {
+      dep->unregisterReverseDependency(this);
+    }
   }
 };
 

@@ -47,14 +47,9 @@ public:
     v.visit(*this);
   }
 
-  virtual std::set<TGExpressionNode<T_element>*> getDependencies() const
-  {
-    return std::set<TGExpressionNode<T_element>*>();
-  }
-
-  virtual void replaceDependency(const TGOutputReference<tg_scalar, T_element>& prev, TGOutputReference<tg_scalar, T_element>& next) {}
-  virtual void replaceDependency(const TGOutputReference<tg_vector, T_element>& prev, TGOutputReference<tg_vector, T_element>& next) {}
-  virtual void replaceDependency(const TGOutputReference<tg_matrix, T_element>& prev, TGOutputReference<tg_matrix, T_element>& next) {}
+  virtual void alterDependencyImpl(const TGOutputReference<tg_scalar, T_element>& prev, TGOutputReference<tg_scalar, T_element>& next) {}
+  virtual void alterDependencyImpl(const TGOutputReference<tg_vector, T_element>& prev, TGOutputReference<tg_vector, T_element>& next) {}
+  virtual void alterDependencyImpl(const TGOutputReference<tg_matrix, T_element>& prev, TGOutputReference<tg_matrix, T_element>& next) {}
 };
 
 }

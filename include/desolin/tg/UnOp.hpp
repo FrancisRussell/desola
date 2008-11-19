@@ -44,6 +44,7 @@ public:
     
   TGUnOp(typename TGInternalType<resultType, T_element>::type* internal, const TGOutputReference<exprType, T_element>& e) : TGExprNode<resultType, T_element>(internal), expr(e)
   {
+    this->registerDependency(expr.getExpressionNode());
   }
 
   inline TGOutputReference<exprType, T_element> getOperand()
@@ -62,17 +63,17 @@ public:
     return std::set<TGExpressionNode<T_element>*>(exprPtrs, exprPtrs+1);
   }
 
-  virtual void replaceDependency(const TGOutputReference<tg_scalar, T_element>& previous, TGOutputReference<tg_scalar, T_element>& next)
+  virtual void alterDependencyImpl(const TGOutputReference<tg_scalar, T_element>& previous, TGOutputReference<tg_scalar, T_element>& next)
   {
     ReplaceOutputReference<exprType, tg_scalar, T_element>()(expr, previous, next);
   }
 
-  virtual void replaceDependency(const TGOutputReference<tg_vector, T_element>& previous, TGOutputReference<tg_vector, T_element>& next)
+  virtual void alterDependencyImpl(const TGOutputReference<tg_vector, T_element>& previous, TGOutputReference<tg_vector, T_element>& next)
   {
     ReplaceOutputReference<exprType, tg_vector, T_element>()(expr, previous, next);
   }
 
-  virtual void replaceDependency(const TGOutputReference<tg_matrix, T_element>& previous, TGOutputReference<tg_matrix, T_element>& next)
+  virtual void alterDependencyImpl(const TGOutputReference<tg_matrix, T_element>& previous, TGOutputReference<tg_matrix, T_element>& next)
   {
     ReplaceOutputReference<exprType, tg_matrix, T_element>()(expr, previous, next);
   }

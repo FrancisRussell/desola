@@ -220,7 +220,7 @@ public:
   {
     BOOST_FOREACH(TGExpressionNode<T_element>& node, exprVector)
     {
-      node.replaceDependency(previous, next);
+      node.alterDependency(previous, next);
     }
   }
 
@@ -228,7 +228,7 @@ public:
   {
     BOOST_FOREACH(TGExpressionNode<T_element>& node, exprVector)
     {
-      node.replaceDependency(previous, next);
+      node.alterDependency(previous, next);
     }
   }
 
@@ -236,13 +236,19 @@ public:
   {
     BOOST_FOREACH(TGExpressionNode<T_element>& node, exprVector)
     {
-      node.replaceDependency(previous, next);
+      node.alterDependency(previous, next);
     }
+  }
+
+  void removeNodes(const std::set<TGExpressionNode<T_element>*>& nodes)
+  {
+    //TODO: Implement me!
   }
 
   void replaceNodes(const std::set<TGExpressionNode<T_element>*>& oldNodes, TGExpressionNode<T_element>* newNode)
   {
     boost::ptr_vector< TGExpressionNode<T_element> > newExprVector;
+
     bool firstMatch = true;
   
     while(!exprVector.empty())

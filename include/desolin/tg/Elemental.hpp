@@ -75,10 +75,9 @@ private:
   TGOutputReference<exprType, T_element> expr;
   AssignmentMap assignments;
 
-  static void addDependency(std::set<TGExpressionNode<T_element>*>& dependencies,
-                            const std::pair<const TGElementIndex<exprType>, TGOutputReference<tg_scalar, T_element> >& pair)
+  static void registerAssignmentValue(TGElementSet* const e, const std::pair<const TGElementIndex<exprType>, TGOutputReference<tg_scalar, T_element> >& pair)
   {
-    dependencies.insert(pair.second.getExpressionNode());
+    e->registerDependency(pair.second.getExpressionNode());
   }
 
 public:
@@ -115,6 +114,8 @@ public:
 	       const TGOutputReference<exprType, T_element>& o,
 	       const AssignmentMap& a) : TGExprNode<exprType, T_element>(internal), expr(o), assignments(a)
   {
+    this->registerDependency(expr.getExpressionNode());
+    std::for_each(assignments.begin(), assignments.end(), boost::bind(&TGElementSet::registerAssignmentValue, this, _1));
   }
 
   inline TGOutputReference<exprType, T_element> getOperand()
@@ -126,7 +127,6 @@ public:
   {
     return expr;
   }
-
 
   std::map<TGElementIndex<exprType>, TGOutputReference<tg_scalar, T_element> > getAssignments() 
   {
@@ -143,15 +143,7 @@ public:
     v.visit(*this);
   }
 
-  virtual std::set<TGExpressionNode<T_element>*> getDependencies() const
-  {
-    std::set<TGExpressionNode<T_element>*> dependencies;
-
-    std::for_each(assignments.begin(), assignments.end(), boost::bind(&TGElementSet::addDependency, dependencies, _1));
-    return dependencies;
-  }
-
-  virtual void replaceDependency(const TGOutputReference<tg_scalar, T_element>& previous, TGOutputReference<tg_scalar, T_element>& next)
+  virtual void alterDependencyImpl(const TGOutputReference<tg_scalar, T_element>& previous, TGOutputReference<tg_scalar, T_element>& next)
   {
     ReplaceOutputReference<exprType, tg_scalar, T_element>()(expr, previous, next);
 
@@ -161,12 +153,12 @@ public:
     }
   }
 
-  virtual void replaceDependency(const TGOutputReference<tg_vector, T_element>& previous, TGOutputReference<tg_vector, T_element>& next)
+  virtual void alterDependencyImpl(const TGOutputReference<tg_vector, T_element>& previous, TGOutputReference<tg_vector, T_element>& next)
   {
     ReplaceOutputReference<exprType, tg_vector, T_element>()(expr, previous, next);
   }
 
-  virtual void replaceDependency(const TGOutputReference<tg_matrix, T_element>& previous, TGOutputReference<tg_matrix, T_element>& next)
+  virtual void alterDependencyImpl(const TGOutputReference<tg_matrix, T_element>& previous, TGOutputReference<tg_matrix, T_element>& next)
   {
     ReplaceOutputReference<exprType, tg_matrix, T_element>()(expr, previous, next);
   }

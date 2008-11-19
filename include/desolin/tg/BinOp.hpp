@@ -47,6 +47,8 @@ public:
   TGBinOp(typename TGInternalType<resultType, T_element>::type* internal, const TGOutputReference<leftType,T_element>& l, 
     const TGOutputReference<rightType, T_element>& r) : TGExprNode<resultType, T_element>(internal), left(l), right(r)
   {
+    this->registerDependency(left.getExpressionNode());
+    this->registerDependency(right.getExpressionNode());
   }
 
   inline TGOutputReference<leftType, T_element> getLeft()
@@ -69,25 +71,19 @@ public:
     return right;
   }
 
-  virtual std::set<TGExpressionNode<T_element>*> getDependencies() const
-  {
-    TGExpressionNode<T_element>* exprPtrs[]  = {left.getExpressionNode(), right.getExpressionNode()};
-    return std::set<TGExpressionNode<T_element>*>(exprPtrs, exprPtrs+2);
-  }
-
-  virtual void replaceDependency(const TGOutputReference<tg_scalar, T_element>& previous, TGOutputReference<tg_scalar, T_element>& next)
+  virtual void alterDependencyImpl(const TGOutputReference<tg_scalar, T_element>& previous, TGOutputReference<tg_scalar, T_element>& next)
   {
     ReplaceOutputReference<leftType, tg_scalar, T_element>()(left, previous, next);
     ReplaceOutputReference<rightType, tg_scalar, T_element>()(right, previous, next);
   }
 
-  virtual void replaceDependency(const TGOutputReference<tg_vector, T_element>& previous, TGOutputReference<tg_vector, T_element>& next)
+  virtual void alterDependencyImpl(const TGOutputReference<tg_vector, T_element>& previous, TGOutputReference<tg_vector, T_element>& next)
   {
     ReplaceOutputReference<leftType, tg_vector, T_element>()(left, previous, next);
     ReplaceOutputReference<rightType, tg_vector, T_element>()(right, previous, next);
   }
 
-  virtual void replaceDependency(const TGOutputReference<tg_matrix, T_element>& previous, TGOutputReference<tg_matrix, T_element>& next)
+  virtual void alterDependencyImpl(const TGOutputReference<tg_matrix, T_element>& previous, TGOutputReference<tg_matrix, T_element>& next)
   {
     ReplaceOutputReference<leftType, tg_matrix, T_element>()(left, previous, next);
     ReplaceOutputReference<rightType, tg_matrix, T_element>()(right, previous, next);

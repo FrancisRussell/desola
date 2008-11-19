@@ -118,6 +118,12 @@ public:
   TGMatrixMultiVectorMult(const TGOutputReference<tg_matrix, T_element>& _matrix, 
     const std::vector<multiply_params>& _multiplies) : matrix(_matrix), multiplies(_multiplies)
   {
+    this->registerDependency(matrix.getExpressionNode());
+
+    BOOST_FOREACH(const multiply_params& paramTuple, multiplies)
+    {
+      this->registerDependency(boost::get<0>(paramTuple).getExpressionNode());
+    }
   }
 
   void accept(TGExpressionNodeVisitor<T_element>& v)
@@ -186,19 +192,6 @@ public:
     }
   }
 
-  virtual std::set<TGExpressionNode<T_element>*> getDependencies() const
-  {
-    std::set<TGExpressionNode<T_element>*> dependencies;
-    dependencies.insert(matrix.getExpressionNode());
-
-    BOOST_FOREACH(const multiply_params& paramTuple, multiplies)
-    {
-      dependencies.insert(boost::get<0>(paramTuple).getExpressionNode());
-    }
-
-    return dependencies;
-  }
-
   virtual ~TGMatrixMultiVectorMult()
   {
     BOOST_FOREACH(multiply_params paramTuple, multiplies)
@@ -207,11 +200,11 @@ public:
     }
   }
 
-  virtual void replaceDependency(const TGOutputReference<tg_scalar, T_element>& previous, TGOutputReference<tg_scalar, T_element>& next)
+  virtual void alterDependencyImpl(const TGOutputReference<tg_scalar, T_element>& previous, TGOutputReference<tg_scalar, T_element>& next)
   {
   }
 
-  virtual void replaceDependency(const TGOutputReference<tg_vector, T_element>& previous, TGOutputReference<tg_vector, T_element>& next)
+  virtual void alterDependencyImpl(const TGOutputReference<tg_vector, T_element>& previous, TGOutputReference<tg_vector, T_element>& next)
   {
     BOOST_FOREACH(multiply_params& paramTuple, multiplies)
     {
@@ -219,7 +212,7 @@ public:
     }
   }
 
-  virtual void replaceDependency(const TGOutputReference<tg_matrix, T_element>& previous, TGOutputReference<tg_matrix, T_element>& next)
+  virtual void alterDependencyImpl(const TGOutputReference<tg_matrix, T_element>& previous, TGOutputReference<tg_matrix, T_element>& next)
   {
     ReplaceOutputReference<tg_matrix, tg_matrix, T_element>()(matrix, previous, next);
   }
