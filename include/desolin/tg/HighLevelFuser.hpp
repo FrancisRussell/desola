@@ -7,6 +7,7 @@
 #include <vector>
 #include <algorithm>
 #include <iterator>
+#include <cstddef>
 #include <boost/foreach.hpp>
 
 // Note that a number of vectors are used here when it seems like sets might be
@@ -132,6 +133,7 @@ private:
     if (sets_disjoint(matVecMulSet.begin(), matVecMulSet.end(), combinedDependencies.begin(), combinedDependencies.end()))
     {
       std::vector<typename TGMatrixMultiVectorMult<T_element>::multiply_params> multiNodeParams;
+      multiNodeParams.reserve(matVecMuls.size());
 
       BOOST_FOREACH(TGMatrixVectorMult<T_element>* matVecMul, matVecMuls)
       {

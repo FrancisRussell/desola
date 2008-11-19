@@ -81,7 +81,7 @@ private:
 
     typedef std::back_insert_iterator< std::vector<TGExpressionNode<T_element>*> > OutputIterator;
     OutputIterator out(nodes);
-    std::for_each(leaves.begin(), leaves.end(), boost::bind(getTopologicalSortHelper<OutputIterator>, _1, boost::ref(visited), out));
+    std::for_each(leaves.begin(), leaves.end(), boost::bind(getTopologicalSortHelper<OutputIterator>, _1, boost::ref(visited), boost::ref(out)));
     return nodes;
   }
 
@@ -302,7 +302,6 @@ public:
 
   void sort()
   {
-
     std::vector<TGExpressionNode<T_element>*> newExprVector(getTopologicalSort());
     exprVector.swap(newExprVector);
   }
