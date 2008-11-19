@@ -195,8 +195,8 @@ public:
 template<typename T_candidate, typename T_replacement, typename T_element>
 struct ReplaceOutputReference
 {
-  bool operator()(TGOutputReference<T_candidate, T_element>& ref, 
-    const TGOutputReference<T_replacement, T_element>& from, const TGOutputReference<T_replacement, T_element>& to)
+  inline bool operator()(TGOutputReference<T_candidate, T_element>& ref, 
+    const TGOutputReference<T_replacement, T_element>& from, const TGOutputReference<T_replacement, T_element>& to) const
   {
     return false;
   }
@@ -205,8 +205,8 @@ struct ReplaceOutputReference
 template<typename T_replacement, typename T_element>
 struct ReplaceOutputReference<T_replacement, T_replacement, T_element>
 {
-  bool operator()(TGOutputReference<T_replacement, T_element>& ref, 
-    const TGOutputReference<T_replacement, T_element>& from, const TGOutputReference<T_replacement, T_element>& to)
+  inline bool operator()(TGOutputReference<T_replacement, T_element>& ref, 
+    const TGOutputReference<T_replacement, T_element>& from, const TGOutputReference<T_replacement, T_element>& to) const
   {
     const bool replace = (from == ref);
     if (replace) ref = to;
