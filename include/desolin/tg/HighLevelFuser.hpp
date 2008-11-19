@@ -138,7 +138,8 @@ private:
         graph.replaceDependency(from, to);
       }
 
-      graph.replaceNodes(matVecMulSet, multiMatVecMul);
+      graph.removeNodes(matVecMulSet);
+      graph.add(multiMatVecMul);
     }
   }
  

@@ -18,18 +18,18 @@
 #ifndef DESOLIN_TG_EXPRESSION_GRAPH_HPP
 #define DESOLIN_TG_EXPRESSION_GRAPH_HPP
 
+#include <vector>
 #include <algorithm>
 #include <functional>
 #include <cstddef>
 #include <cassert>
 #include <map>
-#include <memory>
+#include <utility>
 #include <sys/time.h>
 #include <TaskGraph>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 #include "HighLevelFuser.hpp"
 #include <boost/foreach.hpp>
-#include <boost/ptr_container/ptr_vector.hpp>
 #include <boost/scoped_ptr.hpp>
 
 namespace desolin
@@ -45,7 +45,7 @@ private:
   TGExpressionGraph(const TGExpressionGraph&);
   TGExpressionGraph& operator=(const TGExpressionGraph&);
   
-  boost::ptr_vector< TGExpressionNode<T_element> > exprVector;
+  std::vector<TGExpressionNode<T_element>*> exprVector;
   boost::scoped_ptr<tg::tuTaskGraph> taskGraphObject;
   NameGenerator generator;
 
@@ -63,9 +63,9 @@ private:
     {
     }
 
-    inline void operator()(TGExpressionNode<T_element>& node) const
+    inline void operator()(TGExpressionNode<T_element>* const node) const
     {
-      node.accept(visitor);
+      node->accept(visitor);
     }
   };
 
@@ -74,7 +74,7 @@ public:
   {
   }
 
-  inline void add(TGExpressionNode<T_element>* value)
+  inline void add(TGExpressionNode<T_element>* const value)
   {
     assert(!isHashCached);
     exprVector.push_back(value);
@@ -106,8 +106,8 @@ public:
 
     tu_taskgraph(*taskGraphObject)
     {
-      for(typename boost::ptr_vector< TGExpressionNode<T_element> >::iterator exprVectorIter(exprVector.begin()); exprVectorIter!=exprVector.end(); ++exprVectorIter)
-        exprVectorIter->createTaskGraphVariable();
+      for(typename std::vector<TGExpressionNode<T_element>*>::iterator exprVectorIter(exprVector.begin()); exprVectorIter!=exprVector.end(); ++exprVectorIter)
+        (*exprVectorIter)->createTaskGraphVariable();
 
       TGCodeGenerator<T_element> codeGenerator(*this);
       accept(codeGenerator);
@@ -190,7 +190,7 @@ public:
       std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*> mappings;
       for(std::size_t index = 0; index<exprVector.size(); ++index)
       {
-        mappings[&exprVector[index]] = &right.exprVector[index];
+        mappings[exprVector[index]] = right.exprVector[index];
       }
 
       TGEqualityCheckingVisitor<T_element> checker(mappings);
@@ -207,7 +207,7 @@ public:
       std::map<const TGExpressionNode<T_element>*, int> nodeNumberings;
 
       for(std::size_t index=0; index<graph.exprVector.size(); ++index)
-        nodeNumberings[&graph.exprVector[index]] = index;
+        nodeNumberings[graph.exprVector[index]] = index;
 
       TGHashingVisitor<T_element> hasher(nodeNumberings);
       const_cast<TGExpressionGraph<T_element>&>(graph).accept(hasher);
@@ -218,62 +218,54 @@ public:
 
   void replaceDependency(const TGOutputReference<tg_scalar, T_element>& previous, TGOutputReference<tg_scalar, T_element>& next)
   {
-    BOOST_FOREACH(TGExpressionNode<T_element>& node, exprVector)
+    BOOST_FOREACH(TGExpressionNode<T_element>* node, exprVector)
     {
-      node.alterDependency(previous, next);
+      node->alterDependency(previous, next);
     }
   }
 
   void replaceDependency(const TGOutputReference<tg_vector, T_element>& previous, TGOutputReference<tg_vector, T_element>& next)
   {
-    BOOST_FOREACH(TGExpressionNode<T_element>& node, exprVector)
+    BOOST_FOREACH(TGExpressionNode<T_element>* node, exprVector)
     {
-      node.alterDependency(previous, next);
+      node->alterDependency(previous, next);
     }
   }
 
   void replaceDependency(const TGOutputReference<tg_matrix, T_element>& previous, TGOutputReference<tg_matrix, T_element>& next)
   {
-    BOOST_FOREACH(TGExpressionNode<T_element>& node, exprVector)
+    BOOST_FOREACH(TGExpressionNode<T_element>* node, exprVector)
     {
-      node.alterDependency(previous, next);
+      node->alterDependency(previous, next);
     }
   }
 
   void removeNodes(const std::set<TGExpressionNode<T_element>*>& nodes)
   {
-    //TODO: Implement me!
-  }
+    std::vector<TGExpressionNode<T_element>*> newExprVector;
+    newExprVector.reserve(exprVector.size());
 
-  void replaceNodes(const std::set<TGExpressionNode<T_element>*>& oldNodes, TGExpressionNode<T_element>* newNode)
-  {
-    boost::ptr_vector< TGExpressionNode<T_element> > newExprVector;
-
-    bool firstMatch = true;
-  
-    while(!exprVector.empty())
+    BOOST_FOREACH(TGExpressionNode<T_element>* node, exprVector)
     {
-      typename boost::ptr_vector< TGExpressionNode<T_element> >::auto_type node = exprVector.pop_back();
-
-      if (oldNodes.find(node.get()) == oldNodes.end())
+      if (nodes.find(node) == nodes.end())
       {
-        newExprVector.push_back(node.release());
+        newExprVector.push_back(node);
       }
       else
       {
-        // We replace the final matching node in the list with the new node.
-        // This should keep the topological sort valid without having to completely
-        // re-sort the DAG.
-        if (firstMatch)
-          newExprVector.push_back(newNode);
-
-        firstMatch = false;
+        delete node;
       }
     }
 
-    // There doesn't seem to be an efficient way to reverse a ptr_vector
-    while(!newExprVector.empty())
-      exprVector.push_back(newExprVector.pop_back().release());
+    exprVector.swap(newExprVector);
+  }
+
+  ~TGExpressionGraph()
+  {
+    BOOST_FOREACH(TGExpressionNode<T_element>* node, std::make_pair(exprVector.rbegin(), exprVector.rend()))
+    {
+      delete node;
+    }
   }
 };
 

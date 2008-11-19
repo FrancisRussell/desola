@@ -364,6 +364,11 @@ public:
 
   virtual ~TGExpressionNode()
   {
+    if (reverseDependencies.size() > 0)
+    {
+      std::cout << "ARGH: " << typeid(*this).name() << std::endl;
+    }
+
     // We shouldn't have anything depending on this node
     assert(reverseDependencies.empty());
 
