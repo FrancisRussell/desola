@@ -38,8 +38,8 @@ namespace detail
 template<typename T_candidate, typename T_replacement, typename T_element>
 struct ReplaceExprNode
 {
-  bool operator()(ExprNode<T_candidate, T_element>*& ref, 
-    const ExprNode<T_replacement, T_element>* const from, ExprNode<T_replacement, T_element>* const to)
+  inline bool operator()(ExprNode<T_candidate, T_element>*& ref, 
+    const ExprNode<T_replacement, T_element>* const from, ExprNode<T_replacement, T_element>* const to) const
   {
     return false;
   }
@@ -48,8 +48,8 @@ struct ReplaceExprNode
 template<typename T_replacement, typename T_element>
 struct ReplaceExprNode<T_replacement, T_replacement, T_element>
 {
-  bool operator()(ExprNode<T_replacement, T_element>*& ref, 
-    const ExprNode<T_replacement, T_element>* const from, ExprNode<T_replacement, T_element>* const to)
+  inline bool operator()(ExprNode<T_replacement, T_element>*& ref, 
+    const ExprNode<T_replacement, T_element>* const from, ExprNode<T_replacement, T_element>* const to) const
   {
     const bool replace = (from == ref);
     if (replace) ref = to;
