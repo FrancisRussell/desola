@@ -140,6 +140,7 @@ private:
 
       graph.removeNodes(matVecMulSet);
       graph.add(multiMatVecMul);
+      graph.sort();
     }
   }
  

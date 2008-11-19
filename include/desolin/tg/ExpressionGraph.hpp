@@ -24,13 +24,17 @@
 #include <cstddef>
 #include <cassert>
 #include <map>
+#include <set>
+#include <iterator>
 #include <utility>
-#include <sys/time.h>
 #include <TaskGraph>
 #include <desolin/tg/Desolin_tg_fwd.hpp>
 #include "HighLevelFuser.hpp"
 #include <boost/foreach.hpp>
 #include <boost/scoped_ptr.hpp>
+#include <boost/bind.hpp>
+#include <boost/ref.hpp>
+#include <sys/time.h>
 
 namespace desolin
 {
@@ -68,6 +72,29 @@ private:
       node->accept(visitor);
     }
   };
+
+  std::vector<TGExpressionNode<T_element>*> getTopologicalSort(const std::vector<TGExpressionNode<T_element>*>& leaves)
+  {
+    std::vector<TGExpressionNode<T_element>*> nodes;
+    std::set<TGExpressionNode<T_element>*> visited; 
+
+    typedef std::back_insert_iterator< std::vector<TGExpressionNode<T_element>*> > OutputIterator;
+    OutputIterator out(nodes);
+    std::for_each(leaves.begin(), leaves.end(), boost::bind(getTopologicalSortHelper<OutputIterator>, _1, boost::ref(visited), out));
+    return nodes;
+  }
+
+  template<typename OutputIterator>
+  static void getTopologicalSortHelper(TGExpressionNode<T_element>* const node, std::set<TGExpressionNode<T_element>*>& visited, OutputIterator& out)
+  {
+    if (visited.insert(node).second)
+    {
+      const std::vector<TGExpressionNode<T_element>*> deps(node->getDependencies());
+      std::for_each(deps.begin(), deps.end(), boost::bind(getTopologicalSortHelper<OutputIterator>, _1, boost::ref(visited), boost::ref(out)));
+      *out++ = node;
+    }
+  }
+
 
 public:
   TGExpressionGraph() : taskGraphObject(NULL), isHashCached(false)
@@ -257,6 +284,22 @@ public:
       }
     }
 
+    exprVector.swap(newExprVector);
+  }
+
+  void sort()
+  {
+    std::vector<TGExpressionNode<T_element>*> leaves;
+
+    BOOST_FOREACH(TGExpressionNode<T_element>* node, exprVector)
+    {
+      if (node->getDependencies().size() == 0)
+      {
+        leaves.push_back(node);
+      }
+    }
+
+    std::vector<TGExpressionNode<T_element>*> newExprVector(getTopologicalSort(leaves));
     exprVector.swap(newExprVector);
   }
 
