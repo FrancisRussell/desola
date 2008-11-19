@@ -293,7 +293,7 @@ public:
 
     BOOST_FOREACH(TGExpressionNode<T_element>* node, exprVector)
     {
-      if (node->getDependencies().size() == 0)
+      if (node->numReverseDependencies() == 0)
       {
         leaves.push_back(node);
       }
@@ -305,6 +305,8 @@ public:
 
   ~TGExpressionGraph()
   {
+    // We delete in reverse order because the nodes throw an assertion failure if they're deleted
+    // while something still depends on them.
     BOOST_FOREACH(TGExpressionNode<T_element>* node, std::make_pair(exprVector.rbegin(), exprVector.rend()))
     {
       delete node;

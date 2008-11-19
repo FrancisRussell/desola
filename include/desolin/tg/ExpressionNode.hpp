@@ -342,6 +342,16 @@ public:
     return reverseDependencies;
   }
 
+  std::size_t numDependencies() const
+  {
+    return dependencies.size();
+  }
+
+  std::size_t numReverseDependencies() const
+  {
+    return reverseDependencies.size();
+  }
+
   virtual std::size_t getNumOutputs() const = 0;
   virtual bool isParameter(const std::size_t index) const = 0;
   virtual internal_variant_type getInternal(const std::size_t index) = 0;
@@ -364,11 +374,6 @@ public:
 
   virtual ~TGExpressionNode()
   {
-    if (reverseDependencies.size() > 0)
-    {
-      std::cout << "ARGH: " << typeid(*this).name() << std::endl;
-    }
-
     // We shouldn't have anything depending on this node
     assert(reverseDependencies.empty());
 
