@@ -19,7 +19,6 @@
 #define DESOLIN_TG_EVALUATOR_HPP
 
 #include <boost/shared_ptr.hpp>
-#include <boost/bind.hpp>
 #include <boost/functional/hash.hpp>
 #include <vector>
 #include <map>
@@ -100,18 +99,19 @@ public:
   
   virtual void evaluate()
   {
+    const ConfigurationManager& configurationManager(ConfigurationManager::getConfigurationManager());	
     assert(!evaluated); 
     evaluated = true;
 
     // We perform this optimisation here because it needs to be done before hashing/equality comparisons
-    graph->performHighLevelFusion();
+    if (configurationManager.loopFusionEnabled())
+      graph->performHighLevelFusion();
 
     const std::size_t hash = boost::hash< TGExpressionGraph<T_element> >()(*graph);
     typename TGCache<T_element>::T_cachedGraphMap& cachedGraphMap(graphCache.getCachedGraphs());
     const typename TGCache<T_element>::T_cachedGraphMap::iterator cachedGraphIterator = cachedGraphMap.find(hash);
 
     ParameterHolder parameterHolder;
-    const ConfigurationManager& configurationManager(ConfigurationManager::getConfigurationManager());	
     objectGenerator.addTaskGraphMappings(parameterHolder);
 	    
     if (configurationManager.codeCachingEnabled() && cachedGraphIterator != cachedGraphMap.end() && 
