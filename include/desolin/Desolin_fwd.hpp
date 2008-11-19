@@ -78,6 +78,9 @@ template<typename exprType, typename T_element> class Negate;
 template<typename T_element> class Absolute;
 template<typename T_element> class SquareRoot;
 
+// Helper class for performing typesafe dependency replacement
+template<typename T_candidate, typename T_replacement, typename T_element> struct ReplaceExprNode;
+
 // Expression Tree Visitors
 template<typename T_element> class ExpressionNodeVisitor;
 template<typename T_element> class ExpressionNodeTypeVisitor;
