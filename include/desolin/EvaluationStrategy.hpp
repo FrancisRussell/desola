@@ -133,7 +133,8 @@ private:
   }
 
 public:
-  EvaluationStrategy(ExpressionGraph<T_element>& graph) : hasEvaluated(false), expressionGraph(graph), sortedUnclaimed(graph.getSortedNodes())
+  EvaluationStrategy(ExpressionGraph<T_element>& graph) : hasEvaluated(false), expressionGraph(graph), 
+    sortedUnclaimed(graph.sortedNodesBegin(), graph.sortedNodesEnd())
   {
     NullEvaluatorFactory<T_element> nullEvaluatorFactory;
     addEvaluator(nullEvaluatorFactory);

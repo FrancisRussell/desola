@@ -36,7 +36,7 @@ template<typename T_element>
 class ExpressionGraph
 {
 private:
-  std::vector< ExpressionNode<T_element>* >  exprVector;
+  std::vector<ExpressionNode<T_element>*>  exprVector;
 
   template<typename VisitorType>
   class ApplyVisitor : public std::unary_function<void, ExpressionNode<T_element>*>
@@ -79,16 +79,23 @@ private:
   }
   
 public:
+  typedef typename std::vector<ExpressionNode<T_element>*>::const_iterator const_node_iterator;
+
   template<typename InputIterator>
   ExpressionGraph(const InputIterator& start, const InputIterator& end) : exprVector(start, end)
   {
   }
 
-  inline std::vector< ExpressionNode<T_element>* > getSortedNodes() const
+  const_node_iterator sortedNodesBegin() const
   {
-    return exprVector;
+    return exprVector.begin();
   }
-  
+
+  const_node_iterator sortedNodesEnd() const
+  {
+    return exprVector.end();
+  }
+
   inline std::size_t nodeCount() const
   {
     return exprVector.size();

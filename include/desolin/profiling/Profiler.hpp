@@ -76,7 +76,7 @@ private:
 
   std::vector<ExpressionNode<T_element>*> getRequiredNodes(ExpressionGraph<T_element>& graph)
   {
-    const std::vector<ExpressionNode<T_element>*> allNodes(graph.getSortedNodes());
+    const std::vector<ExpressionNode<T_element>*> allNodes(graph.sortedNodesBegin(), graph.sortedNodesEnd());
     std::vector<ExpressionNode<T_element>*> required;
     std::back_insert_iterator< std::vector<ExpressionNode<T_element>*> > inserter(required);
 
