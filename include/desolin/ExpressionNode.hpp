@@ -53,98 +53,6 @@ private:
   std::vector<ExpressionNode*> internal_reqBy;
   std::vector<ExpressionNode*> deps;
 
-public:
-  static std::vector<ExpressionNode*> getTopologicallySortedNodes(const std::vector<ExpressionNode*>& leaves)
-  { 
-    std::vector<ExpressionNode*> nodes;
-    std::set<ExpressionNode*> visited; 
-    typedef std::back_insert_iterator< std::vector<ExpressionNode*> > OutputIterator;
-    OutputIterator out(nodes);
-    std::for_each(leaves.begin(), leaves.end(), boost::bind(getTopologicallySortedNodesHelper<OutputIterator>, _1, boost::ref(visited), out));
-    return nodes;
-  }
-    
-  ExpressionNode() : evaluationDirective(EVALUATE)
-  {
-  }
-
-  std::vector<ExpressionNode*> getInternalRequiredBy() const
-  {
-    return internal_reqBy;
-  }
-  
-  std::multiset<const Variable<T_element>*> getExternalRequiredBy() const
-  {
-    return external_reqBy;
-  }
-  
-  std::vector<ExpressionNode*> getDependencies() const
-  {
-    return deps;
-  }
-  
-  void registerRequiredBy(const Variable<T_element>& e)
-  {
-    external_reqBy.insert(&e);
-  }
-  
-  void unregisterRequiredBy(const Variable<T_element>& v)
-  {
-    // We only want to erase one instance from the multiset
-    const typename std::multiset<const Variable<T_element>*>::iterator location = external_reqBy.find(&v);
-    assert(location != external_reqBy.end());
-    external_reqBy.erase(location);
-    checkSelfDestruct();
-  }
-
-  void deleteIfUnused()
-  {
-    checkSelfDestruct();
-  }
-  
-  void evaluate()
-  {
-    for(typename std::set< PExpressionNodeRef<T_element> >::iterator monitorIterator = monitors.begin(); monitorIterator!=monitors.end(); ++monitorIterator)
-      monitorIterator->getPExpressionNode().notifyLive();
-
-    monitors.clear();
-    internal_evaluate();
-  }
-    
-  virtual void accept(ExpressionNodeVisitor<T_element>& visitor) = 0;
-  virtual void accept(ExpressionNodeTypeVisitor<T_element>& visitor) = 0;
-  virtual void accept(LiteralVisitor<T_element>& visitor)
-  {
-  }
-
-  virtual Maybe<double> getFlops() const = 0;
-
-  void setEvaluationDirective(const EvaluationDirective d)
-  {
-    evaluationDirective = d;
-  }
-
-  EvaluationDirective getEvaluationDirective() const
-  {
-    return evaluationDirective;
-  }
-
-  void notifyOfUse(PExpressionNodeRef<T_element>& monitor)
-  {
-    monitors.insert(monitor);
-  }
-
-  virtual ~ExpressionNode() 
-  {
-    for(typename std::set< PExpressionNodeRef<T_element> >::iterator monitorIterator = monitors.begin(); monitorIterator!=monitors.end(); ++monitorIterator)
-      monitorIterator->getPExpressionNode().notifyDead();
-  }
-
-protected:
-  virtual void update(ExprNode<scalar, T_element>& previous, ExprNode<scalar, T_element>& next) = 0;
-  virtual void update(ExprNode<vector, T_element>& previous, ExprNode<vector, T_element>& next) = 0;
-  virtual void update(ExprNode<matrix, T_element>& previous, ExprNode<matrix, T_element>& next) = 0;
-
   template<typename exprType>
   static void updateVariable(const Variable<T_element>* variable, ExprNode<exprType, T_element>& previous, ExprNode<exprType, T_element>& next)
   {
@@ -156,7 +64,72 @@ protected:
   {
     expressionNode->update(previous, next);
   }
-  
+
+  void checkSelfDestruct()
+  {
+    if(internal_reqBy.empty() && external_reqBy.empty())
+    {
+      typedef typename std::vector<ExpressionNode*>::iterator Iterator;
+      for(Iterator i = deps.begin(); i != deps.end(); ++i)
+        (*i)->unregisterRequiredBy(this);
+
+      delete this;
+    }
+  }
+
+  static void getLeavesHelper(std::set<ExpressionNode*>& visited, std::vector<ExpressionNode*>& leaves, ExpressionNode* const node)
+  {
+    if (visited.insert(node).second)
+    {
+      if (node->internal_reqBy.empty())
+        leaves.push_back(node);
+
+      std::for_each(node->deps.begin(), node->deps.end(), boost::bind(getLeavesHelper, boost::ref(visited), boost::ref(leaves), _1));
+      std::for_each(node->internal_reqBy.begin(), node->internal_reqBy.end(), boost::bind(getLeavesHelper, boost::ref(visited), boost::ref(leaves), _1));
+    }	   
+  }
+
+  std::vector<ExpressionNode*> getLeaves() 
+  {
+    std::set<ExpressionNode*> visited;
+    std::vector<ExpressionNode*> leaves;
+    getLeavesHelper(visited, leaves, this);
+    return leaves;
+  }
+
+  template<typename OutputIterator>
+  static void getTopologicallySortedNodesHelper(ExpressionNode* const node, std::set<ExpressionNode*>& visited, OutputIterator& out)
+  {
+    if (visited.insert(node).second)
+    {
+      std::for_each(node->deps.begin(), node->deps.end(), boost::bind(getTopologicallySortedNodesHelper<OutputIterator>, _1, boost::ref(visited), out));
+      *out++ = node;
+    }
+  }
+
+  std::auto_ptr< ExpressionGraph<T_element> > getExpressionGraph(const std::vector<ExpressionNode*>& nodes)
+  {
+    const ConfigurationManager& configurationManager(ConfigurationManager::getConfigurationManager());
+    const bool useProfiler = configurationManager.livenessAnalysisEnabled();
+
+    std::auto_ptr< ExpressionGraph<T_element> >  expressionGraph(new ExpressionGraph<T_element>(nodes.begin(), nodes.end()));
+    if (useProfiler)
+    {
+      Profiler<T_element>& profiler = Profiler<T_element>::getProfiler();
+      return profiler.getAnnotatedExpressionGraph(*expressionGraph, *this);
+    }
+    else
+    {
+      expressionGraph->setDefaultAnnotations();
+      return expressionGraph;
+    }
+  }
+
+protected:
+  virtual void update(ExprNode<scalar, T_element>& previous, ExprNode<scalar, T_element>& next) = 0;
+  virtual void update(ExprNode<vector, T_element>& previous, ExprNode<vector, T_element>& next) = 0;
+  virtual void update(ExprNode<matrix, T_element>& previous, ExprNode<matrix, T_element>& next) = 0;
+
   template<typename exprType>
   void internalReplace(ExprNode<exprType, T_element>& previous, ExprNode<exprType, T_element>& next)
   {
@@ -211,66 +184,6 @@ protected:
     internal_reqBy.erase(location);
     checkSelfDestruct();
   }
-  
-  void checkSelfDestruct()
-  {
-    if(internal_reqBy.empty() && external_reqBy.empty())
-    {
-      typedef typename std::vector<ExpressionNode*>::iterator Iterator;
-      for(Iterator i = deps.begin(); i != deps.end(); ++i)
-        (*i)->unregisterRequiredBy(this);
-
-      delete this;
-    }
-  }
-
-  static void getLeavesHelper(std::set<ExpressionNode*>& visited, std::vector<ExpressionNode*>& leaves, ExpressionNode* const node)
-  {
-    if (visited.insert(node).second)
-    {
-      if (node->internal_reqBy.empty())
-        leaves.push_back(node);
-
-      std::for_each(node->deps.begin(), node->deps.end(), boost::bind(getLeavesHelper, boost::ref(visited), boost::ref(leaves), _1));
-      std::for_each(node->internal_reqBy.begin(), node->internal_reqBy.end(), boost::bind(getLeavesHelper, boost::ref(visited), boost::ref(leaves), _1));
-    }	   
-  }
-
-  std::vector<ExpressionNode*> getLeaves() 
-  {
-    std::set<ExpressionNode*> visited;
-    std::vector<ExpressionNode*> leaves;
-    getLeavesHelper(visited, leaves, this);
-    return leaves;
-  }
-
-  template<typename OutputIterator>
-  static void getTopologicallySortedNodesHelper(ExpressionNode* const node, std::set<ExpressionNode*>& visited, OutputIterator out)
-  {
-    if (visited.insert(node).second)
-    {
-      std::for_each(node->deps.begin(), node->deps.end(), boost::bind(getTopologicallySortedNodesHelper<OutputIterator>, _1, boost::ref(visited), out));
-      *out++ = node;
-    }
-  }
-
-  std::auto_ptr< ExpressionGraph<T_element> > getExpressionGraph(const std::vector<ExpressionNode*>& nodes)
-  {
-    const ConfigurationManager& configurationManager(ConfigurationManager::getConfigurationManager());
-    const bool useProfiler = configurationManager.livenessAnalysisEnabled();
-
-    std::auto_ptr< ExpressionGraph<T_element> >  expressionGraph(new ExpressionGraph<T_element>(nodes.begin(), nodes.end()));
-    if (useProfiler)
-    {
-      Profiler<T_element>& profiler = Profiler<T_element>::getProfiler();
-      return profiler.getAnnotatedExpressionGraph(*expressionGraph, *this);
-    }
-    else
-    {
-      expressionGraph->setDefaultAnnotations();
-      return expressionGraph;
-    }
-  }
 
   virtual void internal_evaluate()
   {
@@ -286,6 +199,95 @@ protected:
     strategy->addEvaluator(tgEvaluatorFactory);
     strategy->execute();
   }
+
+public:
+  ExpressionNode() : evaluationDirective(EVALUATE)
+  {
+  }
+
+  std::vector<ExpressionNode*> getInternalRequiredBy() const
+  {
+    return internal_reqBy;
+  }
+  
+  std::multiset<const Variable<T_element>*> getExternalRequiredBy() const
+  {
+    return external_reqBy;
+  }
+  
+  std::vector<ExpressionNode*> getDependencies() const
+  {
+    return deps;
+  }
+  
+  void registerRequiredBy(const Variable<T_element>& e)
+  {
+    external_reqBy.insert(&e);
+  }
+  
+  void unregisterRequiredBy(const Variable<T_element>& v)
+  {
+    // We only want to erase one instance from the multiset
+    const typename std::multiset<const Variable<T_element>*>::iterator location = external_reqBy.find(&v);
+    assert(location != external_reqBy.end());
+    external_reqBy.erase(location);
+    checkSelfDestruct();
+  }
+
+  static std::vector<ExpressionNode*> getTopologicallySortedNodes(const std::vector<ExpressionNode*>& leaves)
+  { 
+    std::vector<ExpressionNode*> nodes;
+    std::set<ExpressionNode*> visited; 
+    typedef std::back_insert_iterator< std::vector<ExpressionNode*> > OutputIterator;
+    OutputIterator out(nodes);
+    std::for_each(leaves.begin(), leaves.end(), boost::bind(getTopologicallySortedNodesHelper<OutputIterator>,
+      _1, boost::ref(visited), boost::ref(out)));
+    return nodes;
+  }
+
+  void deleteIfUnused()
+  {
+    checkSelfDestruct();
+  }
+  
+  void evaluate()
+  {
+    for(typename std::set< PExpressionNodeRef<T_element> >::iterator monitorIterator = monitors.begin(); monitorIterator!=monitors.end(); ++monitorIterator)
+      monitorIterator->getPExpressionNode().notifyLive();
+
+    monitors.clear();
+    internal_evaluate();
+  }
+    
+  virtual void accept(ExpressionNodeVisitor<T_element>& visitor) = 0;
+  virtual void accept(ExpressionNodeTypeVisitor<T_element>& visitor) = 0;
+  virtual void accept(LiteralVisitor<T_element>& visitor)
+  {
+  }
+
+  virtual Maybe<double> getFlops() const = 0;
+
+  void setEvaluationDirective(const EvaluationDirective d)
+  {
+    evaluationDirective = d;
+  }
+
+  EvaluationDirective getEvaluationDirective() const
+  {
+    return evaluationDirective;
+  }
+
+  void notifyOfUse(PExpressionNodeRef<T_element>& monitor)
+  {
+    monitors.insert(monitor);
+  }
+
+  virtual ~ExpressionNode() 
+  {
+    for(typename std::set< PExpressionNodeRef<T_element> >::iterator monitorIterator = monitors.begin(); monitorIterator!=monitors.end(); ++monitorIterator)
+      monitorIterator->getPExpressionNode().notifyDead();
+  }
+
 };
 
 }
