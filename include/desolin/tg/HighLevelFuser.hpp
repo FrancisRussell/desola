@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <iterator>
 #include <cstddef>
+#include <utility>
 #include <boost/foreach.hpp>
 
 // Note that a number of vectors are used here when it seems like sets might be
@@ -108,7 +109,7 @@ private:
   static void getDependenciesHelper(std::set<TGExpressionNode<T_element>*>& dependencies,
     TGExpressionNode<T_element>* const node)
   {
-    BOOST_FOREACH(TGExpressionNode<T_element>* dependency, node->getDependencies())
+    BOOST_FOREACH(TGExpressionNode<T_element>* dependency, std::make_pair(node->beginDependencies(), node->endDependencies()))
     {
       if (dependencies.insert(dependency).second)
         getDependenciesHelper(dependencies, dependency);

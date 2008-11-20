@@ -303,11 +303,33 @@ protected:
   virtual void alterDependencyImpl(const TGOutputReference<tg_matrix, T_element>& previous, TGOutputReference<tg_matrix, T_element>& next) = 0;
 
 public:
+  typedef typename std::vector<TGExpressionNode<T_element>*>::const_iterator dependency_const_iterator;
+  typedef typename std::vector<TGExpressionNode<T_element>*>::const_iterator rev_dependency_const_iterator;
   typedef typename boost::make_variant_over<internal_types>::type internal_variant_type;
   typedef typename boost::make_variant_over<internal_types_const>::type const_internal_variant_type;
 
   TGExpressionNode()
   {
+  }
+
+  dependency_const_iterator beginDependencies() const
+  {
+    return dependencies.begin();
+  }
+
+  dependency_const_iterator endDependencies() const
+  {
+    return dependencies.end();
+  }
+
+  rev_dependency_const_iterator beginReverseDependencies() const
+  {
+    return reverseDependencies.begin();
+  }
+
+  rev_dependency_const_iterator endReverseDependencies() const
+  {
+    return reverseDependencies.end();
   }
 
   bool isEqual(const TGExpressionNode& node, const std::map<const TGExpressionNode<T_element>*, const TGExpressionNode<T_element>*>& mappings) const
@@ -329,16 +351,6 @@ public:
   
   virtual void accept(TGExpressionNodeVisitor<T_element>& visitor) = 0;
   virtual void createTaskGraphVariable() = 0;
-
-  std::vector<TGExpressionNode<T_element>*> getDependencies() const
-  {
-    return dependencies;
-  }
-
-  std::vector<TGExpressionNode<T_element>*> getReverseDependencies() const
-  {
-    return reverseDependencies;
-  }
 
   std::size_t numDependencies() const
   {

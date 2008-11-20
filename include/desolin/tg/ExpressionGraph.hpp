@@ -90,8 +90,8 @@ private:
   {
     if (visited.insert(node).second)
     {
-      const std::vector<TGExpressionNode<T_element>*> deps(node->getDependencies());
-      std::for_each(deps.begin(), deps.end(), boost::bind(getTopologicalSortHelper<OutputIterator>, _1, boost::ref(visited), boost::ref(out)));
+      std::for_each(node->beginDependencies(), node->endDependencies(), 
+        boost::bind(getTopologicalSortHelper<OutputIterator>, _1, boost::ref(visited), boost::ref(out)));
       *out++ = node;
     }
   }
@@ -107,6 +107,17 @@ private:
     }
 
     return leaves;
+  }
+
+  template<typename exprType>
+  void replaceDependencyImpl(const TGOutputReference<exprType, T_element>& previous, TGOutputReference<exprType, T_element>& next)
+  {
+    TGExpressionNode<T_element>* const node = previous.getExpressionNode();
+    
+    BOOST_FOREACH(TGExpressionNode<T_element>* node, std::make_pair(node->beginReverseDependencies(), node->endReverseDependencies()))
+    {
+      node->alterDependency(previous, next);
+    }
   }
 
 public:
@@ -258,26 +269,17 @@ public:
 
   void replaceDependency(const TGOutputReference<tg_scalar, T_element>& previous, TGOutputReference<tg_scalar, T_element>& next)
   {
-    BOOST_FOREACH(TGExpressionNode<T_element>* node, exprVector)
-    {
-      node->alterDependency(previous, next);
-    }
+    replaceDependencyImpl(previous, next);
   }
 
   void replaceDependency(const TGOutputReference<tg_vector, T_element>& previous, TGOutputReference<tg_vector, T_element>& next)
   {
-    BOOST_FOREACH(TGExpressionNode<T_element>* node, exprVector)
-    {
-      node->alterDependency(previous, next);
-    }
+    replaceDependencyImpl(previous, next);
   }
 
   void replaceDependency(const TGOutputReference<tg_matrix, T_element>& previous, TGOutputReference<tg_matrix, T_element>& next)
   {
-    BOOST_FOREACH(TGExpressionNode<T_element>* node, exprVector)
-    {
-      node->alterDependency(previous, next);
-    }
+    replaceDependencyImpl(previous, next);
   }
 
   void removeNodes(const std::set<TGExpressionNode<T_element>*>& nodes)
