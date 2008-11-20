@@ -3,6 +3,8 @@
 
 #include <vector>
 #include <cstddef>
+#include <boost/scoped_array.hpp>
+#include <algorithm>
 #include <desolin/file-access/mtl_harwell_boeing_stream.hpp>
 #include <desolin/file-access/mtl_entry.hpp>
 
@@ -20,35 +22,46 @@ public:
   typedef std::size_t size_type;
 
 private:
-  std::vector<value_type> values;
+  size_type numRows;
+  boost::scoped_array<value_type> values;
 
 public:
-  BLASVector(const size_type rows) : values(rows)
+  BLASVector(const size_type rows) : numRows(rows), values(new value_type[rows])
   {
   }
 
-  BLASVector(const size_type rows, const value_type initial) : values(rows, initial)
+  BLASVector(const size_type rows, const value_type initial) : numRows(rows), values(new value_type[rows])
   {
+    std::fill(values.get(), values.get() + numRows, initial);
+  }
+
+  BLASVector(const BLASVector& v) : numRows(v.numRows), values(new value_type[numRows])
+  {
+    std::copy(v.values.get(), v.values.get() + numRows, values.get());
   }
 
   void resize(const size_type rows)
   {
-    values.resize(rows);
+    value_type* const newValues = new value_type[rows];
+    std::copy(values.get(), newValues, std::min(rows, numRows));
+
+    numRows = rows;
+    values.reset(newValues);
   }
 
   inline size_type nrows() const
   {
-    return values.size();
+    return numRows;
   }
 
   inline value_type* data()
   {
-    return &values[0];
+    return values.get();
   }
 
   inline const value_type* data() const
   {
-    return &values[0];
+    return values.get();
   }
 };
 
@@ -63,16 +76,18 @@ public:
 private:
   const size_type rows;
   const size_type cols;
-  std::vector<value_type> values;
+  boost::scoped_array<value_type> values;
 
 public:
-  BLASGeneralMatrix(const size_type r, const size_type c) : rows(r), cols(c), values(rows*cols, 0)
+  BLASGeneralMatrix(const size_type r, const size_type c) : rows(r), cols(c), values(new value_type[rows*cols])
   {
   }
 
   template<typename StreamType>
-  explicit BLASGeneralMatrix(StreamType& str) : rows(str.nrows()), cols(str.ncols()), values(rows*cols, 0)
+  explicit BLASGeneralMatrix(StreamType& str) : rows(str.nrows()), cols(str.ncols()), values(new value_type[rows*cols])
   {
+    std::fill(values.get(), values.get() + rows*cols, T());
+
     while(!str.eof())
     {
       desolin::entry2<double> entry;
@@ -93,12 +108,12 @@ public:
 
   inline value_type* data()
   {
-    return &values[0];
+    return values.get();
   }
 
   inline const value_type* data() const
   {
-    return &values[0];
+    return values.get();
   }
 };
 
