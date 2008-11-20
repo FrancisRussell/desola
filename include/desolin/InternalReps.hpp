@@ -23,6 +23,7 @@
 #include <cstddef>
 #include <algorithm>
 #include <desolin/Desolin_fwd.hpp>
+#include <boost/scoped_array.hpp>
 #include <boost/tuple/tuple.hpp>
 #include <boost/tuple/tuple_comparison.hpp>
 #include <desolin/file-access/mtl_entry.hpp>
@@ -159,22 +160,23 @@ template<typename T_element>
 class ConventionalVector : public InternalVector<T_element>
 {
 private:
-  std::vector<T_element> value;
+  boost::scoped_array<T_element> value;
   
 public:
-  ConventionalVector(const std::size_t rowCount) : InternalVector<T_element>(false, rowCount)
+  ConventionalVector(const std::size_t rowCount) : InternalVector<T_element>(false, rowCount), value(NULL)
   {
   }
 
-  ConventionalVector(const std::size_t rowCount, const T_element initialValue) : InternalVector<T_element>(true, rowCount), value(rowCount, initialValue)
+  ConventionalVector(const std::size_t rowCount, const T_element initialValue) : InternalVector<T_element>(true, rowCount), value(new T_element[rowCount])
   {
+    std::fill(value.get(), value.get() + this->rows, initialValue);
   }
 
   virtual void allocate()
   {
     if(!this->allocated)
     {
-      value.resize(this->rows);
+      value.reset(new T_element[this->rows]);
       this->allocated=true;
     }
   }
@@ -187,7 +189,7 @@ public:
   T_element* getValue()
   {
     assert(this->allocated);
-    return &value[0];
+    return value.get();
   }
 
   virtual T_element getElementValue(const ElementIndex<vector>& index)
@@ -201,21 +203,21 @@ template<typename T_element>
 class ConventionalMatrix : public InternalMatrix<T_element>
 {
 private:
-  std::vector<T_element> value;
+  boost::scoped_array<T_element> value;
   
 public:
-  ConventionalMatrix(const std::size_t rowCount, const std::size_t colCount) : InternalMatrix<T_element>(false, rowCount, colCount)
+  ConventionalMatrix(const std::size_t rowCount, const std::size_t colCount) : InternalMatrix<T_element>(false, rowCount, colCount), value(NULL)
   {
   }
 
   template<typename StreamType>
-  explicit ConventionalMatrix(StreamType& stream) : InternalMatrix<T_element>(true, stream.nrows(), stream.ncols()), value(stream.nrows()*stream.ncols())
+  explicit ConventionalMatrix(StreamType& stream) : InternalMatrix<T_element>(true, stream.nrows(), stream.ncols()), value(new T_element[this->rows*this->cols])
   {
     while(!stream.eof())
     {
         entry2<double> entry;
         stream >> entry;
-	value[this->getColCount()*entry.row + entry.col] = entry.value;
+	value[this->cols*entry.row + entry.col] = entry.value;
     }
   }
   
@@ -223,7 +225,7 @@ public:
   {
     if(!this->allocated)
     {
-      value.resize(this->rows * this->cols);
+      value.reset(new T_element(this->rows * this->cols));
       this->allocated=true;
     }
   }
@@ -241,7 +243,7 @@ public:
   T_element* getValue()
   {
     assert(this->allocated);
-    return &value[0];
+    return value.get();
   }
 
   virtual T_element getElementValue(const ElementIndex<matrix>& index) 
