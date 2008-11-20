@@ -21,7 +21,6 @@
 #include <cmath>
 #include <cassert>
 #include <boost/array.hpp>
-#include <boost/cast.hpp>
 #include <desolin/Desolin_fwd.hpp>
 
 namespace desolin
@@ -36,15 +35,14 @@ class UnOp : public ExprNode<resultType, T_element>
 private:
   ExprNode<exprType, T_element>* expr;
 
-  void updateImpl(ExpressionNode<T_element>& previous, ExpressionNode<T_element>& next)
+  template<typename T_replacement>
+  void updateImpl(ExprNode<T_replacement, T_element>& previous, ExprNode<T_replacement, T_element>& next)
   {
     assert(expr != NULL);
     
-    if (expr == &previous)
-    {
+    const bool replaced = ReplaceExprNode<exprType, T_replacement, T_element>()(expr, &previous, &next);
+    if (replaced)
       this->replaceDependency(&previous, &next);
-      expr = boost::polymorphic_downcast< ExprNode<exprType, T_element>* >(&next);
-    }
   }
   
 public:

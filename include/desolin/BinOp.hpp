@@ -20,7 +20,6 @@
 
 #include <desolin/Desolin_fwd.hpp>
 #include <boost/array.hpp>
-#include <boost/cast.hpp>
 #include <cassert>
 #include <cstddef>
 
@@ -37,21 +36,19 @@ private:
   ExprNode<leftType, T_element>* left;
   ExprNode<rightType, T_element>* right;
 
-  void updateImpl(ExpressionNode<T_element>& previous, ExpressionNode<T_element>& next)
+  template<typename T_replacement>
+  void updateImpl(ExprNode<T_replacement, T_element>& previous, ExprNode<T_replacement, T_element>& next)
   {
     assert(left != NULL);
     assert(right != NULL);
 
-    if (left == &previous)
-    {
+    const bool leftReplaced = ReplaceExprNode<leftType, T_replacement, T_element>()(left, &previous, &next);
+    if (leftReplaced)
       this->replaceDependency(&previous, &next);
-      left = boost::polymorphic_downcast< ExprNode<leftType, T_element>* >(&next);
-    }
-    if(right == &previous)
-    {
+
+    const bool rightReplaced = ReplaceExprNode<rightType, T_replacement, T_element>()(right, &previous, &next);
+    if(rightReplaced)
       this->replaceDependency(&previous, &next);
-      right = boost::polymorphic_downcast< ExprNode<rightType, T_element>* >(&next);
-    }
   }
 
 public:
