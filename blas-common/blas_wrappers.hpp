@@ -43,7 +43,7 @@ public:
   void resize(const size_type rows)
   {
     value_type* const newValues = new value_type[rows];
-    std::copy(values.get(), newValues, std::min(rows, numRows));
+    std::copy(values.get(), values.get() + std::min(rows, numRows), newValues);
 
     numRows = rows;
     values.reset(newValues);
