@@ -162,11 +162,13 @@ private:
   }
   
 public:
-  TGConventionalScalar(NameGenerator& generator, const ConventionalScalar<T_element>& internal) : parameter(true), name(generator.getName(getPrefix())), value(true, name)
+  TGConventionalScalar(NameGenerator& generator, const ConventionalScalar<T_element>& internal, const bool hasData) : 
+    parameter(true), name(generator.getName(getPrefix())), value(true, name)
   {
   }
 
-  TGConventionalScalar(bool param, NameGenerator& generator, const ExprNode<scalar, T_element>& s) : parameter(param), name(generator.getName(getPrefix())), value(param, name)
+  TGConventionalScalar(const bool param, NameGenerator& generator, const ExprNode<scalar, T_element>& s) : parameter(param), 
+    name(generator.getName(getPrefix())), value(param, name)
   {
   }
 
@@ -265,11 +267,13 @@ private:
   }
   
 public:
-  TGConventionalVector(NameGenerator& generator, const ConventionalVector<T_element>& internal) :  parameter(true), name(generator.getName(getPrefix())), rows(internal.getRowCount()), value(true, name, rows)
+  TGConventionalVector(NameGenerator& generator, const ConventionalVector<T_element>& internal, const bool hasData) : 
+    parameter(true), name(generator.getName(getPrefix())), rows(internal.getRowCount()), value(true, name, rows)
   {
   }
 
-  TGConventionalVector(bool param, NameGenerator& generator, const ExprNode<vector, T_element>& v) :  parameter(param), name(generator.getName(getPrefix())), rows(v.getRowCount()), value(param, name, rows)
+  TGConventionalVector(const bool param, NameGenerator& generator, const ExprNode<vector, T_element>& v) : 
+    parameter(param), name(generator.getName(getPrefix())), rows(v.getRowCount()), value(param, name, rows)
   {
   }
   
@@ -379,11 +383,13 @@ private:
 public:
   typedef typename TGMatrix<T_element>::MatrixIterationCallback MatrixIterationCallback;
 
-  TGConventionalMatrix(NameGenerator& generator, ConventionalMatrix<T_element>& internal) : parameter(true), name(generator.getName(getPrefix())),  rows(internal.getRowCount()), cols(internal.getColCount()), value(true, name, rows, cols)
+  TGConventionalMatrix(NameGenerator& generator, ConventionalMatrix<T_element>& internal, const bool hasData) : 
+    parameter(true), name(generator.getName(getPrefix())),  rows(internal.getRowCount()), cols(internal.getColCount()), value(true, name, rows, cols)
   {
   }
 
-  TGConventionalMatrix(bool param, NameGenerator& generator, const ExprNode<matrix, T_element>& m) :  parameter(param), name(generator.getName(getPrefix())), rows(m.getRowCount()), cols(m.getColCount()), value(param, name, rows, cols)
+  TGConventionalMatrix(const bool param, NameGenerator& generator, const ExprNode<matrix, T_element>& m) : 
+    parameter(param), name(generator.getName(getPrefix())), rows(m.getRowCount()), cols(m.getColCount()), value(param, name, rows, cols)
   {
   }
 
@@ -537,15 +543,16 @@ private:
   TaskArrayWrapper<int, 1> col_ind;
   TaskArrayWrapper<int, 1> row_ptr;
   TaskArrayWrapper<T_element, 1> val;
+  CRSMatrix<T_element>* possibleData;
 
 public:
   typedef typename TGMatrix<T_element>::MatrixIterationCallback MatrixIterationCallback;
 
-  TGCRSMatrix(NameGenerator& generator, CRSMatrix<T_element>& internal) : parameter(true), col_ind_name(generator.getName(getColIndPrefix())), 
-                                                                          row_ptr_name(generator.getName(getRowPtrPrefix())), val_name(generator.getName(getValPrefix())),
-                                                                          nnz(internal.nnz()), rows(internal.getRowCount()), cols(internal.getColCount()), 
-                                                                          col_ind(true, col_ind_name, nnz), row_ptr(true, row_ptr_name, internal.row_ptr_size()),
-                                                                          val(true, val_name, nnz)
+  TGCRSMatrix(NameGenerator& generator, CRSMatrix<T_element>& internal, const bool hasData) : 
+    parameter(true), col_ind_name(generator.getName(getColIndPrefix())), row_ptr_name(generator.getName(getRowPtrPrefix())), 
+    val_name(generator.getName(getValPrefix())), nnz(internal.nnz()), rows(internal.getRowCount()), 
+    cols(internal.getColCount()), col_ind(true, col_ind_name, nnz), row_ptr(true, row_ptr_name, internal.row_ptr_size()),
+    val(true, val_name, nnz), possibleData(hasData ? &internal : NULL)
   {
   }
 
@@ -733,21 +740,24 @@ public:
 template<typename T_element>
 class TGMatrixGen : public InternalMatrixVisitor<T_element>
 {
+private:
   NameGenerator& generator;
   TGMatrix<T_element>* result;
+  const bool hasData;
+
 public:
-  TGMatrixGen(NameGenerator& g) : generator(g)
+  TGMatrixGen(NameGenerator& g, const bool _hasData) : generator(g), hasData(_hasData)
   {
   }
   
   void visit(ConventionalMatrix<T_element>& m)
   {
-    result = new TGConventionalMatrix<T_element>(generator, m);
+    result = new TGConventionalMatrix<T_element>(generator, m, hasData);
   }
 
   void visit(CRSMatrix<T_element>& m)
   {
-    result = new TGCRSMatrix<T_element>(generator, m);
+    result = new TGCRSMatrix<T_element>(generator, m, hasData);
   }
 
   TGMatrix<T_element>* getResult() const
@@ -760,16 +770,19 @@ public:
 template<typename T_element>
 class TGVectorGen : public InternalVectorVisitor<T_element>
 {
+private:
   NameGenerator& generator;
   TGVector<T_element>* result;
+  const bool hasData;
+
 public:
-  TGVectorGen(NameGenerator& g) : generator(g)
+  TGVectorGen(NameGenerator& g, const bool _hasData) : generator(g), hasData(_hasData)
   {
   }
 
   void visit(ConventionalVector<T_element>& m)
   {
-    result = new TGConventionalVector<T_element>(generator, m);
+    result = new TGConventionalVector<T_element>(generator, m, hasData);
   }
  
   TGVector<T_element>* getResult() const
@@ -782,16 +795,19 @@ public:
 template<typename T_element>
 class TGScalarGen : public InternalScalarVisitor<T_element>
 {
+private:
   NameGenerator& generator;
   TGScalar<T_element>* result;
+  const bool hasData;
+
 public:
-  TGScalarGen(NameGenerator& g) : generator(g)
+  TGScalarGen(NameGenerator& g, const bool _hasData) : generator(g), hasData(_hasData)
   {
   }
 
   void visit(ConventionalScalar<T_element>& m)
   {
-    result = new TGConventionalScalar<T_element>(generator, m);
+    result = new TGConventionalScalar<T_element>(generator, m, hasData);
   }
  
   TGScalar<T_element>* getResult() const

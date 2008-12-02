@@ -195,6 +195,24 @@ public:
     return false;
   }
 
+  // Given a pointer to a Literal, these methods return whether or not the literal contains actual data. At
+  // the moment, we can just check to see if they're a key in the replacement map as the original literals in
+  // the ExpressionGraph are mapped to themselves.
+  bool hasData(Literal<scalar, T_element>* const l) const
+  {
+    return scalarMap.find(l) != scalarMap.end();
+  }
+
+  bool hasData(Literal<vector, T_element>* const l) const
+  {
+    return vectorMap.find(l) != vectorMap.end();
+  }
+
+  bool hasData(Literal<matrix, T_element>* const l) const
+  {
+    return matrixMap.find(l) != matrixMap.end();
+  }
+
   inline ExpressionGraph<T_element>& getExpressionGraph()
   {
     return expressionGraph;

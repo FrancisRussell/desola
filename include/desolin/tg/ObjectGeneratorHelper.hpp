@@ -91,7 +91,8 @@ public:
     else
     {
       Literal<exprType, T_element>* const literal = getStrategy().getEvaluatedExpr(&e);
-      typename ExprTGTraits<exprType, T_element>::internalRepCreator creator(getGraph().getNameGenerator());
+      const bool hasData = getStrategy().hasData(literal);
+      typename ExprTGTraits<exprType, T_element>::internalRepCreator creator(getGraph().getNameGenerator(), hasData);
       literal->getValue().accept(creator);
       tgInternalRepType* const tgInternalRep = creator.getResult();
       handleNode(e, new TGLiteral<tgExprType, T_element>(tgInternalRep));
