@@ -37,6 +37,7 @@ private:
   bool doLiveness;
   bool doCodeCaching;
   bool doArrayContraction;
+  bool doSparseSpecialisation;
   static ConfigurationManager configurationManager;
 
   void flushCaches();
@@ -71,6 +72,9 @@ public:
   void enableArrayContraction();
   void disableArrayContraction();
   bool arrayContractionEnabled() const;
+
+  void enableSparseSpecialisation(const bool enabled);
+  bool sparseSpecialisationEnabled() const;
 };
 
 }

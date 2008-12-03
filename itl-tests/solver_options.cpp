@@ -30,11 +30,12 @@ SolverOptions::SolverOptions(const std::string& fileDesc) : description("Allowed
     ("help", "produce help message")
     ("enable-gcc", "use GNU C Compiler")
     ("enable-icc", "use Intel C Compiler")
-    ("iterations", po::value<int>(&iterations)->default_value(256), "number of iterations to perform")
+    ("iterations", po::value<int>(&iterations)->default_value(256), "maximum number of iterations to execute")
     ("liveness-analysis", po::value<bool>(&useLivenessAnalysis)->default_value(true), "enable runtime liveness analysis")
-    ("code-caching", po::value<bool>(&useCodeCaching)->default_value(true), "enable code caching and resue")
-    ("loop-fusion", po::value<bool>(&useLoopFusion)->default_value(true), "enable loop fusion of runtime generated code")
+    ("code-caching", po::value<bool>(&useCodeCaching)->default_value(true), "enable code caching and reuse")
+    ("loop-fusion", po::value<bool>(&useLoopFusion)->default_value(true), "enable loop fusion on runtime generated code")
     ("array-contraction", po::value<bool>(&useArrayContraction)->default_value(true), "enable array contraction on runtime generated code")
+    ("sparse-specialisation", po::value<bool>(&useSparseSpecialisation)->default_value(false), "specialise generated code to sparse matrix row lengths")
     ("sparse", "use sparse representation for matrix storage")
     ("format", po::value<std::string>(&format)->default_value("hb"), "format of input file: Harwell-Boeing=hb, Matrix-Market=mm")
     ("single-line-result", "print statistics on single line")
@@ -90,6 +91,8 @@ void SolverOptions::processOptions(int argc, char* argv[])
     configurationManager.enableArrayContraction();
   else
     configurationManager.disableArrayContraction();
+
+  configurationManager.enableSparseSpecialisation(useSparseSpecialisation);
 }
 
 std::string SolverOptions::getFile() const

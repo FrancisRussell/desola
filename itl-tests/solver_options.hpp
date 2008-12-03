@@ -34,6 +34,7 @@ private:
   bool useLoopFusion;
   bool useArrayContraction;
   bool useSingleLineResult;
+  bool useSparseSpecialisation;
   int iterations;
   
 public:
