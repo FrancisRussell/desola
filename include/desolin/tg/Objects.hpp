@@ -543,7 +543,7 @@ private:
   TaskArrayWrapper<int, 1> col_ind;
   TaskArrayWrapper<int, 1> row_ptr;
   TaskArrayWrapper<T_element, 1> val;
-  CRSMatrix<T_element>* possibleData;
+  const CRSMatrix<T_element>* possibleData;
 
 public:
   typedef typename TGMatrix<T_element>::MatrixIterationCallback MatrixIterationCallback;
@@ -626,6 +626,11 @@ public:
 
   virtual void iterateSparse(NameGenerator& generator, MatrixIterationCallback& callback) const
   {
+    if (possibleData != NULL)
+    {
+      RowLengthStatistics stats(*possibleData);
+    }
+
     using namespace tg;
     const bool useSingleForImplementation = false;
 

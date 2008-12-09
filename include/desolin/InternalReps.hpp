@@ -349,6 +349,21 @@ public:
     return &val[0];
   }
 
+  const int* get_col_ind() const
+  {
+    return &col_ind[0];
+  }
+
+  const int* get_row_ptr() const
+  {
+    return &row_ptr[0];
+  }
+
+  const T_element* get_val() const
+  {
+    return &val[0];
+  }
+
   virtual T_element getElementValue(const ElementIndex<matrix>& index) 
   {
     assert(this->allocated);

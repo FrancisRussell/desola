@@ -36,6 +36,7 @@
 #include "ScalarPiecewise.hpp"
 #include "MatrixVector.hpp"
 #include "InternalReps.hpp"
+#include "RowLengthStatistics.hpp"
 #include "Literal.hpp"
 #include "ExpressionNodeVisitor.hpp"
 #include "ExpressionGraph.hpp"

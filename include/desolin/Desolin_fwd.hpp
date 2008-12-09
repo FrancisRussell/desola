@@ -95,6 +95,7 @@ template<typename T_elementType> class ConventionalScalar;
 template<typename T_elementType> class ConventionalVector;
 template<typename T_elementType> class ConventionalMatrix;
 template<typename T_elementType> class CRSMatrix;
+class RowLengthStatistics;
 
 //Storage Representation Visitors
 template<typename T_elementType> class InternalScalarVisitor;
