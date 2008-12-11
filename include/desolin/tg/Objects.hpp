@@ -24,6 +24,8 @@
 #include <cstring>
 #include <string>
 #include <map>
+#include <utility>
+#include <algorithm>
 #include <TaskGraph>
 #include <boost/functional/hash.hpp>
 #include <boost/function.hpp>
@@ -517,6 +519,9 @@ public:
 template<typename T_element>
 class TGCRSMatrix : public TGMatrix<T_element>
 {
+public:
+  typedef typename TGMatrix<T_element>::MatrixIterationCallback MatrixIterationCallback;
+
 private:
   static inline std::string getColIndPrefix()
   {
@@ -545,9 +550,49 @@ private:
   TaskArrayWrapper<T_element, 1> val;
   const CRSMatrix<T_element>* possibleData;
 
-public:
-  typedef typename TGMatrix<T_element>::MatrixIterationCallback MatrixIterationCallback;
+  void specialisedIterateSparse(NameGenerator& generator, MatrixIterationCallback& callback) const
+  {
+    using namespace tg;
 
+    assert(possibleData != NULL);
+    RowLengthStatistics stats(*possibleData);
+
+    std::vector< std::pair<std::size_t, std::size_t> > freqToRowLengths;
+
+    BOOST_FOREACH(const RowLengthStatistics::value_type& rowFreq, std::make_pair(stats.begin(), stats.end()))
+    {
+      freqToRowLengths.push_back(std::make_pair(rowFreq.second, rowFreq.first));
+    }
+    
+    std::sort(freqToRowLengths.begin(), freqToRowLengths.end());
+
+    tVarNamed(unsigned, row, generator.getName("row").c_str());
+    tVarNamed(unsigned, rowLength, generator.getName("rowLength").c_str());
+    tVarNamed(unsigned, valOffset, generator.getName("valPtr").c_str());
+    tVarNamed(unsigned, valPtrStart, generator.getName("valPtrStart").c_str());
+    tVarNamed(unsigned, valPtrEnd, generator.getName("valPtrEnd").c_str());
+
+    tFor(row, 0u, rows-1)
+    {
+      valPtrStart = (*row_ptr)[row];
+      valPtrEnd = (*row_ptr)[row+1];
+      rowLength = valPtrEnd - valPtrStart;
+
+      for(std::size_t index = 0; index < freqToRowLengths.size(); ++index)
+      {
+        const std::size_t constRowLength = freqToRowLengths[index].second;
+        tIf(rowLength == constRowLength)
+        {
+          tFor(valOffset, 0, constRowLength - 1)
+          {
+            callback(generator, row, (*col_ind)[valPtrStart + valOffset], TGScalarExpr<T_element>((*val)[valPtrStart + valOffset]));
+          }
+        }
+      }
+    }
+  }
+
+public:
   TGCRSMatrix(NameGenerator& generator, CRSMatrix<T_element>& internal, const bool hasData) : 
     parameter(true), col_ind_name(generator.getName(getColIndPrefix())), row_ptr_name(generator.getName(getRowPtrPrefix())), 
     val_name(generator.getName(getValPrefix())), nnz(internal.nnz()), rows(internal.getRowCount()), 
@@ -626,15 +671,16 @@ public:
 
   virtual void iterateSparse(NameGenerator& generator, MatrixIterationCallback& callback) const
   {
-    if (possibleData != NULL)
-    {
-      RowLengthStatistics stats(*possibleData);
-    }
-
     using namespace tg;
+    const ConfigurationManager& configurationManager(ConfigurationManager::getConfigurationManager());
     const bool useSingleForImplementation = false;
 
-    if (useSingleForImplementation)
+
+    if (possibleData != NULL && configurationManager.sparseSpecialisationEnabled())
+    {
+      specialisedIterateSparse(generator, callback);
+    }
+    else if (useSingleForImplementation)
     {
       tVarNamed(unsigned, valPtr, generator.getName("valPtr").c_str());
       tVarNamed(unsigned, currentRow, generator.getName("currentRow").c_str());
@@ -659,9 +705,9 @@ public:
       tFor(row, 0u, rows-1)
       {
         valPtrStart = (*row_ptr)[row];
-        valPtrEnd = (*row_ptr)[row+1]-1;
+        valPtrEnd = (*row_ptr)[row+1];
 
-        tFor(valPtr, valPtrStart, valPtrEnd)
+        tFor(valPtr, valPtrStart, valPtrEnd - 1)
         {
           callback(generator, row, (*col_ind)[valPtr], TGScalarExpr<T_element>((*val)[valPtr]));
         }

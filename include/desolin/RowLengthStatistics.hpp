@@ -17,6 +17,10 @@ private:
   std::map<std::size_t, std::size_t> lengths;
 
 public:
+  typedef std::map<std::size_t, std::size_t>::iterator iterator;
+  typedef std::map<std::size_t, std::size_t>::const_iterator const_iterator;
+  typedef std::pair<std::size_t, std::size_t> value_type;
+
   template<typename T>
   RowLengthStatistics(const CRSMatrix<T>& matrix)
   {
@@ -42,6 +46,26 @@ public:
       return 0;
     else
       return lengthIter->second;
+  }
+
+  iterator begin()
+  {
+    return lengths.begin();
+  }
+
+  const_iterator begin() const
+  {
+    return lengths.begin();
+  }
+
+  iterator end()
+  {
+    return lengths.end();
+  }
+
+  const_iterator end() const
+  {
+    return lengths.end();
   }
 };
 
