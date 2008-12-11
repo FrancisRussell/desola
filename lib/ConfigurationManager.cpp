@@ -25,7 +25,8 @@ namespace desolin
 
 ConfigurationManager ConfigurationManager::configurationManager;
 
-ConfigurationManager::ConfigurationManager() : gcc(true), doFusion(true), doLiveness(true), doCodeCaching(true), doArrayContraction(true)
+ConfigurationManager::ConfigurationManager() : gcc(true), doFusion(true), doLiveness(true),
+  doCodeCaching(true), doArrayContraction(true), doSparseSpecialisation(false)
 {
 }
 
@@ -138,6 +139,16 @@ void ConfigurationManager::disableArrayContraction()
 bool ConfigurationManager::arrayContractionEnabled() const
 {
   return doArrayContraction;
+}
+
+void ConfigurationManager::enableSparseSpecialisation(const bool enabled)
+{
+  doSparseSpecialisation = enabled;
+}
+
+bool ConfigurationManager::sparseSpecialisationEnabled() const
+{
+  return doSparseSpecialisation;
 }
 
 }
