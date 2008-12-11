@@ -574,10 +574,10 @@ private:
     tVarNamed(unsigned, valPtrEnd, generator.getName("valPtrEnd").c_str());
     tVarNamed(unsigned, hitSpecialised, generator.getName("hitSpecialised").c_str());
 
-    hitSpecialised = false;
 
     tFor(row, 0u, rows-1)
     {
+      hitSpecialised = false;
       valPtrStart = (*row_ptr)[row];
       valPtrEnd = (*row_ptr)[row+1];
       rowLength = valPtrEnd - valPtrStart;
