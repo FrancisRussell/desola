@@ -573,12 +573,9 @@ private:
     tVarNamed(unsigned, valPtr, generator.getName("valPtr").c_str());
     tVarNamed(unsigned, valPtrStart, generator.getName("valPtrStart").c_str());
     tVarNamed(unsigned, valPtrEnd, generator.getName("valPtrEnd").c_str());
-    tVarNamed(unsigned, hitSpecialised, generator.getName("hitSpecialised").c_str());
-
 
     tFor(row, 0u, rows-1)
     {
-      hitSpecialised = false;
       valPtrStart = (*row_ptr)[row];
       valPtrEnd = (*row_ptr)[row+1];
       rowLength = valPtrEnd - valPtrStart;
@@ -592,23 +589,20 @@ private:
         const std::size_t constRowLength = freqToRowLengths[index].second;
         tIf(rowLength == constRowLength)
         {
-          hitSpecialised = true;
           tFor(valOffset, 0, constRowLength - 1)
           {
             callback(generator, row, (*col_ind)[valPtrStart + valOffset], TGScalarExpr<T_element>((*val)[valPtrStart + valOffset]));
           }
+          tContinue;
         }
 
         if (static_cast<double>(rowsSpecialised)/stats.numRows() >= fractionToSpecialise)
           break;
       }
 
-      tIf(hitSpecialised == 0)
+      tFor(valPtr, valPtrStart, valPtrEnd - 1)
       {
-        tFor(valPtr, valPtrStart, valPtrEnd - 1)
-        {
-          callback(generator, row, (*col_ind)[valPtr], TGScalarExpr<T_element>((*val)[valPtr]));
-        }
+        callback(generator, row, (*col_ind)[valPtr], TGScalarExpr<T_element>((*val)[valPtr]));
       }
     }
   }
