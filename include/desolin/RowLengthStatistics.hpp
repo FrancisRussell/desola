@@ -1,9 +1,11 @@
 #ifndef DESOLIN_ROW_LENGTH_STATISTICS_HPP
 #define DESOLIN_ROW_LENGTH_STATISTICS_HPP
 
+#include "Desolin_fwd.hpp"
 #include <cstddef>
 #include <map>
 #include <cassert>
+#include <ostream>
 
 namespace desolin
 {
@@ -14,6 +16,7 @@ namespace detail
 class RowLengthStatistics
 {
 private:
+  const std::size_t rows;
   std::map<std::size_t, std::size_t> lengths;
 
 public:
@@ -22,14 +25,12 @@ public:
   typedef std::pair<std::size_t, std::size_t> value_type;
 
   template<typename T>
-  RowLengthStatistics(const CRSMatrix<T>& matrix)
+  RowLengthStatistics(const CRSMatrix<T>& matrix) : rows(matrix.getRowCount())
   {
-    const std::size_t numRows = matrix.getRowCount();
     const int* rowPtr = matrix.get_row_ptr();
-
-    assert(numRows == matrix.row_ptr_size() - 1);
+    assert(rows == matrix.row_ptr_size() - 1);
     
-    for(std::size_t row = 0; row<numRows; ++row)
+    for(std::size_t row = 0; row<rows; ++row)
       ++lengths[rowPtr[row+1] - rowPtr[row]];
   }
 
@@ -66,6 +67,11 @@ public:
   const_iterator end() const
   {
     return lengths.end();
+  }
+
+  std::size_t numRows() const
+  {
+    return rows;
   }
 };
 

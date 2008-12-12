@@ -26,6 +26,7 @@
 #include <map>
 #include <utility>
 #include <algorithm>
+#include <functional>
 #include <TaskGraph>
 #include <boost/functional/hash.hpp>
 #include <boost/function.hpp>
@@ -564,7 +565,7 @@ private:
       freqToRowLengths.push_back(std::make_pair(rowFreq.second, rowFreq.first));
     }
     
-    std::sort(freqToRowLengths.begin(), freqToRowLengths.end());
+    std::sort(freqToRowLengths.begin(), freqToRowLengths.end(), std::greater< std::pair<std::size_t, std::size_t> >());
 
     tVarNamed(unsigned, row, generator.getName("row").c_str());
     tVarNamed(unsigned, rowLength, generator.getName("rowLength").c_str());
@@ -582,8 +583,12 @@ private:
       valPtrEnd = (*row_ptr)[row+1];
       rowLength = valPtrEnd - valPtrStart;
 
+      const double fractionToSpecialise = 0.95;
+      std::size_t rowsSpecialised = 0;
+
       for(std::size_t index = 0; index < freqToRowLengths.size(); ++index)
       {
+        rowsSpecialised += freqToRowLengths[index].first;
         const std::size_t constRowLength = freqToRowLengths[index].second;
         tIf(rowLength == constRowLength)
         {
@@ -593,6 +598,9 @@ private:
             callback(generator, row, (*col_ind)[valPtrStart + valOffset], TGScalarExpr<T_element>((*val)[valPtrStart + valOffset]));
           }
         }
+
+        if (static_cast<double>(rowsSpecialised)/stats.numRows() >= fractionToSpecialise)
+          break;
       }
 
       tIf(hitSpecialised == 0)
