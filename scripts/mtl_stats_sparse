@@ -5,7 +5,7 @@
 SOLVER_PATH="../mtl-itl-tests"
 MATRIX_PATH="../large-test-matrices"
 SOLVERS="identity_bicg identity_bicgstab identity_cgs identity_qmr identity_tfqmr"
-MATRICES=$(find ${MATRIX_PATH} -name "*.mtx")
+MATRICES=$(find -H ${MATRIX_PATH} -name "*.mtx")
 SOLVER_OPTIONS="--sparse --format=mm"
 
 invoke_solvers
