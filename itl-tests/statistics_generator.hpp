@@ -58,6 +58,8 @@ public:
     std::cout << "Compile Count: " << statsCollector.getCompileCount() << std::endl;
     std::cout << "Total Time: " << elapsed << " seconds" << std::endl;
     std::cout << "FLOPs: " << statsCollector.getFlops() << std::endl;
+    std::cout << "High-Level Fusion: " << getStatus(configManager.highLevelFusionEnabled()) << std::endl;
+    std::cout << "Single For-Loop Sparse Iteration: " << getStatus(configManager.singleForLoopSparseIterationEnabled()) << std::endl;
     std::cout << "Sparse Row Length Specialisation: " << getStatus(configManager.sparseSpecialisationEnabled()) << std::endl;
 
     if (options.useSparse())
@@ -87,6 +89,8 @@ public:
     std::cout << "Compile_count: " << statsCollector.getCompileCount() << "\t";
     std::cout << "Total_time: " << elapsed << "\t";
     std::cout << "FLOPs: " << statsCollector.getFlops() << "\t";
+    std::cout << "High_level_fusion: " << getStatus(configManager.highLevelFusionEnabled()) << "\t";
+    std::cout << "Single_for_loop_sparse: " << getStatus(configManager.singleForLoopSparseIterationEnabled()) << "\t";
     std::cout << "Specialise_sparse: " << getStatus(configManager.sparseSpecialisationEnabled()) << std::endl;
     
     if (options.useSparse())

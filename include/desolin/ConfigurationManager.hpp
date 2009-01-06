@@ -33,10 +33,12 @@ class ConfigurationManager
 private:
   std::set<detail::Cache*> caches;
   bool gcc;
-  bool doFusion;
-  bool doLiveness;
   bool doCodeCaching;
+  bool doFusion;
+  bool doHighLevelFusion;
   bool doArrayContraction;
+  bool doLiveness;
+  bool doSingleForLoopSparse;
   bool doSparseSpecialisation;
   static ConfigurationManager configurationManager;
 
@@ -53,8 +55,9 @@ public:
   void unregisterCache(detail::Cache& cache);
 	  
   void useGCC();
-  void useICC();
   bool usingGCC() const;
+
+  void useICC();
   bool usingICC() const;
 	
   void enableLivenessAnalysis();
@@ -69,12 +72,19 @@ public:
   void disableLoopFusion();
   bool loopFusionEnabled() const;
   
+  void enableHighLevelFusion(const bool enabled);
+  bool highLevelFusionEnabled() const;
+
   void enableArrayContraction();
   void disableArrayContraction();
   bool arrayContractionEnabled() const;
 
+  void enableSingleForLoopSparseIteration(const bool enabled);
+  bool singleForLoopSparseIterationEnabled() const;
+
   void enableSparseSpecialisation(const bool enabled);
   bool sparseSpecialisationEnabled() const;
+
 };
 
 }

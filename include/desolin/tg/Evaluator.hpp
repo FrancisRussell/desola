@@ -104,7 +104,7 @@ public:
     evaluated = true;
 
     // We perform this optimisation here because it needs to be done before hashing/equality comparisons
-    if (configurationManager.loopFusionEnabled())
+    if (configurationManager.highLevelFusionEnabled())
       graph->performHighLevelFusion();
 
     const std::size_t hash = boost::hash< TGExpressionGraph<T_element> >()(*graph);

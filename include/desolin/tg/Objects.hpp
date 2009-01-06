@@ -690,12 +690,7 @@ public:
     const ConfigurationManager& configurationManager(ConfigurationManager::getConfigurationManager());
     const bool useSingleForImplementation = false;
 
-
-    if (possibleData != NULL && configurationManager.sparseSpecialisationEnabled())
-    {
-      specialisedIterateSparse(generator, callback);
-    }
-    else if (useSingleForImplementation)
+    if (configurationManager.singleForLoopSparseIterationEnabled())
     {
       tVarNamed(unsigned, valPtr, generator.getName("valPtr").c_str());
       tVarNamed(unsigned, currentRow, generator.getName("currentRow").c_str());
@@ -709,6 +704,10 @@ public:
 
         callback(generator, currentRow, (*col_ind)[valPtr], TGScalarExpr<T_element>((*val)[valPtr]));
       }
+    }
+    else if (possibleData != NULL && configurationManager.sparseSpecialisationEnabled())
+    {
+      specialisedIterateSparse(generator, callback);
     }
     else
     {

@@ -25,8 +25,9 @@ namespace desolin
 
 ConfigurationManager ConfigurationManager::configurationManager;
 
-ConfigurationManager::ConfigurationManager() : gcc(true), doFusion(true), doLiveness(true),
-  doCodeCaching(true), doArrayContraction(true), doSparseSpecialisation(false)
+ConfigurationManager::ConfigurationManager() : gcc(true), doCodeCaching(true), 
+  doFusion(true), doHighLevelFusion(true), doArrayContraction(true), doLiveness(false), doSingleForLoopSparse(false), 
+  doSparseSpecialisation(false)
 {
 }
 
@@ -124,6 +125,17 @@ bool ConfigurationManager::loopFusionEnabled() const
   return doFusion;
 }
 
+void ConfigurationManager::enableHighLevelFusion(const bool enabled)
+{
+  flushCaches();
+  doHighLevelFusion = enabled;
+}
+
+bool ConfigurationManager::highLevelFusionEnabled() const
+{
+  return doHighLevelFusion;
+}
+
 void ConfigurationManager::enableArrayContraction()
 {
   flushCaches();
@@ -139,6 +151,17 @@ void ConfigurationManager::disableArrayContraction()
 bool ConfigurationManager::arrayContractionEnabled() const
 {
   return doArrayContraction;
+}
+
+void ConfigurationManager::enableSingleForLoopSparseIteration(const bool enabled)
+{
+  flushCaches();
+  doSingleForLoopSparse = enabled;
+}
+
+bool ConfigurationManager::singleForLoopSparseIterationEnabled() const
+{
+  return doSingleForLoopSparse;
 }
 
 void ConfigurationManager::enableSparseSpecialisation(const bool enabled)
