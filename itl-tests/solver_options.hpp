@@ -32,8 +32,10 @@ private:
   bool useLivenessAnalysis;
   bool useCodeCaching;
   bool useLoopFusion;
+  bool useHighLevelFusion;
   bool useArrayContraction;
   bool useSingleLineResult;
+  bool useSingleForLoopSparse;
   bool useSparseSpecialisation;
   int iterations;
   
