@@ -74,16 +74,10 @@ bool ConfigurationManager::usingICC() const
   return !gcc;
 }
 
-void ConfigurationManager::enableLivenessAnalysis()
+void ConfigurationManager::enableLivenessAnalysis(const bool enabled)
 {
   flushCaches();
-  doLiveness=true;
-}
-
-void ConfigurationManager::disableLivenessAnalysis()
-{
-  flushCaches();
-  doLiveness=false;
+  doLiveness=enabled;
 }
 
 bool ConfigurationManager::livenessAnalysisEnabled() const
@@ -91,16 +85,10 @@ bool ConfigurationManager::livenessAnalysisEnabled() const
   return doLiveness;
 }
 
-void ConfigurationManager::enableCodeCaching()
+void ConfigurationManager::enableCodeCaching(const bool enabled)
 {
   flushCaches();
-  doCodeCaching=true;
-}
-
-void ConfigurationManager::disableCodeCaching()
-{
-  flushCaches();
-  doCodeCaching=false;
+  doCodeCaching=enabled;
 }
 
 bool ConfigurationManager::codeCachingEnabled() const
@@ -108,16 +96,10 @@ bool ConfigurationManager::codeCachingEnabled() const
   return doCodeCaching;
 }
 
-void ConfigurationManager::enableLoopFusion() 
+void ConfigurationManager::enableLoopFusion(const bool enabled) 
 {
   flushCaches();
-  doFusion = true;
-}
-
-void ConfigurationManager::disableLoopFusion()
-{
-  flushCaches();
-  doFusion = false;
+  doFusion = enabled;
 }
 
 bool ConfigurationManager::loopFusionEnabled() const
@@ -136,16 +118,10 @@ bool ConfigurationManager::highLevelFusionEnabled() const
   return doHighLevelFusion;
 }
 
-void ConfigurationManager::enableArrayContraction()
+void ConfigurationManager::enableArrayContraction(const bool enabled)
 {
   flushCaches();
-  doArrayContraction=true;
-}
-
-void ConfigurationManager::disableArrayContraction()
-{
-  flushCaches();
-  doArrayContraction=false;
+  doArrayContraction=enabled;
 }
 
 bool ConfigurationManager::arrayContractionEnabled() const

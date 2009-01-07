@@ -74,26 +74,12 @@ void SolverOptions::processOptions(int argc, char* argv[])
   if(vm.count("enable-icc"))
     configurationManager.useICC();
 
-  if(useLivenessAnalysis)
-    configurationManager.enableLivenessAnalysis();
-  else
-    configurationManager.disableLivenessAnalysis();
-
-  if(useCodeCaching)
-    configurationManager.enableCodeCaching();
-  else
-    configurationManager.disableCodeCaching();
-	 
-  if(useLoopFusion)
-    configurationManager.enableLoopFusion();
-  else
-    configurationManager.disableLoopFusion();
-
-  if(useArrayContraction)
-    configurationManager.enableArrayContraction();
-  else
-    configurationManager.disableArrayContraction();
-
+  configurationManager.enableLivenessAnalysis(useLivenessAnalysis);
+  configurationManager.enableCodeCaching(useCodeCaching);
+  configurationManager.enableLoopFusion(useLoopFusion);
+  configurationManager.enableArrayContraction(useArrayContraction);
+  configurationManager.enableSingleForLoopSparseIteration(useSingleForLoopSparse);
+  configurationManager.enableHighLevelFusion(useHighLevelFusion);
   configurationManager.enableSparseSpecialisation(useSparseSpecialisation);
 }
 

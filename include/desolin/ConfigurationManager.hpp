@@ -60,23 +60,19 @@ public:
   void useICC();
   bool usingICC() const;
 	
-  void enableLivenessAnalysis();
-  void disableLivenessAnalysis();
+  void enableLivenessAnalysis(const bool enabled);
   bool livenessAnalysisEnabled() const;
   
-  void enableCodeCaching();
-  void disableCodeCaching();
+  void enableCodeCaching(const bool enabled);
   bool codeCachingEnabled() const;
 
-  void enableLoopFusion();
-  void disableLoopFusion();
+  void enableLoopFusion(const bool enabled);
   bool loopFusionEnabled() const;
   
   void enableHighLevelFusion(const bool enabled);
   bool highLevelFusionEnabled() const;
 
-  void enableArrayContraction();
-  void disableArrayContraction();
+  void enableArrayContraction(const bool enabled);
   bool arrayContractionEnabled() const;
 
   void enableSingleForLoopSparseIteration(const bool enabled);
