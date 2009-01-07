@@ -5,7 +5,7 @@
 SOLVER_PATH="../imkl-itl-tests"
 MATRIX_PATH="../benchmark-matrices"
 SOLVERS="identity_bicg identity_bicgstab identity_cgs identity_qmr identity_tfqmr"
-MATRICES=$(find ${MATRIX_PATH} -name "*.rua")
+MATRICES=$(find -H ${MATRIX_PATH} -name "*.rua")
 unset SOLVER_OPTIONS
 
 invoke_solvers
