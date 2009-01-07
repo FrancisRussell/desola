@@ -1,33 +1,43 @@
 #! /bin/bash
 
-iterationspec="Iterations: 256"
+getValue()
+{
+  grep -Po ":$1=.*?:" | sed -r "s/^:.*=(.*):$/\1/"
+}
+
+iterationspec="iterations=256:"
 for solver in identity_bicg identity_bicgstab identity_cgs identity_qmr identity_tfqmr; do
 
-for matrix in $(grep "Matrix:" "$1" | sed -r "s/.*Matrix: ([[:graph:]]*).*/\1/" | sort | uniq); do
+for matrix in $(cat "$1" | getValue mat | sort | uniq); do
+
 echo -n "${solver}  "
-echo -n "${matrix}  " | sed -r "s/(.*)\.[[:graph:]]*/\1/"
-grep -E "Matrix: ${matrix}[[:space:]]+" "$1" | grep -o -E "NNZ: ([0-9]*)" | sed -r "s/NNZ: //" | head -n1 | tr "\t\n" "  "
-grep -E "Matrix: ${matrix}[[:space:]]+" "$1" | grep -o -E "Matrix Size: ([0-9]*)" | sed "s/Matrix Size: //" | head -n1 | tr "\t\n" "  "
+echo -n "${matrix}  " | sed -r "s/^(.*)\.[[:graph:]]*/\1/"
+grep -E ":mat=${matrix}:" "$1" | getValue nnz | head -n1 | tr "\t\n" "  "
+grep -E ":mat=${matrix}:" "$1" | getValue mat_n | head -n1 | tr "\t\n" "  "
 
 #Desolin Timing Columns
-for linespec in "^Solver: ${solver}[[:space:]]+Library: desolin.*Matrix: ${matrix}[[:space:]]+.*Code_cache: On.*Fusion: Off.*Contraction: Off.*Liveness: Off.*$" \
-                "^Solver: ${solver}[[:space:]]+Library: desolin.*Matrix: ${matrix}[[:space:]]+.*Code_cache: On.*Fusion: On.*Contraction: Off.*Liveness: Off.*$" \
-		"^Solver: ${solver}[[:space:]]+Library: desolin.*Matrix: ${matrix}[[:space:]]+.*Code_cache: On.*Fusion: On.*Contraction: On.*Liveness: Off.*$" \
-		"^Solver: ${solver}[[:space:]]+Library: desolin.*Matrix: ${matrix}[[:space:]]+.*Code_cache: On.*Fusion: On.*Contraction: On.*Liveness: On.*$"; do
+for linespec in ":solver=${solver}:lib=desolin:mat=${matrix}:.*:code_cache=on:fusion=off:contraction=off:liveness=off:.*:high_level_fusion=off:single_for_loop_sparse=on:specialise_sparse=off:" \
+                ":solver=${solver}:lib=desolin:mat=${matrix}:.*:code_cache=on:fusion=off:contraction=off:liveness=off:.*:high_level_fusion=off:single_for_loop_sparse=off:specialise_sparse=off:" \
+                ":solver=${solver}:lib=desolin:mat=${matrix}:.*:code_cache=on:fusion=on:contraction=off:liveness=off:.*:high_level_fusion=off:single_for_loop_sparse=off:specialise_sparse=off:" \
+                ":solver=${solver}:lib=desolin:mat=${matrix}:.*:code_cache=on:fusion=on:contraction=off:liveness=off:.*:high_level_fusion=on:single_for_loop_sparse=off:specialise_sparse=off:" \
+                ":solver=${solver}:lib=desolin:mat=${matrix}:.*:code_cache=on:fusion=on:contraction=off:liveness=off:.*:high_level_fusion=on:single_for_loop_sparse=off:specialise_sparse=on:" \
+                ":solver=${solver}:lib=desolin:mat=${matrix}:.*:code_cache=on:fusion=on:contraction=on:liveness=off:.*:high_level_fusion=on:single_for_loop_sparse=off:specialise_sparse=on:" \
+                ":solver=${solver}:lib=desolin:mat=${matrix}:.*:code_cache=on:fusion=on:contraction=on:liveness=on:.*:high_level_fusion=on:single_for_loop_sparse=off:specialise_sparse=on:";
+do
 # Average Evaluation Time
-grep -E "${linespec}" "$1" | grep "${iterationspec}" | clm 29 | average | tr "\n" " "
+grep -E "${linespec}" "$1" | grep ":${iterationspec}" | getValue total_time | average | tr "\n" " "
 # Average Compile Time
-grep -E "${linespec}" "$1" | grep "${iterationspec}" | clm 25 | average | tr "\n" " "
+grep -E "${linespec}" "$1" | grep ":${iterationspec}" | getValue compile_time | average | tr "\n" " "
 done;
 
 #MTL Timing Column
-grep -E "^Solver: ${solver}[[:space:]]+Library: MTL.*Matrix: ${matrix}[[:space:]]+.*$" "$1" | grep "${iterationspec}" | clm 15 | average | tr "\n" " "
+grep -E ":solver=${solver}:lib=mtl:mat=${matrix}:" "$1" | grep ":${iterationspec}" | getValue total_time | average | tr "\n" " "
 
 #IMKL Timing Column
-grep -E "^Solver: ${solver}[[:space:]]+Library: IMKL.*Matrix: ${matrix}[[:space:]]+.*$" "$1" | grep "${iterationspec}" | clm 15 | average | tr "\n" " "
+grep -E ":solver=${solver}:lib=imkl:mat=${matrix}:" "$1" | grep ":${iterationspec}" | getValue total_time | average | tr "\n" " "
 
-#FLOPs Column
-grep -E "^Solver: ${solver}[[:space:]]+Library: desolin.*Matrix: ${matrix}[[:space:]]+.*Code_cache: On.*Fusion: On.*Contraction: On.*Liveness: Off.*$" "$1" | grep "${iterationspec}" | clm 31 | head -n1 | tr "\n" " "
+#FLOP Column
+grep -E ":solver=${solver}:lib=desolin:mat=${matrix}:code_cache=on:fusion=on:contraction=on:liveness=off:" "$1" | grep ":${iterationspec}" | getValue flop | head -n1 | tr "\n" " "
 
 # End of column newline
 echo 

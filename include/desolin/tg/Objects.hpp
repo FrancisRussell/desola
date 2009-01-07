@@ -688,7 +688,6 @@ public:
   {
     using namespace tg;
     const ConfigurationManager& configurationManager(ConfigurationManager::getConfigurationManager());
-    const bool useSingleForImplementation = false;
 
     if (configurationManager.singleForLoopSparseIterationEnabled())
     {

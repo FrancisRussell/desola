@@ -7,10 +7,13 @@ MATRIX_PATH="../large-test-matrices"
 SOLVERS="identity_bicg identity_bicgstab identity_cgs identity_qmr identity_tfqmr"
 MATRICES=$(find -H ${MATRIX_PATH} -name "*.mtx")
 
-for OPTIONS in "--code-caching=true --loop-fusion=false --array-contraction=false --liveness-analysis=false" \
-               "--code-caching=true --loop-fusion=true  --array-contraction=false --liveness-analysis=false" \
-               "--code-caching=true --loop-fusion=true  --array-contraction=true  --liveness-analysis=false" \
-               "--code-caching=true --loop-fusion=true  --array-contraction=true  --liveness-analysis=true";
+for OPTIONS in "--code-caching=true --single-for-loop-sparse=true   --loop-fusion=false --high-level-fusion=false --sparse-specialisation=false --array-contraction=false  --liveness-analysis=false" \
+               "--code-caching=true --single-for-loop-sparse=false  --loop-fusion=false --high-level-fusion=false --sparse-specialisation=false --array-contraction=false  --liveness-analysis=false" \
+               "--code-caching=true --single-for-loop-sparse=false  --loop-fusion=true  --high-level-fusion=false --sparse-specialisation=false --array-contraction=false  --liveness-analysis=false" \
+               "--code-caching=true --single-for-loop-sparse=false  --loop-fusion=true  --high-level-fusion=true  --sparse-specialisation=false --array-contraction=false  --liveness-analysis=false" \
+               "--code-caching=true --single-for-loop-sparse=false  --loop-fusion=true  --high-level-fusion=true  --sparse-specialisation=true  --array-contraction=false  --liveness-analysis=false" \
+               "--code-caching=true --single-for-loop-sparse=false  --loop-fusion=true  --high-level-fusion=true  --sparse-specialisation=true  --array-contraction=true   --liveness-analysis=false" \
+               "--code-caching=true --single-for-loop-sparse=false  --loop-fusion=true  --high-level-fusion=true  --sparse-specialisation=true  --array-contraction=true   --liveness-analysis=true";
 do
   SOLVER_OPTIONS="--enable-icc --sparse --format=mm ${OPTIONS}";
   invoke_solvers;

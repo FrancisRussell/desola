@@ -51,14 +51,16 @@ public:
   void printShortResults(const MatrixType& matrix, IterationType& iter, const SolverOptions& options)
   {
     const double elapsed = getTime() - startTime;
+    const char d = ':';
+
     std::cout.precision(5);
     std::cout.setf(std::ios::fixed);
-    std::cout << "Library: ATLAS\t";
-    std::cout << "Matrix: " << getLeaf(options.getFile()) << "\t";
-    std::cout << "Matrix Size: " << num_cols(matrix) << "\t";
-    std::cout << "Iterations: " << iter.iterations() << "\t";
-    std::cout << "Iter_time: " << elapsed / iter.iterations() << "\t";
-    std::cout << "Total_time: " << elapsed << std::endl;
+    std::cout << d;
+    std::cout << "lib=atlas" << d;
+    std::cout << "mat=" << getLeaf(options.getFile()) << d;
+    std::cout << "mat_n=" << num_cols(matrix) << d;
+    std::cout << "iterations=" << iter.iterations() << d;
+    std::cout << "total_time=" << elapsed << d << std::endl;
   }
 
   template<typename MatrixType, typename IterationType>

@@ -2,8 +2,8 @@ invoke_solvers()
 {
   for SOLVER in ${SOLVERS}; do
     for MATRIX in ${MATRICES}; do
-      echo -n -e "Solver: ${SOLVER}\t"
-      $SOLVER_PATH/$SOLVER ${SOLVER_OPTIONS} --iterations 256 --single-line ${MATRIX_PATH}/${MATRIX} | grep "^Library:";
+      echo -n -e ":solver=${SOLVER}"
+      $SOLVER_PATH/$SOLVER ${SOLVER_OPTIONS} --iterations 256 --single-line ${MATRIX_PATH}/${MATRIX} | grep "^:lib=";
     done;
   done;
 }

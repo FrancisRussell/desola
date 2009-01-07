@@ -73,28 +73,30 @@ public:
   void printShortResults(const MatrixType& matrix, IterationType& iter, const SolverOptions& options)
   {
     const double elapsed = getTime() - startTime;
+    const char d = ':';
+
     std::cout.precision(5);
     std::cout.setf(std::ios::fixed);
-    std::cout << "Library: desolin\t";
-    std::cout << "Matrix: " << getLeaf(options.getFile()) << "\t";
-    std::cout << "Matrix Size: " << num_cols(matrix) << "\t";
-    std::cout << "Compiler: " << getCompiler() << "\t";
-    std::cout << "Code_cache: " << getStatus(configManager.codeCachingEnabled()) << "\t";
-    std::cout << "Fusion: " << getStatus(configManager.loopFusionEnabled()) << "\t";
-    std::cout << "Contraction: " << getStatus(configManager.arrayContractionEnabled()) << "\t";
-    std::cout << "Liveness: " << getStatus(configManager.livenessAnalysisEnabled()) << "\t";
-    std::cout << "Iterations: " << iter.iterations() << "\t";
-    std::cout << "Iter_time: " << elapsed / iter.iterations() << "\t";
-    std::cout << "Compile_time: " << statsCollector.getCompileTime() << "\t";
-    std::cout << "Compile_count: " << statsCollector.getCompileCount() << "\t";
-    std::cout << "Total_time: " << elapsed << "\t";
-    std::cout << "FLOPs: " << statsCollector.getFlops() << "\t";
-    std::cout << "High_level_fusion: " << getStatus(configManager.highLevelFusionEnabled()) << "\t";
-    std::cout << "Single_for_loop_sparse: " << getStatus(configManager.singleForLoopSparseIterationEnabled()) << "\t";
-    std::cout << "Specialise_sparse: " << getStatus(configManager.sparseSpecialisationEnabled()) << std::endl;
+    std::cout << d;
+    std::cout << "lib=desolin" << d;
+    std::cout << "mat=" << getLeaf(options.getFile()) << d;
+    std::cout << "mat_n=" << num_cols(matrix) << d;
+    std::cout << "compiler=" << getCompiler() << d;
+    std::cout << "code_cache=" << getStatus(configManager.codeCachingEnabled()) << d;
+    std::cout << "fusion=" << getStatus(configManager.loopFusionEnabled()) << d;
+    std::cout << "contraction=" << getStatus(configManager.arrayContractionEnabled()) << d;
+    std::cout << "liveness=" << getStatus(configManager.livenessAnalysisEnabled()) << d;
+    std::cout << "iterations=" << iter.iterations() << d;
+    std::cout << "compile_time=" << statsCollector.getCompileTime() << d;
+    std::cout << "compile_count=" << statsCollector.getCompileCount() << d;
+    std::cout << "total_time=" << elapsed << d;
+    std::cout << "flop=" << statsCollector.getFlops() << d;
+    std::cout << "high_level_fusion=" << getStatus(configManager.highLevelFusionEnabled()) << d;
+    std::cout << "single_for_loop_sparse=" << getStatus(configManager.singleForLoopSparseIterationEnabled()) << d;
+    std::cout << "specialise_sparse=" << getStatus(configManager.sparseSpecialisationEnabled()) << d;
     
     if (options.useSparse())
-      std::cout << "\tNNZ: " << nnz(matrix);
+      std::cout << "nnz=" << nnz(matrix) << d;
       
     std::cout << std::endl;
   }
@@ -131,9 +133,9 @@ public:
   static std::string getStatus(const bool b)
   {
     if (b)
-      return "On";
+      return "on";
     else
-      return "Off";
+      return "off";
   }
 
   static std::string getLeaf(const std::string& pathString)
