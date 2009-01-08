@@ -2,7 +2,7 @@
 
 getValue()
 {
-  grep -Po ":$1=.*?:" | sed -r "s/^:.*=(.*):$/\1/"
+  pcregrep -o ":$1=.*?:" | sed -r "s/^:.*=(.*):$/\1/"
 }
 
 iterationspec="iterations=256:"
@@ -37,7 +37,7 @@ grep -E ":solver=${solver}:lib=mtl:mat=${matrix}:" "$1" | grep ":${iterationspec
 grep -E ":solver=${solver}:lib=imkl:mat=${matrix}:" "$1" | grep ":${iterationspec}" | getValue total_time | average | tr "\n" " "
 
 #FLOP Column
-grep -E ":solver=${solver}:lib=desolin:mat=${matrix}:code_cache=on:fusion=on:contraction=on:liveness=off:" "$1" | grep ":${iterationspec}" | getValue flop | head -n1 | tr "\n" " "
+grep -E ":solver=${solver}:lib=desolin:mat=${matrix}:.*:code_cache=on:fusion=on:contraction=on:liveness=off:" "$1" | grep ":${iterationspec}" | getValue flop | head -n1 | tr "\n" " "
 
 # End of column newline
 echo 

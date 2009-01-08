@@ -2,7 +2,7 @@
 
 getValue()
 {
-  grep -Po ":$1=.*?:" | sed -r "s/^:.*=(.*):$/\1/"
+  pcregrep o ":$1=.*?:" | sed -r "s/^:.*=(.*):$/\1/"
 }
 
 iterationspec="iterations=256:"
