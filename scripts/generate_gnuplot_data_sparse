@@ -20,7 +20,7 @@ for linespec in ":solver=${solver}:lib=desolin:mat=${matrix}:.*:code_cache=on:fu
                 ":solver=${solver}:lib=desolin:mat=${matrix}:.*:code_cache=on:fusion=off:contraction=off:liveness=off:.*:high_level_fusion=off:single_for_loop_sparse=off:specialise_sparse=off:" \
                 ":solver=${solver}:lib=desolin:mat=${matrix}:.*:code_cache=on:fusion=on:contraction=off:liveness=off:.*:high_level_fusion=off:single_for_loop_sparse=off:specialise_sparse=off:" \
                 ":solver=${solver}:lib=desolin:mat=${matrix}:.*:code_cache=on:fusion=on:contraction=off:liveness=off:.*:high_level_fusion=on:single_for_loop_sparse=off:specialise_sparse=off:" \
-                ":solver=${solver}:lib=desolin:mat=${matrix}:.*:code_cache=on:fusion=on:contraction=off:liveness=off:.*:high_level_fusion=on:single_for_loop_sparse=off:specialise_sparse=on:" \
+                ":solver=${solver}:lib=desolin:mat=${matrix}:.*:code_cache=on:fusion=on:contraction=on:liveness=off:.*:high_level_fusion=on:single_for_loop_sparse=off:specialise_sparse=off:" \
                 ":solver=${solver}:lib=desolin:mat=${matrix}:.*:code_cache=on:fusion=on:contraction=on:liveness=off:.*:high_level_fusion=on:single_for_loop_sparse=off:specialise_sparse=on:" \
                 ":solver=${solver}:lib=desolin:mat=${matrix}:.*:code_cache=on:fusion=on:contraction=on:liveness=on:.*:high_level_fusion=on:single_for_loop_sparse=off:specialise_sparse=on:";
 do
