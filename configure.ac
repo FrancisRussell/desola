@@ -78,6 +78,12 @@ AC_ARG_WITH([mtl],
           ]
           )
 
+AC_ARG_WITH([icpc],
+            AC_HELP_STRING([--with-icpc=LOCATION],
+            [Use LOCATION as the icpc compiler. Default is to search the path for a binary with name 'icpc'.]),
+	    [AC_CHECK_FILE([$withval], icpc_path="$withval", AC_MSG_ERROR($withval not found))],
+            [AC_PATH_PROGS(icpc_path, "icpc")])
+
 
 AX_BOOST_BASE([1.34])
 AX_BOOST_PROGRAM_OPTIONS
@@ -95,6 +101,11 @@ AC_TRY_COMPILE([@%:@include <mkl_cblas.h>], [], [AC_MSG_NOTICE([Found Intel MKL]
 AC_SUBST(BLAS_LIBS)
 AC_SUBST(IMKL_LIBS)
 
+if test -f "$icpc_path"; then
+  AC_MSG_NOTICE([Using ICC to build MTL examples.])
+fi
+
+AM_CONDITIONAL([use_icpc], [test -f "$icpc_path"])
 AM_CONDITIONAL([build_mtl_examples], [test "$using_mtl" = yes])
 AM_CONDITIONAL([build_atlas_examples], [test "$using_atlas" = yes])
 AM_CONDITIONAL([build_imkl_examples], [test "$using_imkl" = yes])
