@@ -7,7 +7,7 @@ noinst_PROGRAMS = identity_cg identity_qmr identity_cgs identity_bicg identity_b
 	cp ../benchmarks-common/$@ .
 
 #CXX=icpc
-#CXXFLAGS+=-O3 -restrict -ansi-alias -xSSE3
+#CXXFLAGS+=-O3 -restrict -ansi-alias -xHost
 
 nodist_identity_cg_SOURCES = identity_cg.cpp
 identity_cg_SOURCES = solver_options.cpp
