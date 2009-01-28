@@ -15,16 +15,16 @@
 /*                                                                          */
 /****************************************************************************/
 
-#include <desolin/tg/Exceptions.hpp>
+#include <desola/tg/Exceptions.hpp>
 #include <string>
 
-namespace desolin
+namespace desola
 {
 
 namespace detail
 {
 
-TGInvalidOperationError::TGInvalidOperationError(const std::string& error) : DesolinRuntimeError(error)
+TGInvalidOperationError::TGInvalidOperationError(const std::string& error) : DesolaRuntimeError(error)
 {
 }
 

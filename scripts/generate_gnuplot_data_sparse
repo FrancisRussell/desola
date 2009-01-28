@@ -15,14 +15,14 @@ echo -n "${matrix}  " | sed -r "s/^(.*)\.[[:graph:]]*/\1/"
 grep -E ":mat=${matrix}:" "$1" | getValue nnz | head -n1 | tr "\t\n" "  "
 grep -E ":mat=${matrix}:" "$1" | getValue mat_n | head -n1 | tr "\t\n" "  "
 
-#Desolin Timing Columns
-for linespec in ":solver=${solver}:lib=desolin:mat=${matrix}:.*:code_cache=on:fusion=off:contraction=off:liveness=off:.*:high_level_fusion=off:single_for_loop_sparse=on:specialise_sparse=off:" \
-                ":solver=${solver}:lib=desolin:mat=${matrix}:.*:code_cache=on:fusion=off:contraction=off:liveness=off:.*:high_level_fusion=off:single_for_loop_sparse=off:specialise_sparse=off:" \
-                ":solver=${solver}:lib=desolin:mat=${matrix}:.*:code_cache=on:fusion=on:contraction=off:liveness=off:.*:high_level_fusion=off:single_for_loop_sparse=off:specialise_sparse=off:" \
-                ":solver=${solver}:lib=desolin:mat=${matrix}:.*:code_cache=on:fusion=on:contraction=off:liveness=off:.*:high_level_fusion=on:single_for_loop_sparse=off:specialise_sparse=off:" \
-                ":solver=${solver}:lib=desolin:mat=${matrix}:.*:code_cache=on:fusion=on:contraction=on:liveness=off:.*:high_level_fusion=on:single_for_loop_sparse=off:specialise_sparse=off:" \
-                ":solver=${solver}:lib=desolin:mat=${matrix}:.*:code_cache=on:fusion=on:contraction=on:liveness=off:.*:high_level_fusion=on:single_for_loop_sparse=off:specialise_sparse=on:" \
-                ":solver=${solver}:lib=desolin:mat=${matrix}:.*:code_cache=on:fusion=on:contraction=on:liveness=on:.*:high_level_fusion=on:single_for_loop_sparse=off:specialise_sparse=on:";
+#Desola Timing Columns
+for linespec in ":solver=${solver}:lib=desola:mat=${matrix}:.*:code_cache=on:fusion=off:contraction=off:liveness=off:.*:high_level_fusion=off:single_for_loop_sparse=on:specialise_sparse=off:" \
+                ":solver=${solver}:lib=desola:mat=${matrix}:.*:code_cache=on:fusion=off:contraction=off:liveness=off:.*:high_level_fusion=off:single_for_loop_sparse=off:specialise_sparse=off:" \
+                ":solver=${solver}:lib=desola:mat=${matrix}:.*:code_cache=on:fusion=on:contraction=off:liveness=off:.*:high_level_fusion=off:single_for_loop_sparse=off:specialise_sparse=off:" \
+                ":solver=${solver}:lib=desola:mat=${matrix}:.*:code_cache=on:fusion=on:contraction=off:liveness=off:.*:high_level_fusion=on:single_for_loop_sparse=off:specialise_sparse=off:" \
+                ":solver=${solver}:lib=desola:mat=${matrix}:.*:code_cache=on:fusion=on:contraction=on:liveness=off:.*:high_level_fusion=on:single_for_loop_sparse=off:specialise_sparse=off:" \
+                ":solver=${solver}:lib=desola:mat=${matrix}:.*:code_cache=on:fusion=on:contraction=on:liveness=off:.*:high_level_fusion=on:single_for_loop_sparse=off:specialise_sparse=on:" \
+                ":solver=${solver}:lib=desola:mat=${matrix}:.*:code_cache=on:fusion=on:contraction=on:liveness=on:.*:high_level_fusion=on:single_for_loop_sparse=off:specialise_sparse=on:";
 do
 # Average Evaluation Time
 grep -E "${linespec}" "$1" | grep ":${iterationspec}" | getValue total_time | average | tr "\n" " "
@@ -37,7 +37,7 @@ grep -E ":solver=${solver}:lib=mtl:mat=${matrix}:" "$1" | grep ":${iterationspec
 grep -E ":solver=${solver}:lib=imkl:mat=${matrix}:" "$1" | grep ":${iterationspec}" | getValue total_time | average | tr "\n" " "
 
 #FLOP Column
-grep -E ":solver=${solver}:lib=desolin:mat=${matrix}:.*:code_cache=on:fusion=on:contraction=on:liveness=off:" "$1" | grep ":${iterationspec}" | getValue flop | head -n1 | tr "\n" " "
+grep -E ":solver=${solver}:lib=desola:mat=${matrix}:.*:code_cache=on:fusion=on:contraction=on:liveness=off:" "$1" | grep ":${iterationspec}" | getValue flop | head -n1 | tr "\n" " "
 
 # End of column newline
 echo 

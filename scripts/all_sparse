@@ -1,5 +1,5 @@
 #!/bin/bash
 
-./desolin_stats_sparse &&
+./desola_stats_sparse &&
 ./mtl_stats_sparse &&
 ./imkl_stats_sparse

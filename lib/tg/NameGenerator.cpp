@@ -16,7 +16,7 @@
 /****************************************************************************/
 
 #include <boost/scoped_array.hpp>
-#include <desolin/tg/NameGenerator.hpp>
+#include <desola/tg/NameGenerator.hpp>
 #include <cstring>
 #include <cmath>
 #include <climits>
@@ -26,7 +26,7 @@
 #include <iostream>
 
 
-namespace desolin
+namespace desola
 {
 
 namespace detail

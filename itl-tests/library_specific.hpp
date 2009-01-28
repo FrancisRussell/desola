@@ -1,9 +1,9 @@
-#ifndef DESOLIN_DESOLIN_LIBRARY_SPECIFIC_HPP
-#define DESOLIN_DESOLIN_LIBRARY_SPECIFIC_HPP
+#ifndef DESOLA_DESOLA_LIBRARY_SPECIFIC_HPP
+#define DESOLA_DESOLA_LIBRARY_SPECIFIC_HPP
 
 #include <cassert>
-#include <desolin/Desolin.hpp>
-#include <desolin/itl_interface.hpp>
+#include <desola/Desola.hpp>
+#include <desola/itl_interface.hpp>
 #include <sys/time.h>
 #include <sys/resource.h>
 #include "solver_options.hpp"
@@ -27,7 +27,7 @@ inline std::size_t num_cols(const Matrix& m)
 template<typename Matrix>
 inline std::size_t nnz(const Matrix& m)
 {
-  const desolin::Maybe<std::size_t> n(m.nnz());
+  const desola::Maybe<std::size_t> n(m.nnz());
 
   assert(n.hasValue());
   return n.value();
@@ -44,9 +44,9 @@ template<typename StreamType>
 void invokeSolver(const SolverOptions& options, StreamType& stream)
 {
   typedef double Type;
-  typedef desolin::Matrix<Type> Matrix;
-  typedef desolin::Vector<Type> Vector;
-  typedef desolin::Scalar<Type> Scalar;
+  typedef desola::Matrix<Type> Matrix;
+  typedef desola::Vector<Type> Vector;
+  typedef desola::Scalar<Type> Scalar;
   
   Matrix A;
 
@@ -67,12 +67,12 @@ void invokeSolver(const SolverOptions& options)
 {
   if (options.fileIsHB())
   {
-    desolin::harwell_boeing_stream<double> stream(const_cast<char*>(options.getFile().c_str()));
+    desola::harwell_boeing_stream<double> stream(const_cast<char*>(options.getFile().c_str()));
     invokeSolver(options, stream);
   }
   else if (options.fileIsMM())
   {
-    desolin::matrix_market_stream<double> stream(const_cast<char*>(options.getFile().c_str()));
+    desola::matrix_market_stream<double> stream(const_cast<char*>(options.getFile().c_str()));
     invokeSolver(options, stream);
   }
   else

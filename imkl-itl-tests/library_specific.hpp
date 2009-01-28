@@ -1,11 +1,11 @@
-#ifndef DESOLIN_IMKL_LIBARY_SPECIFIC_HPP
-#define DESOLIN_IMKL_LIBARY_SPECIFIC_HPP
+#ifndef DESOLA_IMKL_LIBARY_SPECIFIC_HPP
+#define DESOLA_IMKL_LIBARY_SPECIFIC_HPP
 
 #include <cassert>
 #include "solver_options.hpp"
 #include "statistics_generator.hpp"
-#include <desolin/file-access/mtl_harwell_boeing_stream.hpp>
-#include <desolin/file-access/mtl_matrix_market_stream.hpp>
+#include <desola/file-access/mtl_harwell_boeing_stream.hpp>
+#include <desola/file-access/mtl_matrix_market_stream.hpp>
 
 extern "C" 
 {
@@ -33,13 +33,13 @@ inline std::size_t num_cols(const Matrix& m)
 }
 
 template<typename T>
-inline std::size_t nnz(const desolin::blas_wrappers::BLASCRSMatrix<T>& m)
+inline std::size_t nnz(const desola::blas_wrappers::BLASCRSMatrix<T>& m)
 {
   return m.nnz();
 }
 
 template<typename T>
-inline std::size_t nnz(const desolin::blas_wrappers::BLASGeneralMatrix<T>& m)
+inline std::size_t nnz(const desola::blas_wrappers::BLASGeneralMatrix<T>& m)
 {
   return m.nrows() * m.ncols();
 }
@@ -56,9 +56,9 @@ template<typename StreamType>
 void invokeSolver(const SolverOptions& options, StreamType& stream)
 {
   typedef double Type;
-  typedef desolin::blas_wrappers::BLASGeneralMatrix<Type> MatrixDense;
-  typedef desolin::blas_wrappers::BLASCRSMatrix<Type> MatrixSparse;
-  typedef desolin::blas_wrappers::BLASVector<Type> Vector;
+  typedef desola::blas_wrappers::BLASGeneralMatrix<Type> MatrixDense;
+  typedef desola::blas_wrappers::BLASCRSMatrix<Type> MatrixSparse;
+  typedef desola::blas_wrappers::BLASVector<Type> Vector;
   typedef Type Scalar;
 
   if (options.useSparse())
@@ -83,12 +83,12 @@ void invokeSolver(const SolverOptions& options)
 {
   if (options.fileIsHB())
   {
-    desolin::harwell_boeing_stream<double> stream(const_cast<char*>(options.getFile().c_str()));
+    desola::harwell_boeing_stream<double> stream(const_cast<char*>(options.getFile().c_str()));
     invokeSolver(options, stream);
   }
   else if (options.fileIsMM())
   {
-    desolin::matrix_market_stream<double> stream(const_cast<char*>(options.getFile().c_str()));
+    desola::matrix_market_stream<double> stream(const_cast<char*>(options.getFile().c_str()));
     invokeSolver(options, stream);
   }
   else

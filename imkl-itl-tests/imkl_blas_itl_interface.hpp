@@ -1,12 +1,12 @@
-#ifndef DESOLIN_IMKL_BLAS_INTERFACE_HPP
-#define DESOLIN_IMKL_BLAS_INTERFACE_HPP
+#ifndef DESOLA_IMKL_BLAS_INTERFACE_HPP
+#define DESOLA_IMKL_BLAS_INTERFACE_HPP
 
 #include "blas_itl_interface.hpp"
 
 namespace itl
 {
-  using desolin::blas_wrappers::BLASVector;
-  using desolin::blas_wrappers::BLASCRSMatrix;
+  using desola::blas_wrappers::BLASVector;
+  using desola::blas_wrappers::BLASCRSMatrix;
 
   namespace
   {

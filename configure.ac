@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT([Desolin], [0.1], [fpr02@doc.ic.ac.uk])
+AC_INIT([Desola], [0.1], [fpr02@doc.ic.ac.uk])
 AC_CONFIG_SRCDIR([lib/Exceptions.cpp])
 AC_LANG_CPLUSPLUS
 AM_INIT_AUTOMAKE([subdir-objects])

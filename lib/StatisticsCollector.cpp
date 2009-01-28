@@ -15,10 +15,10 @@
 /*                                                                          */
 /****************************************************************************/
 
-#include <desolin/StatisticsCollector.hpp>
-#include <desolin/Maybe.hpp>
+#include <desola/StatisticsCollector.hpp>
+#include <desola/Maybe.hpp>
 
-namespace desolin
+namespace desola
 {
 
 StatisticsCollector StatisticsCollector::statsCollector;

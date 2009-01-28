@@ -1,4 +1,4 @@
-// Modified 2005-2006 by Francis Russell to work with desolin library and allow benchmarking.
+// Modified 2005-2006 by Francis Russell to work with desola library and allow benchmarking.
 // Copyright 1997, University of Notre Dame.
 // Authors: Andrew Lumsdaine, Lie-Quan Lee
 //

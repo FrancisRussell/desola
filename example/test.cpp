@@ -15,11 +15,11 @@
 /*                                                                          */
 /****************************************************************************/
 
-#include <desolin/Desolin.hpp>
+#include <desola/Desola.hpp>
 #include <TaskGraph>
 #include <vector>
 #include <iostream>
-using namespace desolin;
+using namespace desola;
 
 int main()
 {

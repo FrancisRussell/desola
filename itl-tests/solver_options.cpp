@@ -20,7 +20,7 @@
 #include <string>
 #include <iostream>
 #include <boost/program_options.hpp>
-#include <desolin/ConfigurationManager.hpp>
+#include <desola/ConfigurationManager.hpp>
 
 namespace po = boost::program_options;
 
@@ -66,7 +66,7 @@ void SolverOptions::processOptions(int argc, char* argv[])
     exit(EXIT_FAILURE);
   }
 
-  desolin::ConfigurationManager& configurationManager(desolin::ConfigurationManager::getConfigurationManager());
+  desola::ConfigurationManager& configurationManager(desola::ConfigurationManager::getConfigurationManager());
    
   if (vm.count("enable-gcc"))
     configurationManager.useGCC();

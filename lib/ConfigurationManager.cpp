@@ -15,12 +15,12 @@
 /*                                                                          */
 /****************************************************************************/
 
-#include <desolin/ConfigurationManager.hpp>
-#include <desolin/Cache.hpp>
+#include <desola/ConfigurationManager.hpp>
+#include <desola/Cache.hpp>
 #include <algorithm>
 #include <boost/functional.hpp>
 
-namespace desolin
+namespace desola
 {
 
 ConfigurationManager ConfigurationManager::configurationManager;

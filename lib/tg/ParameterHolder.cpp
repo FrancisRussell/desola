@@ -15,7 +15,7 @@
 /*                                                                          */
 /****************************************************************************/
 
-#include <desolin/tg/ParameterHolder.hpp>
+#include <desola/tg/ParameterHolder.hpp>
 #include <string>
 #include <map>
 #include <cassert>
@@ -25,7 +25,7 @@
 #include <boost/ref.hpp>
 #include <TaskGraph>
 
-namespace desolin
+namespace desola
 {
 
 namespace detail

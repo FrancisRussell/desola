@@ -1,14 +1,14 @@
-#ifndef DESOLIN_BLAS_WRAPPERS_HPP
-#define DESOLIN_BLAS_WRAPPERS_HPP
+#ifndef DESOLA_BLAS_WRAPPERS_HPP
+#define DESOLA_BLAS_WRAPPERS_HPP
 
 #include <vector>
 #include <cstddef>
 #include <boost/scoped_array.hpp>
 #include <algorithm>
-#include <desolin/file-access/mtl_harwell_boeing_stream.hpp>
-#include <desolin/file-access/mtl_entry.hpp>
+#include <desola/file-access/mtl_harwell_boeing_stream.hpp>
+#include <desola/file-access/mtl_entry.hpp>
 
-namespace desolin
+namespace desola
 {
 
 namespace blas_wrappers
@@ -90,7 +90,7 @@ public:
 
     while(!str.eof())
     {
-      desolin::entry2<double> entry;
+      desola::entry2<double> entry;
       str >> entry;
       values[ncols()*entry.row + entry.col] = entry.value;
     }

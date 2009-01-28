@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo "nobase_include_HEADERS" = $(find desolin -name "*.hpp"; find desolin -name "*.h")
+echo "nobase_include_HEADERS" = $(find desola -name "*.hpp"; find desola -name "*.h")
 echo
 echo "noinst_HEADERS" = $(find itl -name "*.hpp"; find itl -name "*.h")
 

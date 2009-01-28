@@ -15,8 +15,8 @@
 /*                                                                          */
 /****************************************************************************/
 
-#ifndef DESOLIN_ATLAS_STATISTICS_GENERATOR_HPP
-#define DESOLIN_ATLAS_STATISTICS_GENERATOR_HPP
+#ifndef DESOLA_ATLAS_STATISTICS_GENERATOR_HPP
+#define DESOLA_ATLAS_STATISTICS_GENERATOR_HPP
 
 #include <iostream>
 #include <string>

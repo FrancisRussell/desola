@@ -15,22 +15,22 @@
 /*                                                                          */
 /****************************************************************************/
 
-#include <desolin/Exceptions.hpp>
+#include <desola/Exceptions.hpp>
 #include <stdexcept>
 #include <string>
 
-namespace desolin
+namespace desola
 {
 
-DesolinLogicError::DesolinLogicError(const std::string& message) : std::logic_error(message)
-{
-}
-
-DesolinRuntimeError::DesolinRuntimeError(const std::string& message) : std::runtime_error(message)
+DesolaLogicError::DesolaLogicError(const std::string& message) : std::logic_error(message)
 {
 }
 
-NullSizeError::NullSizeError(const std::string& message) : DesolinLogicError(message) 
+DesolaRuntimeError::DesolaRuntimeError(const std::string& message) : std::runtime_error(message)
+{
+}
+
+NullSizeError::NullSizeError(const std::string& message) : DesolaLogicError(message) 
 {
 }
 

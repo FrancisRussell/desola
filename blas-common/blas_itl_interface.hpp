@@ -15,8 +15,8 @@
 /*                                                                          */
 /****************************************************************************/
 
-#ifndef DESOLIN_ITL_BLAS_INTERFACE_HPP
-#define DESOLIN_ITL_BLAS_INTERFACE_HPP
+#ifndef DESOLA_ITL_BLAS_INTERFACE_HPP
+#define DESOLA_ITL_BLAS_INTERFACE_HPP
 
 #include <cassert>
 #include <complex>
@@ -25,8 +25,8 @@
 #include <itl/number_traits.h>
 
 namespace itl {
-  using desolin::blas_wrappers::BLASVector;
-  using desolin::blas_wrappers::BLASGeneralMatrix;
+  using desola::blas_wrappers::BLASVector;
+  using desola::blas_wrappers::BLASGeneralMatrix;
   
   template <typename Vec>
   struct itl_traits {

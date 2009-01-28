@@ -1,5 +1,5 @@
-#ifndef DESOLIN_MTL_LIBRARY_SPECIFIC_HPP
-#define DESOLIN_MTL_LIBRARY_SPECIFIC_HPP
+#ifndef DESOLA_MTL_LIBRARY_SPECIFIC_HPP
+#define DESOLA_MTL_LIBRARY_SPECIFIC_HPP
 
 #include "solver_options.hpp"
 #include "statistics_generator.hpp"

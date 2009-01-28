@@ -15,11 +15,11 @@
 /*                                                                          */
 /****************************************************************************/
 
-#ifndef DESOLIN_DESOLIN_STATISTICS_GENERATOR_HPP
-#define DESOLIN_DESOLIN_STATISTICS_GENERATOR_HPP
+#ifndef DESOLA_DESOLA_STATISTICS_GENERATOR_HPP
+#define DESOLA_DESOLA_STATISTICS_GENERATOR_HPP
 
-#include <desolin/ConfigurationManager.hpp>
-#include <desolin/StatisticsCollector.hpp>
+#include <desola/ConfigurationManager.hpp>
+#include <desola/StatisticsCollector.hpp>
 #include <boost/filesystem/path.hpp>
 #include <iostream>
 #include <string>
@@ -30,11 +30,11 @@ class StatisticsGenerator
 {
 private:
   double startTime;
-  const desolin::ConfigurationManager& configManager;
-  const desolin::StatisticsCollector& statsCollector;
+  const desola::ConfigurationManager& configManager;
+  const desola::StatisticsCollector& statsCollector;
   
 public:
-  StatisticsGenerator() : startTime(getTime()), configManager(desolin::ConfigurationManager::getConfigurationManager()), statsCollector(desolin::StatisticsCollector::getStatisticsCollector())
+  StatisticsGenerator() : startTime(getTime()), configManager(desola::ConfigurationManager::getConfigurationManager()), statsCollector(desola::StatisticsCollector::getStatisticsCollector())
   {
   }
   
@@ -44,7 +44,7 @@ public:
     const double elapsed = getTime() - startTime;
     std::cout.precision(5);
     std::cout.setf(std::ios::fixed);
-    std::cout << "Library: desolin" << std::endl;
+    std::cout << "Library: desola" << std::endl;
     std::cout << "Matrix: " << getLeaf(options.getFile()) << std::endl;
     std::cout << "Matrix Size: " << num_cols(matrix) << std::endl;
     std::cout << "Compiler: " << getCompiler() << std::endl;
@@ -78,7 +78,7 @@ public:
     std::cout.precision(5);
     std::cout.setf(std::ios::fixed);
     std::cout << d;
-    std::cout << "lib=desolin" << d;
+    std::cout << "lib=desola" << d;
     std::cout << "mat=" << getLeaf(options.getFile()) << d;
     std::cout << "mat_n=" << num_cols(matrix) << d;
     std::cout << "compiler=" << getCompiler() << d;

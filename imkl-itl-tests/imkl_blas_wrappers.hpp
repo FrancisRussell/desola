@@ -1,5 +1,5 @@
-#ifndef DESOLIN_IMKL_BLAS_WRAPPERS_HPP
-#define DESOLIN_IMKL_BLAS_WRAPPERS_HPP
+#ifndef DESOLA_IMKL_BLAS_WRAPPERS_HPP
+#define DESOLA_IMKL_BLAS_WRAPPERS_HPP
 
 #include <vector>
 #include <cassert>
@@ -7,10 +7,10 @@
 #include <algorithm>
 #include <boost/tuple/tuple.hpp>
 #include <boost/tuple/tuple_comparison.hpp>
-#include <desolin/file-access/mtl_entry.hpp>
+#include <desola/file-access/mtl_entry.hpp>
 #include "blas_wrappers.hpp"
 
-namespace desolin
+namespace desola
 {
 
 namespace blas_wrappers
@@ -39,7 +39,7 @@ public:
 
     while(!stream.eof())
     {
-      desolin::entry2<double> entry;
+      desola::entry2<double> entry;
       stream >> entry;
       assert(entry.row >=0 && entry.col >=0);
       assert(entry.row < static_cast<int>(rows) && entry.col < static_cast<int>(cols));

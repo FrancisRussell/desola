@@ -15,8 +15,8 @@
 /*                                                                          */
 /****************************************************************************/
 
-#ifndef DESOLIN_MTL_STATISTICS_GENERATOR_HPP
-#define DESOLIN_MTL_STATISTICS_GENERATOR_HPP
+#ifndef DESOLA_MTL_STATISTICS_GENERATOR_HPP
+#define DESOLA_MTL_STATISTICS_GENERATOR_HPP
 
 #include <iostream>
 #include <string>

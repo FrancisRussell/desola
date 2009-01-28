@@ -15,8 +15,8 @@
 /*                                                                          */
 /****************************************************************************/
 
-#ifndef DESOLIN_IMKL_SOLVER_OPTIONS
-#define DESOLIN_IMKL_SOLVER_OPTIONS
+#ifndef DESOLA_IMKL_SOLVER_OPTIONS
+#define DESOLA_IMKL_SOLVER_OPTIONS
 
 #include <string>
 #include <boost/program_options.hpp>

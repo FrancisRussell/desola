@@ -1,7 +1,7 @@
-#ifndef DESOLIN_MATRIX_GENERATOR_MATRIX_HPP
-#define DESOLIN_MATRIX_GENERATOR_MATRIX_HPP
+#ifndef DESOLA_MATRIX_GENERATOR_MATRIX_HPP
+#define DESOLA_MATRIX_GENERATOR_MATRIX_HPP
 
-#include<desolin/iohb/iohb.h>
+#include<desola/iohb/iohb.h>
 #include<boost/numeric/ublas/matrix.hpp>
 #include<boost/numeric/ublas/matrix_proxy.hpp>
 #include<cassert>

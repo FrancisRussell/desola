@@ -1,6 +1,6 @@
 #!/bin/bash
 
-./desolin_stats &&
+./desola_stats &&
 ./mtl_stats &&
 ./atlas_stats &&
 ./imkl_stats

@@ -15,8 +15,8 @@
 /*                                                                          */
 /****************************************************************************/
 
-#ifndef DESOLIN_ATLAS_SOLVER_OPTIONS
-#define DESOLIN_ATLAS_SOLVER_OPTIONS
+#ifndef DESOLA_ATLAS_SOLVER_OPTIONS
+#define DESOLA_ATLAS_SOLVER_OPTIONS
 
 #include <string>
 #include <boost/program_options.hpp>

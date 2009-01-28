@@ -24,14 +24,14 @@ for solver_mapping in $solver_mappings; do
   echo "set boxwidth 0.5" >> ${output_file}
   echo "set output \"${name_prefix}.ps\"" >> ${output_file}
 
-  echo "plot \"$1\" using (1):5  index ${index} ti \"desolin inc. cmp\" with boxes fill solid,\\" >> ${output_file}
-  echo "\"$1\" using (1):(\$5-\$6)  index ${index} ti \"desolin\" with boxes fill solid,\\" >> ${output_file}
-  echo "\"$1\" using (2):7  index ${index} ti \"desolin + fusion inc. cmp.\" with boxes fill solid,\\" >> ${output_file}
-  echo "\"$1\" using (2):(\$7-\$8)  index ${index} ti \"desolin + fusion\" with boxes fill solid,\\" >> ${output_file}
-  echo "\"$1\" using (3):9  index ${index} ti \"desolin + fusion, contraction inc. cmp.\" with boxes fill solid,\\" >> ${output_file}
-  echo "\"$1\" using (3):(\$9-\$10)  index ${index} ti \"desolin + fusion, contraction\" with boxes fill solid,\\" >> ${output_file}
-  echo "\"$1\" using (4):11  index ${index} ti \"desolin + fusion, contraction, liveness inc. cmp.\" with boxes fill solid,\\" >> ${output_file}
-  echo "\"$1\" using (4):(\$11-\$12)  index ${index} ti \"desolin + fusion, contraction, liveness\" with boxes fill solid,\\" >> ${output_file}
+  echo "plot \"$1\" using (1):5  index ${index} ti \"desola inc. cmp\" with boxes fill solid,\\" >> ${output_file}
+  echo "\"$1\" using (1):(\$5-\$6)  index ${index} ti \"desola\" with boxes fill solid,\\" >> ${output_file}
+  echo "\"$1\" using (2):7  index ${index} ti \"desola + fusion inc. cmp.\" with boxes fill solid,\\" >> ${output_file}
+  echo "\"$1\" using (2):(\$7-\$8)  index ${index} ti \"desola + fusion\" with boxes fill solid,\\" >> ${output_file}
+  echo "\"$1\" using (3):9  index ${index} ti \"desola + fusion, contraction inc. cmp.\" with boxes fill solid,\\" >> ${output_file}
+  echo "\"$1\" using (3):(\$9-\$10)  index ${index} ti \"desola + fusion, contraction\" with boxes fill solid,\\" >> ${output_file}
+  echo "\"$1\" using (4):11  index ${index} ti \"desola + fusion, contraction, liveness inc. cmp.\" with boxes fill solid,\\" >> ${output_file}
+  echo "\"$1\" using (4):(\$11-\$12)  index ${index} ti \"desola + fusion, contraction, liveness\" with boxes fill solid,\\" >> ${output_file}
   echo "\"$1\" using (5):(\$13)  index ${index} ti \"MTL\" with boxes fill solid,\\" >> ${output_file}
   echo "\"$1\" using (6):(\$14)  index ${index} ti \"IMKL\" with boxes fill solid" >> ${output_file}
 done

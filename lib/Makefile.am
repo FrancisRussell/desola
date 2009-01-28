@@ -1,8 +1,8 @@
-lib_LTLIBRARIES = libdesolin-iohb.la libdesolin.la
+lib_LTLIBRARIES = libdesola-iohb.la libdesola.la
 
-libdesolin_la_CPPFLAGS = -I$(top_srcdir)/include
-libdesolin_la_SOURCES = Exceptions.cpp ConfigurationManager.cpp StatisticsCollector.cpp tg/Exceptions.cpp tg/NameGenerator.cpp tg/ParameterHolder.cpp
-libdesolin_la_LDFLAGS = -ldesolin-iohb -ltaskgraph
+libdesola_la_CPPFLAGS = -I$(top_srcdir)/include
+libdesola_la_SOURCES = Exceptions.cpp ConfigurationManager.cpp StatisticsCollector.cpp tg/Exceptions.cpp tg/NameGenerator.cpp tg/ParameterHolder.cpp
+libdesola_la_LDFLAGS = -ldesola-iohb -ltaskgraph
 
-libdesolin_iohb_la_CPPFLAGS = -I$(top_srcdir)/include/desolin/iohb
-libdesolin_iohb_la_SOURCES = iohb/iohb.c iohb/mmio.c
+libdesola_iohb_la_CPPFLAGS = -I$(top_srcdir)/include/desola/iohb
+libdesola_iohb_la_SOURCES = iohb/iohb.c iohb/mmio.c
