@@ -2,7 +2,6 @@
 #define DESOLA_MTL_LIBRARY_SPECIFIC_HPP
 
 #include "solver_options.hpp"
-#include "statistics_generator.hpp"
 #include <mtl/mtl.h>
 #include <mtl/matrix.h>
 #include <mtl/harwell_boeing_stream.h>

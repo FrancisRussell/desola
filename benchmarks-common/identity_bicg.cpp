@@ -25,6 +25,7 @@
 #include <cstdlib>
 #include <iostream>
 #include "library_specific.hpp"
+#include "statistics_generator.hpp"
 #include <itl/krylov/bicg.h>
 
 using namespace itl;
@@ -48,7 +49,7 @@ void solver(const SolverOptions& options, MatrixType& A, VectorType& x, VectorTy
   stats.printResults(A, iter, options);
 }
 
-int main (int argc, char* argv[]) 
+int main (int argc, char* argv[])
 {
   SolverOptions options("Unsymmetric matrix in Harwell-Boeing format");
   options.processOptions(argc, argv);

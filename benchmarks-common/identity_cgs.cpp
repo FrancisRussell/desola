@@ -25,6 +25,7 @@
 #include <cstdlib>
 #include <iostream>
 #include "library_specific.hpp"
+#include "statistics_generator.hpp"
 #include <itl/krylov/cgs.h>
 
 using namespace itl;
@@ -32,7 +33,7 @@ using namespace itl;
 template<typename MatrixType, typename VectorType, typename ScalarType>
 void solver(const SolverOptions& options, MatrixType& A, VectorType& x, VectorType& b)
 {
-  const int max_iter = options.getIterations();	
+  const int max_iter = options.getIterations();
   identity_preconditioner precond;
 
   noisy_iteration<ScalarType> iter(b, max_iter, 1e-9);
@@ -48,11 +49,11 @@ void solver(const SolverOptions& options, MatrixType& A, VectorType& x, VectorTy
   stats.printResults(A, iter, options);
 }
 
-int main (int argc, char* argv[]) 
+int main (int argc, char* argv[])
 {
   SolverOptions options("Unsymmetric matrix in Harwell-Boeing format");
   options.processOptions(argc, argv);
-      
+
   library_init(options);
   invokeSolver(options);
 

@@ -25,6 +25,7 @@
 #include <cstdlib>
 #include <iostream>
 #include "library_specific.hpp"
+#include "statistics_generator.hpp"
 #include <itl/krylov/qmr.h>
 
 using namespace itl;
@@ -43,7 +44,7 @@ void solver(const SolverOptions& options, MatrixType& A, VectorType& x, VectorTy
   VectorType b1(num_rows(A));
   itl::mult(A, x, b1);
   itl::add(b1, itl::scaled(b, -1.), b1);
-  
+
   std::cout << "Residual " << itl::two_norm(b1) << std::endl;
   stats.printResults(A, iter, options);
 }
@@ -52,7 +53,7 @@ int main(int argc, char* argv[])
 {
   SolverOptions options("Unsymmetric matrix in Harwell-Boeing format");
   options.processOptions(argc, argv);
-      
+
   library_init(options);
   invokeSolver(options);
 

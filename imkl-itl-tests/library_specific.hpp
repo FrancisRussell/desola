@@ -3,11 +3,10 @@
 
 #include <cassert>
 #include "solver_options.hpp"
-#include "statistics_generator.hpp"
 #include <desola/file-access/mtl_harwell_boeing_stream.hpp>
 #include <desola/file-access/mtl_matrix_market_stream.hpp>
 
-extern "C" 
+extern "C"
 {
 #include "mkl.h"
 #include "mkl_cblas.h"

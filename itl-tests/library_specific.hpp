@@ -7,7 +7,6 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 #include "solver_options.hpp"
-#include "statistics_generator.hpp"
 
 template<typename MatrixType, typename VectorType, typename ScalarType>
 void solver(const SolverOptions& options, MatrixType& A, VectorType& x, VectorType& b);
@@ -37,7 +36,7 @@ void library_init(const SolverOptions& options)
 {
 }
 
-namespace 
+namespace
 {
 
 template<typename StreamType>
@@ -47,7 +46,7 @@ void invokeSolver(const SolverOptions& options, StreamType& stream)
   typedef desola::Matrix<Type> Matrix;
   typedef desola::Vector<Type> Vector;
   typedef desola::Scalar<Type> Scalar;
-  
+
   Matrix A;
 
   if (options.useSparse())

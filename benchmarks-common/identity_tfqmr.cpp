@@ -25,6 +25,7 @@
 #include <cstdlib>
 #include <iostream>
 #include "library_specific.hpp"
+#include "statistics_generator.hpp"
 #include <itl/krylov/tfqmr.h>
 
 using namespace itl;
@@ -53,7 +54,7 @@ int main(int argc, char* argv[])
 {
   SolverOptions options("Unsymmetric matrix in Harwell-Boeing format");
   options.processOptions(argc, argv);
-      
+
   library_init(options);
   invokeSolver(options);
 
