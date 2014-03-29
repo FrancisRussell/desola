@@ -21,7 +21,7 @@ AC_ARG_WITH([taskgraph],
             [
               if test -f "$withval/include/TaskGraph"; then
                 CXXFLAGS="$CXXFLAGS -I$withval/include"
-                LDFLAGS="$LDFLAGS -R$withval/lib -L$withval/lib"
+                LDFLAGS="$LDFLAGS -Xlinker -R$withval/lib -L$withval/lib"
               else
                 AC_MSG_ERROR("$withval does not appear to be a prefix for a TaskGraph installation")
               fi
@@ -49,7 +49,7 @@ AC_ARG_WITH([imkl],
 
              if test -f "$withval/include/mkl_cblas.h"; then
                CXXFLAGS="$CXXFLAGS -I$withval/include"
-               LDFLAGS="$LDFLAGS -R$withval/lib/${IMKL_ARCH} -L$withval/lib/${IMKL_ARCH}"
+               LDFLAGS="$LDFLAGS -Xlinker -R$withval/lib/${IMKL_ARCH} -L$withval/lib/${IMKL_ARCH}"
              else
                AC_MSG_ERROR("$withval does not appear to be a prefix for an Intel MKL installation")
              fi
@@ -60,7 +60,7 @@ AC_ARG_WITH([atlas-libs],
            AC_HELP_STRING([--with-atlas-libs=PFX], [Use the ATLAS libraries in PFX]),
            [
              if test -f "$withval/libatlas.so"; then
-               LDFLAGS="$LDFLAGS -R$withval -L$withval"
+               LDFLAGS="$LDFLAGS -Xlinker -R$withval -L$withval"
              else
                AC_MSG_ERROR("$withval does not appear to contain ATLAS libraries")
              fi
