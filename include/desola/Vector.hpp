@@ -30,20 +30,20 @@ class Vector : public detail::Var<detail::vector, T_element>
 public:
   friend class Scalar<T_element>;
   friend class Matrix<T_element>;
-	  
+
   // Typedefs for ITL
   typedef Scalar<T_element> value_type;
   typedef std::size_t size_type;
   typedef detail::vector expressionType;
-    
+
   Vector()
   {
   }
- 
+
   explicit Vector(const size_type rows) : detail::Var<detail::vector, T_element>(*new detail::Literal<detail::vector, T_element>(new detail::ConventionalVector<T_element>(rows)))
   {
   }
-  
+
   Vector(const size_type rows, const T_element initialValue) : detail::Var<detail::vector, T_element>(*new detail::Literal<detail::vector, T_element>(new detail::ConventionalVector<T_element>(rows, initialValue)))
   {
   }
@@ -56,7 +56,7 @@ public:
   {
     if(this != &right)
     {
-      setExpr(right.getExpr());
+      this->setExpr(right.getExpr());
     }
     return *this;
   }
@@ -69,7 +69,7 @@ public:
   const Vector& operator=(const Scalar<T_element>& right)
   {
     using namespace detail;
-    setExpr(*new ScalarPiecewise<vector, T_element>(piecewise_assign, this->getExpr(), right.getExpr()));
+    this->setExpr(*new ScalarPiecewise<vector, T_element>(piecewise_assign, this->getExpr(), right.getExpr()));
     return *this;
   }
 
@@ -89,7 +89,7 @@ public:
   {
     using namespace detail;
     return Vector(*new Negate<vector, T_element>(this->getExpr()));
-  }  
+  }
 
   const Vector operator*(const Scalar<T_element>& right) const
   {
@@ -102,7 +102,7 @@ public:
     using namespace detail;
     return Vector(*new ScalarPiecewise<vector, T_element>(piecewise_divide, this->getExpr(), right.getExpr()));
   }
-	 
+
   const Scalar<T_element> dot(const Vector& right) const
   {
     using namespace detail;
@@ -139,12 +139,12 @@ public:
     const ElementIndex<vector> index(row);
     return ScalarElement<vector, T_element>(*this, index);
   }
-   
+
 protected:
   Vector(detail::ExprNode<detail::vector, T_element>& expr) : detail::Var<detail::vector, T_element>(expr)
   {
   }
-  
+
   virtual detail::ExprNode<detail::vector, T_element>* createDefault() const
   {
     throw NullSizeError("Invalid null size vector usage");
@@ -156,7 +156,7 @@ protected:
     if (&this->getExpr() == &previous)
       this->setExpr(next);
   }
-  virtual void internal_update(detail::ExprNode<detail::matrix, T_element>& previous, detail::ExprNode<detail::matrix, T_element>& next) const {}    
+  virtual void internal_update(detail::ExprNode<detail::matrix, T_element>& previous, detail::ExprNode<detail::matrix, T_element>& next) const {}
 };
 
 }

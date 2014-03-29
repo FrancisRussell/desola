@@ -30,11 +30,11 @@ class Matrix : public detail::Var<detail::matrix, T_element>
 public:
   friend class Scalar<T_element>;
   friend class Vector<T_element>;
-	  
+
   // Typedefs for ITL
   typedef Scalar<T_element> value_type;
   typedef std::size_t size_type;
-	
+
   typedef detail::matrix expressionType;
 
   static Matrix loadDense(harwell_boeing_stream<T_element>& stream)
@@ -46,7 +46,7 @@ public:
   {
     return Matrix(*new detail::Literal<detail::matrix, T_element>(new detail::CRSMatrix<T_element>(stream)));
   }
-    
+
   static Matrix loadDense(matrix_market_stream<T_element>& stream)
   {
     return Matrix(*new detail::Literal<detail::matrix, T_element>(new detail::ConventionalMatrix<T_element>(stream)));
@@ -60,11 +60,11 @@ public:
   Matrix()
   {
   }
- 
+
   explicit Matrix(const size_type rows, const size_type cols) : detail::Var<detail::matrix, T_element>(*new detail::Literal<detail::matrix, T_element>(new detail::ConventionalMatrix<T_element>(rows, cols)))
   {
   }
-  
+
   Matrix(const Matrix& m) : detail::Var<detail::matrix, T_element>(m.getExpr())
   {
   }
@@ -88,7 +88,7 @@ public:
   Matrix& operator=(const Matrix& right)
   {
     if(this != &right)
-      setExpr(right.getExpr());
+      this->setExpr(right.getExpr());
 
     return *this;
   }
@@ -96,7 +96,7 @@ public:
   const Matrix& operator=(const Scalar<T_element>& right)
   {
     using namespace detail;
-    setExpr(*new ScalarPiecewise<matrix, T_element>(piecewise_assign, this->getExpr(), right.getExpr()));
+    this->setExpr(*new ScalarPiecewise<matrix, T_element>(piecewise_assign, this->getExpr(), right.getExpr()));
     return *this;
   }
 
@@ -117,8 +117,8 @@ public:
     using namespace detail;
     return Matrix(*new Negate<matrix, T_element>(this->getExpr()));
   }
-  
-    
+
+
   const Matrix operator*(const Scalar<T_element>& right) const
   {
     using namespace detail;
@@ -129,7 +129,7 @@ public:
   {
     using namespace detail;
     return Matrix(*new ScalarPiecewise<matrix, T_element>(piecewise_divide, this->getExpr(), right.getExpr()));
-  }      
+  }
 
   const Matrix operator*(const Matrix& right) const
   {
@@ -162,7 +162,7 @@ public:
   }
 
   const Matrix ele_div(const Matrix& right) const
-  {  
+  {
     using namespace detail;
     return Matrix(*new Pairwise<matrix, T_element>(pair_div, this->getExpr(), right.getExpr()));
   }
@@ -180,17 +180,17 @@ protected:
   }
 
   virtual detail::ExprNode<detail::matrix, T_element>* createDefault() const
-  { 
+  {
     throw NullSizeError("Invalid null size matrix usage");
   }
-  
+
   virtual void internal_update(detail::ExprNode<detail::scalar, T_element>& previous, detail::ExprNode<detail::scalar, T_element>& next) const {}
   virtual void internal_update(detail::ExprNode<detail::vector, T_element>& previous, detail::ExprNode<detail::vector, T_element>& next) const {}
   virtual void internal_update(detail::ExprNode<detail::matrix, T_element>& previous, detail::ExprNode<detail::matrix, T_element>& next) const
   {
     if (&this->getExpr() == &previous)
       this->setExpr(next);
-  }   
+  }
 };
 
 }
