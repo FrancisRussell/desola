@@ -236,7 +236,7 @@ namespace itl {
       using std::endl;
 
       bool ret;
-      if (converged(r))
+      if (this->converged(r))
 	ret = true;
       else if (this->i < this->max_iter)
 	ret = false;
@@ -255,7 +255,7 @@ namespace itl {
       using std::endl;
 
       bool ret;
-      if (converged(abs(r)))
+      if (this->converged(abs(r)))
 	ret = true;
       else if (this->i < this->max_iter)
 	ret = false;
