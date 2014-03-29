@@ -87,6 +87,7 @@ AC_ARG_WITH([icpc],
 
 AX_BOOST_BASE([1.34])
 AX_BOOST_PROGRAM_OPTIONS
+AX_BOOST_SYSTEM
 AX_BOOST_FILESYSTEM
 
 if test "$want_boost" = no; then
