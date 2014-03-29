@@ -32,12 +32,12 @@ private:
   double startTime;
   const desola::ConfigurationManager& configManager;
   const desola::StatisticsCollector& statsCollector;
-  
+
 public:
   StatisticsGenerator() : startTime(getTime()), configManager(desola::ConfigurationManager::getConfigurationManager()), statsCollector(desola::StatisticsCollector::getStatisticsCollector())
   {
   }
-  
+
   template<typename MatrixType, typename IterationType>
   void printLongResults(const MatrixType& matrix, IterationType& iter, const SolverOptions& options)
   {
@@ -94,10 +94,10 @@ public:
     std::cout << "high_level_fusion=" << getStatus(configManager.highLevelFusionEnabled()) << d;
     std::cout << "single_for_loop_sparse=" << getStatus(configManager.singleForLoopSparseIterationEnabled()) << d;
     std::cout << "specialise_sparse=" << getStatus(configManager.sparseSpecialisationEnabled()) << d;
-    
+
     if (options.useSparse())
       std::cout << "nnz=" << nnz(matrix) << d;
-      
+
     std::cout << std::endl;
   }
 
@@ -141,7 +141,7 @@ public:
   static std::string getLeaf(const std::string& pathString)
   {
     boost::filesystem::path path(pathString);
-    return path.leaf();
+    return path.filename().string();
   }
 
   static double getTime()

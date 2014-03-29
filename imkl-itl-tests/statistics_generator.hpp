@@ -27,12 +27,12 @@ class StatisticsGenerator
 {
 private:
   double startTime;
-  
+
 public:
   StatisticsGenerator() : startTime(getTime())
   {
   }
-  
+
   template<typename MatrixType, typename IterationType>
   void printLongResults(const MatrixType& matrix, IterationType& iter, const SolverOptions& options)
   {
@@ -67,7 +67,7 @@ public:
 
     if (options.useSparse())
       std::cout << "nnz=" << nnz(matrix) << d;
-      
+
     std::cout << std::endl;
   }
 
@@ -91,7 +91,7 @@ public:
   static std::string getLeaf(const std::string& pathString)
   {
     boost::filesystem::path path(pathString);
-    return path.leaf();
+    return path.filename().string();
   }
 
   static double getTime()
